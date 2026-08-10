@@ -1022,15 +1022,87 @@ public class FortunaEnemies {
     }
 
     public void hajia(Entity self, Entity player){
-        player.sinking_strength += 8;
-        player.sinking_term += 5;
-        player.rapture_term += 5;
-        player.rapture_strength += 8;
+        self.sinking_term += 3;
+        self.sinking_strength += 4 + self.shin;
+        if(m.dealDamage(14, player, self)) {
+            player.rapture_term += 2;
+            player.rapture_strength += 8 + self.shin;
+            if (self.sanity < 0) {
+                m.tremorBurst(player);
+            }
+        }
+    }
+
+    public void kai(Entity self, Entity player){
+        self.sinking_term += 3;
+        self.sinking_strength += 6 + self.shin;
+        if(m.dealDamage(20, player, self)){
+            player.rapture_strength += 18 + self.shin;
+        }
+    }
+
+    public void EGO_CorrideBandageKing(Entity self, Entity player){
+        Toast.makeText(s, "这些绳子既是绷带，也是枷锁……到底何时才能让我解放!!", Toast.LENGTH_SHORT);
+        s.appendLog("那一天的伞夫，侵蚀起来~");
+        self.swift -= 8;
+        self.strength += 5;
+        self.this_turn_strength += self.swift * -1;
+        player.swift -= 3;
+        int k = 1;
+        int j = 8;
+        if(self.swift < -10){
+            k++;
+            if(self.swift < -30){
+                k++;
+            }if(self.swift < -75){
+                k++;
+            }
+        }
+        for(int i = 0; i < k; i++){
+            if(m.dealDamage(28, player, self)){
+                player.sanity -= j;
+                j /= 2;
+                player.tremor_strength += 14;
+                player.tremor_term += 4;
+                m.tremorBurst(player);
+            }
+        }
+        self.sinking_term = 0;
+        self.sinking_strength = 0;
+        self.shin++;
+        self.sanity = 0;
+        self.name = "伞神";
     }
 
     public EnemyAction brainGOD(Entity self, Entity player){
         EnemyAction Hajia = new EnemyAction("哈加！", this::hajia);
-        EnemyAction Corride_BandageKing = new EnemyAction("我被束缚在这王座上，独自统治", this::hajia);
-        return null;
+        EnemyAction kai = new EnemyAction("开！", this::kai);
+        EnemyAction Corride_BandageKing = new EnemyAction("这些绳子既是绷带，也是枷锁……到底何时才能让我解放！！", this::EGO_CorrideBandageKing);
+
+        self.panic = panicCheck(self);
+        if (self.panic == PANIC) {
+            self.name  = "被缚之王";
+            return Corride_BandageKing;
+        } else if (self.panic == LOW_MORALE) {
+            self.swift -= 4;
+            self.strength += 3;
+        }
+        self.panic = 0;
+        self.swift -= 3;
+        self.strength += 2;
+
+        if(self.buff.rainoftears != 1){
+            //被动：泪雨
+            self.buff.rainoftears = 1;
+            restriction(self, player);
+        }
+        switch (m.randint(1, 3)){
+            case 1:
+                return kai;
+            case 2:
+            case 3:
+            default:
+                return Hajia;
+        }
     }
 }

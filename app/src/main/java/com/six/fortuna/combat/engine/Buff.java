@@ -35,6 +35,7 @@ public class Buff {
     public int Tiphereth;
     public int expireSwift;
     public int noSelf; //无我
+    public int rainoftears;
     public ArrayList chargeBalls = new ArrayList();
     public int chargeBallSize = 3;
     private int chargeBallCount = 0;
@@ -210,6 +211,7 @@ public class Buff {
         chargeBalls.clear();
         chargeBallCount = chargeBalls.size();
         chargeBallSize = 3;
+        rainoftears = 0;
     }
 
     public void reset_Debuff(){
@@ -280,6 +282,7 @@ public class Buff {
             }
             o.put("concentration", concentration);
             o.put("currentgeneration", currentgeneration);
+            o.put("rainoftears", rainoftears);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -310,6 +313,7 @@ public class Buff {
         }
         b.concentration = o.optInt("concentration", 0);
         b.currentgeneration = o.optInt("currentgeneration", 0);
+        b.rainoftears = o.optInt("rainoftears", 0);
         return b;
     }
 }

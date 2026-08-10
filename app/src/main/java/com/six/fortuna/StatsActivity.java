@@ -257,6 +257,8 @@ public class StatsActivity extends AppCompatActivity {
                 return enemyDefs.brainQuQu(enemy, player);
             case 9:
                 return enemyDefs.brainThunderSpirit(enemy, player);
+            case 10:
+                return enemyDefs.brainGOD(enemy, player);
             default:
                 return null;
         }
@@ -312,6 +314,9 @@ public class StatsActivity extends AppCompatActivity {
                 break;
             case 3:
                 spawnEnemy("无我良秀", 10000, new double[]{-0.2, -0.5, -1.0}, 7);
+                break;
+            case 4:
+                spawnEnemy("伞神", 20000, new double[]{0.8, 0.6, 0.3}, 10);
         }
     }
     private void spawnRein(){
