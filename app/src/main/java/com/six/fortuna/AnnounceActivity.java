@@ -77,7 +77,8 @@ public class AnnounceActivity extends AppCompatActivity {
                 "10. 新卡：第六感[代码：sixthSense](1):获得一定闪避和敏捷\n" +
                 "11. 新卡：脑叶公司E.G.O::魔弹[代码：EGOMagicBullet](0)", announces);
 
-        addAnnounce("修复已知bug/调整：\n" +
+        addAnnounce("v0.2改 小更新\n" +
+                "修复已知bug/调整：\n" +
                 "1. 修复了连续射击和调用连续射击的处置产生死循环的bug\n" +
                 "2. 里恩沉沦过高，叠起来后可能直接每回合都使玩家混乱，故而怒削之[绝对不是我被打死档了]\n" +
                 "3. 修复了魔弹不消耗子弹和第七弹-绝望会递归导致瞬秒自己的问题\n" +
@@ -92,6 +93,27 @@ public class AnnounceActivity extends AppCompatActivity {
                 "   I   神会通过基础技能削减自己的理智\n" +
                 "   II  当神受到攻击时会为自己施加沉沦\n" +
                 "   III 当神的理智降低至-45，应该不会有什么不好的事情发生的...吧？（憋笑）\n", announces);
+
+        addAnnounce("v0.3更新\n" +
+                "修复的bug/调整：\n" +
+                "1. 我很好奇我为什么要边听Yesod和Hod的核心抑制音乐边写代码\n" +
+                "2. 感觉Hod的核心抑制音乐真阳间，只是听完后感觉敲不动键盘了\n" +
+                "3. 扯远了，总之现在画的饼已经完成了一部分了，我们的伞神的逻辑已经全部写好了，如下：\n" +
+                "   I   受到攻击时，根据自身沉沦层数获得{0}0%的减伤，不超过50%\n" +
+                "   II  受到攻击时，获得+1沉沦层数和+1沉沦强度, 且伞神技能具有大量自沉沦施加\n" +
+                "   III 剩下的机制不足道矣了，总之，伞神就是一个纯纯的沙包，相信我\n" +
+                "4. 克罗默还在等待，懒得做了是这样的\n" +
+                "5. 修复危险度设置输入框提示是加护的bug\n" +
+                "6. 提醒各位，以下行为会导致存档的消失\n" +
+                "   I   设置界面的将你抹去，也将我抹去\n" +
+                "   II  设置界面作弊码填入/kill\n" +
+                "   III 删除并重新安装本软件\n" +
+                "7. 一些好玩的卡以及其对应的代码，可以用getCard作弊码获取\n" +
+                "   1. cogito是卡牌Cogito的识别码，Cogito是个十分有趣的牌，可以试试卡组只带2张Cogito然后碰运气\n" +
+                "   2. WordPower_Death是言灵【死】的识别码，不会吧不会吧，不会到现在都有人不知道秒杀的牌的获取方式吧\n" +
+                "   3. @AllHeiShou是@全体黑兽，收到扣三技能的识别码，未来其召唤的黑兽种类会更多\n" +
+                "   4. setDanger是危险度设置的识别码，可以用于设置危险度，不会有人不知道这张牌吧？\n" +
+                "   5. 作弊码填入getCard后确认会有弹窗让你输入卡牌识别码，注意，识别码区分大小写\n", announces);
 
         TextView tvAnnounce = findViewById(R.id.Announcement);
         refreshUI(tvAnnounce, announces, currentIndex);

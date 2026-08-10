@@ -157,6 +157,15 @@ public class Mechanics {
             if(self.ammo > 0) self.consumeAmmo(1);
         }
 
+        if(target.buff.rainoftears >= 1){
+            if(target.sinking_term > 0){
+                damage *= 1 - 0.1 * ((target.sinking_term > 5) ? 5 : target.sinking_term);
+                target.sinking_term++;
+                target.sinking_strength++;
+            }
+            target.strength += 2;
+        }
+
         // 5. 护盾抵扣伤害结算
         if (target.block >= damage) {
             target.block -= damage;
