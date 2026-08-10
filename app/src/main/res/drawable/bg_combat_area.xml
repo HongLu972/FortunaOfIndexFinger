@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 内部填充颜色（保留你原来的米黄色） -->
+    <solid android:color="#000E33" />
+
+    <!-- 边框：宽度2dp，颜色使用深棕色或主题色 -->
+    <stroke
+        android:width="2dp"
+        android:color="#FFFD42" />
+
+    <!-- 圆角半径（让边角圆润一点更好看） -->
+    <corners android:radius="8dp" />
+
+</shape>

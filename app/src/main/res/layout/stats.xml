@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8E0D5">
+    <LinearLayout
+        android:id="@+id/top_stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="16dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="福尔图娜的纸条"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#5D4037" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="食指 编外成员"
+            android:textSize="18sp"
+            android:textColor="#4E342E"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/tv_karma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="160dp"
+                android:text="业(福尔图娜): 0"
+                android:textSize="16sp"
+                android:textColor="#D32F2F"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:id="@+id/tv_blessing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="160dp"
+                android:text="指令加护: 0"
+                android:textSize="16sp"
+                android:textColor="#388E3C" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/HPArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp"
+        android:layout_below="@id/top_stats">
+
+        <LinearLayout
+            android:id="@+id/HPSArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/HPArea"
+            android:weightSum="5">
+            <TextureView
+                android:layout_weight="0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/HP"
+                android:textColor="#F00"
+                android:textSize="20dp"
+                android:layout_weight="5"
+                android:textStyle="bold"
+                android:text="生命值: XX/XX"/>
+
+            <TextureView
+                android:layout_weight="0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:id="@+id/Sanity"-->
+            <!--                android:textColor="#00FFC3"-->
+            <!--                android:textSize="20dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:textStyle="bold"-->
+            <!--                android:text="精神值: XX/XX"/>-->
+            <!--约等于能量，暂时没想好形式-->
+
+
+            <!--这里整个进度条-->
+            <!--整了-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:id="@+id/BarArea">
+            <ProgressBar
+                android:id="@+id/HPBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_marginHorizontal="10dp"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="80"
+                android:progressTint="#F00"
+                android:progressBackgroundTint="#DDD"/>
+
+            <!--            <ProgressBar-->
+            <!--                android:id="@+id/SanBar"-->
+            <!--                style="?android:attr/progressBarStyleHorizontal"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginHorizontal="10dp"-->
+            <!--                android:max="100"-->
+            <!--                android:progress="75"-->
+            <!--                android:progressTint="#00FFC3"-->
+            <!--                android:progressBackgroundTint="#DDD"/>-->
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:scrollbars="none">
+            <TextView
+                android:id="@+id/tv_player_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:textColor="#5D4037"
+                android:background="#22000000"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"/>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/EXPArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/HPArea"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="20dp">
+        <!--等级-->
+
+        <TextView
+            android:id="@+id/EXPNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EXP: XX/XX"
+            android:textColor="#00A0FF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/EXPBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#00A0FF"
+            android:progressBackgroundTint="#DDD" />
+
+        <TextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lv. X"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LTArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/EXPArea"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="20dp">
+
+
+        <!--白色的圆代表着违背填满的光芒槽，黄色代表已经被填满的光芒槽-->
+        <TextView
+            android:id="@+id/LTAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="光芒: 🟡🟡🟡⚪"
+            android:textColor="#00A0FF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/CombatArea"
+        android:layout_below="@id/LTArea"
+        android:orientation="vertical"
+        android:background="@drawable/bg_combat_area"
+        android:layout_above="@id/bottom_toolbar"
+        android:layout_margin="10dp">
+        <!--这里用于进行战斗操作，别问我为什么要加战斗-->
+
+        <!-- 敌人状态栏：名字/血量/意图预告 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tv_enemy_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="敌人：（无）"
+                android:textColor="#FFD54F"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+            <ProgressBar
+                android:id="@+id/EnemyHPBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:max="100"
+                android:progress="100"
+                android:progressTint="#E53935"
+                android:progressBackgroundTint="#555"/>
+
+            <TextView
+                android:id="@+id/tv_enemy_intent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="意图：——"
+                android:textColor="#FFAB91"
+                android:textSize="15sp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:scrollbars="none">
+                <TextView
+                    android:id="@+id/tv_enemy_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textColor="#FFF3E0"
+                    android:background="#33000000"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"/>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/CombatText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="rnfmabj"
+            android:layout_weight="1"
+            android:textColor="#E0E7FF"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:overScrollMode="always"/>
+        <Spinner
+            android:id="@+id/BookPagesChoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFF3E0"
+            android:dropDownWidth="match_parent"/>
+        <Button
+            android:id="@+id/ComfirmUsing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确认使用书页"
+            android:backgroundTint="#FFF"
+            android:textColor="#000"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#D7CCC8"
+        android:weightSum="4">
+
+        <Button
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFCE"
+            android:textColor="#000000"
+            android:text="主页"/>
+
+        <Button
+            android:id="@+id/nav_stats"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFCE"
+            android:textColor="#000000"
+            android:text="战斗"/>
+
+        <Button
+            android:id="@+id/nav_deck"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#FFD54F"
+            android:textColor="#000000"
+            android:text="养成"/>
+
+        <Button
+            android:id="@+id/nav_setting"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFCE"
+            android:textColor="#000000"
+            android:text="设置"/>
+
+    </LinearLayout>
+</RelativeLayout>

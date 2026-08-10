@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8E0D5">
+
+
+    <LinearLayout
+        android:id="@+id/top_stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="福尔图娜的纸条"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#5D4037" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="食指 编外成员"
+            android:textSize="18sp"
+            android:textColor="#4E342E"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/tv_karma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="业(福尔图娜): 0"
+                android:textSize="16sp"
+                android:textColor="#D32F2F"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:id="@+id/tv_blessing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="指令加护: 0"
+                android:textSize="16sp"
+                android:textColor="#388E3C" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--随便改代号-->
+    <LinearLayout
+        android:id="@+id/renameArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/top_stats"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="改名"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/inputRename"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="点击输入文本(改名)"
+            android:inputType="text"
+            android:maxLines="1"/>
+
+        <Button
+            android:id="@+id/rename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更改代号"
+            android:backgroundTint="#CBE2FE"
+            android:textColor="#000" />
+    </LinearLayout>
+
+    <!--作弊？！ 作弊？！ ？！哔哔？！ ？！魔法哔哔机？！-->
+    <LinearLayout
+        android:id="@+id/cheatArea"
+        android:layout_below="@id/renameArea"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="？！弊弊？！"/>
+
+        <EditText
+            android:id="@+id/cheatCode"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="点击输入作弊码~可以试试自己猜猜~"
+            android:maxLines="1"
+            android:inputType="text"/>
+        <Button
+            android:id="@+id/cheat"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="输入完'哔'"
+            android:backgroundTint="#CBE2FE"
+            android:textColor="#000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/newsArea"
+        android:layout_below="@id/cheatArea"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/nav_news"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="获取最新更新公告"
+            android:backgroundTint="#CBE2FE"
+            android:textColor="#000" />
+    </LinearLayout>
+
+    <!-- ?!券券?! -->
+    <Button
+        android:id="@+id/clearAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_toolbar"
+        android:backgroundTint="#FF0000"
+        android:textColor="#FFFFFF"
+        android:text="将我抹去，也将你抹去   ? 🟣🟣🟣🟣"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#D7CCC8"
+        android:weightSum="3">
+
+        <Button
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFCE"
+            android:textColor="#000000"
+            android:text="主页"/>
+
+        <Button
+            android:id="@+id/nav_stats"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFCE"
+            android:textColor="#000000"
+            android:text="战斗"/>
+
+        <Button
+            android:id="@+id/nav_setting"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFCE"
+            android:textColor="#000000"
+            android:text="设置"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

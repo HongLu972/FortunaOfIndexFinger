@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#FFF3E0"
+    android:padding="8dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_card_name"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="卡牌名 x1"
+        android:textColor="#4E342E"
+        android:textSize="15sp"/>
+
+    <Button
+        android:id="@+id/btn_remove_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="移除一张"
+        android:textSize="12sp"
+        android:backgroundTint="#EF9A9A"
+        android:textColor="#000"/>
+</LinearLayout>

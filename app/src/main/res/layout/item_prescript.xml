@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginTop="100dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="#FFF9E6">
+
+    <LinearLayout
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <!-- 指令文字 -->
+            <TextView
+                android:id="@+id/tv_prescript"
+                android:layout_width="213dp"
+                android:layout_height="wrap_content"
+                android:text="示例指令"
+                android:textColor="#3E2723"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- 图标 -->
+            <ImageView
+                android:id="@+id/iv_custom"
+                android:layout_width="68dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:contentDescription="职阶图标" />
+
+        </LinearLayout>
+
+        <!-- 耗时文字 -->
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="耗时：0秒"
+            android:textColor="#8D6E63"
+            android:textSize="14sp" />
+
+        <!-- ★ 按钮行：失败在左，成功在右 ★ -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btn_fail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:backgroundTint="#EF9A9A"
+                android:text="执行失败"
+                android:textColor="#B71C1C" />
+
+            <Button
+                android:id="@+id/btn_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="#A5D6A7"
+                android:text="执行成功"
+                android:textColor="#1B5E20" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
