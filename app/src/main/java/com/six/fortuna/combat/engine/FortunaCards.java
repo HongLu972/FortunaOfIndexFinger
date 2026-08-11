@@ -190,7 +190,8 @@ public class FortunaCards{
     }
 
     public void effect_WordOfPower_Death(Entity player, Entity enemy){
-        m.dealDamage(enemy.max_hp * 2, enemy, player);
+        m.dealDamage((int) (enemy.max_hp * 1.5), enemy, player);
+        enemy.hp = -1;
     }
 
     public void effect_comboshoot(Entity player, Entity enemy){

@@ -699,6 +699,50 @@ public class FortunaEnemies {
         }
         self.panic = 0;
 
+        if(self.hp <= self.max_hp*0.6 && self.countC == 1){
+            self.countC = 2;
+            if(self.buff.UnlockedHealth > 0){
+                self.buff.UnlockedHealth = 0;
+            }
+            //失去第一次锁血
+            self.buff.lockedHealth--;
+            self.stagger_panic_term = 0;
+            if(self.hp < self.max_hp){
+                self.hp = (int) (0.6*self.max_hp);
+            }
+//            if(self.hp <= self.max_hp*0.3){
+//                self.countB++;
+//                self.countC = 3;
+//                switch(m.randint(1, 3)){
+//                    case 1:
+//                        return Furioso_Cresendo_ReqiuemMassI;
+//                    case 2:
+//                        return Furioso_Cresendo_ReqiuemMassII;
+//                    case 3:
+//                        return Furioso_Cresendo_ReqiuemMassIII;
+//                }
+//            }
+            return FuriosoReplica_CresendoFst;
+        }
+
+        if(self.hp <= self.max_hp*0.3 && self.countC == 2){
+            self.countC = 3;
+            self.hp = (int) (self.max_hp * 0.3);
+            if(self.buff.UnlockedHealth > 0) self.buff.UnlockedHealth = 0;
+            self.buff.lockedHealth--;
+            self.stagger_panic_term = 0;
+            self.stagger_count = 4;
+            //至此，再无锁血
+            switch(m.randint(1, 3)){
+                case 1:
+                    return Furioso_Cresendo_ReqiuemMassI;
+                case 2:
+                    return Furioso_Cresendo_ReqiuemMassII;
+                case 3:
+                    return Furioso_Cresendo_ReqiuemMassIII;
+            }
+        }
+
         if(staggerCheck(self)){
             return nullAction;
         }
@@ -707,9 +751,10 @@ public class FortunaEnemies {
             return eStaggerAction;
         }
 
-        if (self.countC != 1) {
+        if (self.countC == 0) {
             self.countB = 0; //灼烧着的伤口
             self.grace = 0; //？！区区？！赫尔墨斯
+            self.buff.lockedHealth = 2;
             restriction(self, player);
             self.countC = 1;
             return announce_Rein;
@@ -731,34 +776,7 @@ public class FortunaEnemies {
             }
         }
 
-        if(self.hp <= self.max_hp*0.6 && self.countC == 1){
-            self.countC = 2;
-            if(self.hp <= self.max_hp*0.3){
-                self.countB++;
-                self.countC = 3;
-                switch(m.randint(1, 3)){
-                    case 1:
-                        return Furioso_Cresendo_ReqiuemMassI;
-                    case 2:
-                        return Furioso_Cresendo_ReqiuemMassII;
-                    case 3:
-                        return Furioso_Cresendo_ReqiuemMassIII;
-                }
-            }
-            return FuriosoReplica_CresendoFst;
-        }
 
-        if(self.hp <= self.max_hp*0.3){
-            self.countC = 3;
-            switch(m.randint(1, 3)){
-                case 1:
-                    return Furioso_Cresendo_ReqiuemMassI;
-                case 2:
-                    return Furioso_Cresendo_ReqiuemMassII;
-                case 3:
-                    return Furioso_Cresendo_ReqiuemMassIII;
-            }
-        }
 
         if (self.grace >= 9){
             self.grace = 0;
@@ -927,12 +945,15 @@ public class FortunaEnemies {
     }
 
     public void clearyouclearme(Entity self, Entity player){
-        self.buff.noSelf *= self.buff.noSelf;
-        m.heal(-1, self);
+        self.buff.noSelf = 999;
         player.block = 0;
         player.buff.sidestep = 0;
-        m.dealDamage((int)(player.max_hp * (0.5 * 0.01 * (((self.buff.noSelf + self.strength) > 150) ? 150 : (self.buff.noSelf + self.strength)))), player, self);
+        m.dealDamage((int)(player.max_hp * (0.5 * 0.01 * (Math.min((self.buff.noSelf + self.strength), 150)))), player, self);
         player.max_hp = player.hp;
+        if(player.hp < 0){
+            player.max_hp = 0;
+            player.hp = 0;
+        }
     }
 
     public EnemyAction brainYoshide(Entity self, Entity player){
@@ -951,12 +972,24 @@ public class FortunaEnemies {
             self.countC = 1;
             self.buff.noSelf += 0.1 * player.restrictions > 100 ? 100 : (int) (0.1 * player.restrictions);
             self.countB = 0;
+            self.buff.lockedHealth += 2;
         }
         if(self.max_hp < self.hp){
+            self.stagger_panic_term = 0;
+            self.stagger_count = 4;
             m.defend(self.hp - self.max_hp, self);
             self.hp = self.max_hp;
         }
-        if(self.stagger_panic_term > 0) return stagger;
+        if(self.buff.UnlockedHealth > 0){
+            self.buff.UnlockedHealth = 0;
+            self.buff.lockedHealth--;
+            self.stagger_panic_term = 0;
+            self.stagger_count = 4;
+            self.max_hp = (int) (self.outside_max_hp * 0.3 * (1 + player.restrictions * 0.03));
+            self.hp = self.max_hp;
+            self.buff.noSelf /= 2;
+        }
+        if(self.stagger_panic_term > 0 && self.buff.lockedHealth == 0) return stagger;
         if(player.max_hp < player.outside_max_hp * 0.10 || player.max_hp < 100 || self.buff.noSelf >= 300){
             return clear;
         }
@@ -1014,10 +1047,81 @@ public class FortunaEnemies {
         }
     }
 
+    public void GreatPurify(Entity self, Entity player){
+        self.strength += Math.min(player.bleed_strength/5, 10);
+        int k = 50;
+        for(int i = 0; i < 1; i++){
+            if(player.bleed_strength > k){
+                k += 50;
+                i--;
+            }
+            if(m.dealDamage(60, player, self)){
+                player.bleed_strength += 13;
+                player.bleed_term += 4;
+            }
+        }
+    }
+
+    public void loyalfulHold(Entity self, Entity player){
+        self.burn_strength = ((self.burn_strength - 3 > 0) ? (self.burn_strength - 3) : (1));
+        self.burn_term += 4;
+        if(m.dealDamage(22, player, self)){
+            player.bleed_strength += 1;
+            player.bleed_term += 7;
+            player.swift -= 3;
+        }
+    }
+
     public EnemyAction brainKromo(Entity self, Entity player){
         EnemyAction Purify = new EnemyAction("净↑化↓", this::Purify);
         EnemyAction Whistle = new EnemyAction("辛克莱哟~(神秘の哨音)", this::Whistle);
         EnemyAction Hold = new EnemyAction("就由我来执握", this::hold);
+        EnemyAction GreatPurify = new EnemyAction("崇高的净↑化↓", this::GreatPurify);
+        EnemyAction loyalfulHold = new EnemyAction("荣耀の执握", this::loyalfulHold);
+
+        if(self.countC == 0){
+            self.countC = 1;
+            restriction(self, player);
+            self.buff.lockedHealth += 1;
+        }
+        if(self.burn_term > 0 && self.burn_strength > 0 || self.bleed_term > 0 && self.bleed_strength > 0){
+            self.strength += 3;
+            m.heal((int) (self.max_hp * 0.3), self);
+        }
+        switch (self.countC){
+            case 1:
+                if(self.buff.UnlockedHealth > 0){
+                    self.max_hp *= 1.4;
+                    self.hp = self.max_hp;
+                    self.stagger_panic_term = 0;
+                    self.stagger_count = 4;
+                    self.buff.UnlockedHealth = 0;
+                    self.countC = 2;
+                    self.name = "欲成原初的克罗默";
+                    self.buff.lockedHealth--;
+                    return GreatPurify;
+                    //进二阶段了
+                }
+                switch (m.randint(1, 2)){
+                    case 1:
+                        if(m.randint(1, 100) < 24){
+                            return Purify;
+                        }else{
+                            return Whistle;
+                        }
+                    case 2:
+                        return Hold;
+                }
+                break;
+            case 2:
+                if(m.randint(1, 4) == 4){
+                    return GreatPurify;
+                }else{
+                    return loyalfulHold;
+                }
+            default:
+                break;
+        }
         return Hold;
     }
 
@@ -1050,6 +1154,7 @@ public class FortunaEnemies {
         player.swift -= 3;
         int k = 1;
         int j = 8;
+        int a = 2;
         if(self.swift < -10){
             k++;
             if(self.swift < -30){
@@ -1060,6 +1165,8 @@ public class FortunaEnemies {
         }
         for(int i = 0; i < k; i++){
             if(m.dealDamage(28, player, self)){
+                m.heal((int) (self.max_hp * 0.01 * a), self);
+                a *= 2;
                 player.sanity -= j;
                 j /= 2;
                 player.tremor_strength += 14;
@@ -1079,22 +1186,30 @@ public class FortunaEnemies {
         EnemyAction kai = new EnemyAction("开！", this::kai);
         EnemyAction Corride_BandageKing = new EnemyAction("这些绳子既是绷带，也是枷锁……到底何时才能让我解放！！", this::EGO_CorrideBandageKing);
 
-        self.panic = panicCheck(self);
-        if (self.panic == PANIC) {
-            self.name  = "被缚之王";
+        if(self.sanity <= -45){
+            m.sanityReturn(self);
+            self.name = "被缚之王";
+            self.swift -= 8;
+            self.strength += 6;
             return Corride_BandageKing;
-        } else if (self.panic == LOW_MORALE) {
-            self.swift -= 4;
-            self.strength += 3;
         }
-        self.panic = 0;
         self.swift -= 3;
         self.strength += 2;
+
+        while(self.sinking_term > 10){
+            m.sinking(self);
+        }
 
         if(self.buff.rainoftears != 1){
             //被动：泪雨
             self.buff.rainoftears = 1;
+            self.buff.lockedHealth++;
             restriction(self, player);
+        }
+
+        if(self.buff.UnlockedHealth > 0){
+            self.hp = (int) (0.4*self.max_hp);
+            self.buff.lockedHealth--;
         }
         switch (m.randint(1, 3)){
             case 1:

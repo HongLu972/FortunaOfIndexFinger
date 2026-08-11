@@ -122,6 +122,17 @@ public class AnnounceActivity extends AppCompatActivity {
                 "2. 一不小心闪开，老子自己来就死循环了，现在不会了\n" +
                 "3. 由于这是紧急修复，故而没有其他内容", announces);
 
+        addAnnounce("v0.4更新\n" +
+                "修复的bug/调整" +
+                "1. 覆写了锁血的代码，以及里恩现在具有锁血了\n" +
+                "2. 里恩获得了2次转阶段锁血\n" +
+                "3. 伞神的生命值由2万变为1w，但其被动泪雨的减伤上限由50%提高至90%并获得1次锁血\n" +
+                "4. 修了一下触发锁血后因为混乱导致被迫双方静坐3回合的问题\n" +
+                "5. 新增了敌人，克罗默\n" +
+                "6. 由于某些敌人(伞神和瓦伦希娜)的超强防守能力，言灵死有点弱势了，故而加强\n" +
+                "7. 修复了大量锁血相关的bug\n" +
+                "8. 修复了克罗默重复触发转阶段锁血的bug[符合原著了属于是]", announces);
+
         TextView tvAnnounce = findViewById(R.id.Announcement);
         refreshUI(tvAnnounce, announces, currentIndex);
 
