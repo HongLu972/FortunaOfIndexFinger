@@ -115,6 +115,13 @@ public class AnnounceActivity extends AppCompatActivity {
                 "   4. setDanger是危险度设置的识别码，可以用于设置危险度，不会有人不知道这张牌吧？\n" +
                 "   5. 作弊码填入getCard后确认会有弹窗让你输入卡牌识别码，注意，识别码区分大小写\n", announces);
 
+        addAnnounce("v0.3.1紧急修复\n" +
+                "修复的bug/调整:" +
+                "1. 由于刷怪逻辑漏洞导致新敌人伞神实际成了棍木\n" +
+                "   如何从randint(1,3)里得出4\n" +
+                "2. 一不小心闪开，老子自己来就死循环了，现在不会了\n" +
+                "3. 由于这是紧急修复，故而没有其他内容", announces);
+
         TextView tvAnnounce = findViewById(R.id.Announcement);
         refreshUI(tvAnnounce, announces, currentIndex);
 
