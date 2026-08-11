@@ -265,7 +265,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void NormalBattle(){
-        switch (mechanics.randint(1, 2)){
+        switch (mechanics.randint(1, 3)){
             case 1:
                 spawnHajimi();
             case 2:
@@ -305,7 +305,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void BossBattle(){
-        switch (mechanics.randint(1, 3)){
+        switch (mechanics.randint(1, 4)){
             case 1:
                 spawnRein();
                 break;

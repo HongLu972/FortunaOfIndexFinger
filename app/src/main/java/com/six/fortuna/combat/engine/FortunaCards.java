@@ -362,13 +362,16 @@ public class FortunaCards{
     }
 
     public void effect_shankailaozizijilai(Entity player, Entity enemy){
-        double k = 0.6;
+        double k = 0.7;
         for (int i = 0; i < 4; i++){
             enemy.rapture_strength += 21;
             enemy.rapture_term += 10;
             player.poise_term += 3;
             player.poise_strength += 5;
-            if(player.hp <= player.max_hp * k) i--;
+            if(player.hp <= player.max_hp * k) {
+                k -= 0.2;
+                i--;
+            }
             m.dealDamage(18, enemy, player);
         }
     }
