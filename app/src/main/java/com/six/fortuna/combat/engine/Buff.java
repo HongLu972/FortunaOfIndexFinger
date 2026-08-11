@@ -32,6 +32,7 @@ public class Buff {
     public int Unlock;
     public int sidestep; //闪避
     public int nextTurnLight; //下回合能量
+    public int lockedHealth;
     public int Tiphereth;
     public int expireSwift;
     public int noSelf; //无我
@@ -39,6 +40,7 @@ public class Buff {
     public ArrayList chargeBalls = new ArrayList();
     public int chargeBallSize = 3;
     private int chargeBallCount = 0;
+    public int UnlockedHealth;
     public void turnEndActivate(){
         m.defend(armored, self);
     }
@@ -212,11 +214,14 @@ public class Buff {
         chargeBallCount = chargeBalls.size();
         chargeBallSize = 3;
         rainoftears = 0;
+        lockedHealth = 0;
     }
 
     public void reset_Debuff(){
         expireSwift = 0;
         poison = 0;
+        noSelf = 0;
+        lockedHealth = 0;
     }
 
     public String translation_chargeball(int chargeBallType){
@@ -268,6 +273,8 @@ public class Buff {
             o.put("expireswift", expireSwift);
             o.put("noself", noSelf);
             //正面效果
+            o.put("unlockedhealth", UnlockedHealth);
+            o.put("lockedhealth", lockedHealth);
             o.put("nextturnlight", nextTurnLight);
             o.put("armored", armored);
             o.put("unlock", Unlock);
@@ -298,7 +305,9 @@ public class Buff {
         b.poison = o.optInt("poison", 0);
         b.expireSwift = o.optInt("expireswift", 0);
         b.noSelf = o.optInt("noself", 0);
+        b.UnlockedHealth = o.optInt("unlockedhealth", 0);
         //正面效果
+        b.lockedHealth = o.optInt("lockedhealth", 0);
         b.nextTurnLight = o.optInt("nextturnlight", 0);
         b.armored = o.optInt("armored", 0);
         b.Unlock = o.optInt("unlock", 0);

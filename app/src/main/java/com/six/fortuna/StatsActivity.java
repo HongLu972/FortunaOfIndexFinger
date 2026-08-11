@@ -259,6 +259,8 @@ public class StatsActivity extends AppCompatActivity {
                 return enemyDefs.brainThunderSpirit(enemy, player);
             case 10:
                 return enemyDefs.brainGOD(enemy, player);
+            case 11:
+                return enemyDefs.brainKromo(enemy, player);
             default:
                 return null;
         }
@@ -305,7 +307,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void BossBattle(){
-        switch (mechanics.randint(1, 4)){
+        switch (mechanics.randint(1, 5)){
             case 1:
                 spawnRein();
                 break;
@@ -316,7 +318,10 @@ public class StatsActivity extends AppCompatActivity {
                 spawnEnemy("无我良秀", 10000, new double[]{-0.2, -0.5, -1.0}, 7);
                 break;
             case 4:
-                spawnEnemy("伞神", 20000, new double[]{0.8, 0.6, 0.3}, 10);
+                spawnEnemy("伞神", 10000, new double[]{0.8, 0.6, 0.3}, 10);
+                break;
+            case 5:
+                spawnEnemy("克罗默", 10000, new double[]{0.7, 0.3, 0.0}, 11);
         }
     }
     private void spawnRein(){
@@ -374,7 +379,7 @@ public class StatsActivity extends AppCompatActivity {
             player.energy = player.max_energy;
         }
 
-        if (enemy.hp > 0 && enemy.current_intent != null && enemy.current_intent.execute != null) {
+        if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0 )&& enemy.current_intent != null && enemy.current_intent.execute != null) {
             appendLog(enemy.name + ": " + enemy.current_intent.description);
             enemy.current_intent.execute.execute(enemy, player);
             if(enemy.buff.cibei > 0){
@@ -436,10 +441,8 @@ public class StatsActivity extends AppCompatActivity {
                 enemy.hp = enemy.max_hp;
                 enemy.block = 0;
             }else {
-                if(enemy.countB < 2 && enemy.EntityId == 7){
-                    enemy.max_hp = (int) ((int) (enemy.outside_max_hp * 0.2)*(1 + 0.03 * player.restrictions));
-                    enemy.countB++;
-                    enemy.hp = enemy.max_hp;
+                if(enemy.buff.lockedHealth > 0){
+                    enemy.buff.UnlockedHealth++;
                 }else {
                     enemy.hp = 0;
                     onVictory();
@@ -490,7 +493,7 @@ public class StatsActivity extends AppCompatActivity {
                 enemy.hp = enemy.max_hp;
                 enemy.block = 0;
             }else {
-                if(enemy.EntityId == 7 && enemy.countB < 2) return;
+                if(enemy.buff.lockedHealth > 0) return;
                 enemy.hp = 0;
                 onVictory();
             }

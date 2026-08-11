@@ -74,7 +74,7 @@ public class Mechanics {
             self.sanity += 2;
         }
         sanityReturn(self);
-        damage *= 1 + 0.01 * self.sanity;
+        damage *= 1 + 0.01 * ((self.sanity > 0) ? (self.sanity) : (-1 * self.sanity));
 
         if (damage <= 0) {
             damage = 0;
@@ -159,7 +159,7 @@ public class Mechanics {
 
         if(target.buff.rainoftears >= 1){
             if(target.sinking_term > 0){
-                damage *= 1 - 0.1 * ((target.sinking_term > 5) ? 5 : target.sinking_term);
+                damage *= 1 - 0.1 * ((target.sinking_term > 9) ? 9 : target.sinking_term);
                 target.sinking_term++;
                 target.sinking_strength++;
             }
@@ -299,7 +299,7 @@ public class Mechanics {
         double staggerLine = target.staggerLine[target.stagger_count];
         int checkPoint = (int) (target.outside_max_hp * staggerLine);
 
-        if (target.health < checkPoint && target.stagger_count < 3) {
+        if (target.health < checkPoint && target.stagger_count < 3 && target.buff.lockedHealth == 0) {
             target.stagger_panic_term += 1;
             target.stagger_count++;
             log("!!! 破防 !!! " + target.name + " 被破防了！本回合跳过，护盾清零。");
