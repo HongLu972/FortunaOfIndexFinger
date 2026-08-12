@@ -62,6 +62,7 @@ public class SettingActivity extends AppCompatActivity {
         refreshStatsUI();
 
         volume.setMax(100);
+        volume.setProgress((int) (store.loadVolume()*100));
 
         volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
