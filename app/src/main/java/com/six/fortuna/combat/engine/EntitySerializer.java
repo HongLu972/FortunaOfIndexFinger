@@ -97,7 +97,7 @@ public class EntitySerializer {
         e.poise_term = o.optInt("poise_term", 0);
         e.poise_strength = o.optInt("poise_strength", 0);
         e.charge_term = o.optInt("charge_term", 0);
-        e.charge_strength = o.optInt("charge_strength", 0);
+        e.charge_strength = o.optInt("charge_strength", 1);
         e.charge_consume = o.optInt("charge_consume", 0);
         e.sanity = o.optInt("sanity", 0);
         e.this_turn_strength = o.optInt("this_turn_strength", 0);

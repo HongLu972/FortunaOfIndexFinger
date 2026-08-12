@@ -1,6 +1,9 @@
 package com.six.fortuna;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.ArrayAdapter;
@@ -24,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,10 @@ public class StatsActivity extends AppCompatActivity {
     private static final String NEXT_BATTLE_LABEL = "🔁 开始下一场战斗";
     private static final String RETRY_LABEL = "🔁 重新开始（危险度已重置）";
     private static final int HAND_SIZE = 5;
+
+    private int currentSongResId;
+    private boolean wasPlayingBeforeStop = false;
+    private MediaPlayer mediaPlayer;
 
     // 局外初始牌组（第一次进游戏时发的牌，之后掉落卡会往里加）
     private static final String[] STARTER_DECK = {
@@ -72,6 +80,11 @@ public class StatsActivity extends AppCompatActivity {
         store = new PrescriptStore(this);
         indexFingerLevel = new IndexFingerLevel_CN();
         store.loadStats(indexFingerLevel);
+        mediaPlayer = MediaPlayer.create(this, R.raw.lobotomy_1);
+        currentSongResId = R.raw.lobotomy_1;
+        mediaPlayer.setVolume(store.loadVolume(), store.loadVolume());
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         bindViews();
         tvCombatLog.setMovementMethod(new ScrollingMovementMethod());
@@ -111,15 +124,18 @@ public class StatsActivity extends AppCompatActivity {
             useCard(deck.hand.get(pos));
         });
 
-        findViewById(R.id.nav_home).setOnClickListener(v ->
-                startActivity(new Intent(this, MainActivity.class)));
+        findViewById(R.id.nav_home).setOnClickListener(v ->{
+            startActivity(new Intent(this, MainActivity.class));
+        });
         findViewById(R.id.nav_stats).setOnClickListener(v -> {});
-        findViewById(R.id.nav_setting).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingActivity.class)));
+        findViewById(R.id.nav_setting).setOnClickListener(v -> {
+                startActivity(new Intent(this, SettingActivity.class));
+        });
         Button navDeck = findViewById(R.id.nav_deck);
         if (navDeck != null) {
-            navDeck.setOnClickListener(v ->
-                    startActivity(new Intent(this, DeckManageActivity.class)));
+            navDeck.setOnClickListener(v -> {
+                startActivity(new Intent(this, DeckManageActivity.class));
+            });
         }
 
         // 优先尝试恢复上次没打完的战斗快照，没有的话才走全新开局
@@ -242,16 +258,22 @@ public class StatsActivity extends AppCompatActivity {
             case 1:
                 return enemyDefs.brainHajimi(enemy, player);
             case 2:
+                playSong(this, R.raw.albina, mediaPlayer);
                 return enemyDefs.brainAlbina(enemy, player);
             case 3:
+                playSong(this, R.raw.saikai, mediaPlayer);
                 return enemyDefs.brainRein(enemy, player);
             case 4:
+                playSong(this, R.raw.libraryabnormality_1, mediaPlayer);
                 return enemyDefs.barinForgottenKiller(enemy, player);
             case 5:
+                playSong(this, R.raw.valencina, mediaPlayer);
                 return enemyDefs.brainValencina(enemy, player);
             case 6:
+                playSong(this, R.raw.libraryabnormality_1, mediaPlayer);
                 return enemyDefs.hearts(enemy, player);
             case 7:
+                playSong(this, R.raw.araya, mediaPlayer);
                 return enemyDefs.brainYoshide(enemy, player);
             case 8:
                 return enemyDefs.brainQuQu(enemy, player);
@@ -260,6 +282,11 @@ public class StatsActivity extends AppCompatActivity {
             case 10:
                 return enemyDefs.brainGOD(enemy, player);
             case 11:
+                if(enemy.countC == 2){
+                    playSong(this, R.raw.betweentwoworlds_2, mediaPlayer);
+                }else{
+                    playSong(this, R.raw.betweentwoworlds_1, mediaPlayer);
+                }
                 return enemyDefs.brainKromo(enemy, player);
             default:
                 return null;
@@ -556,6 +583,7 @@ public class StatsActivity extends AppCompatActivity {
         // 战斗结束，快照没意义了，清掉；危险度已经在spawnByDifficulty时存过，留着给下一场用
         store.clearBattleSnapshot();
         battleOver = true;
+        playSong(this, R.raw.lobotomy_1, mediaPlayer);
         showBattleOverSpinner(NEXT_BATTLE_LABEL);
         refreshAllUI();
     }
@@ -592,6 +620,7 @@ public class StatsActivity extends AppCompatActivity {
         store.clearBattleSnapshot();
         battleOver = true;
         showBattleOverSpinner(RETRY_LABEL);
+        playSong(this, R.raw.lobotomy_1, mediaPlayer);
         refreshAllUI();
     }
 
@@ -788,5 +817,64 @@ public class StatsActivity extends AppCompatActivity {
             }
         }
         return output;
+    }
+
+
+    public void playSong(Context context, int newSongResId, MediaPlayer mediaPlayer) {
+        if (newSongResId == currentSongResId) {
+            if (!mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+            }
+        } else {
+            try {
+                currentSongResId = newSongResId;
+                mediaPlayer.reset();
+                AssetFileDescriptor afd = context.getResources().openRawResourceFd(newSongResId);
+                if (afd != null) {
+                    mediaPlayer.setDataSource(
+                            afd.getFileDescriptor(),
+                            afd.getStartOffset(),
+                            afd.getLength()
+                    );
+                    afd.close();
+                    mediaPlayer.prepareAsync();
+                    mediaPlayer.setOnPreparedListener(mp -> mp.start());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 当 Activity 进入后台（不可见）时执行
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            wasPlayingBeforeStop = true; // 记录状态：本来正在播放
+            mediaPlayer.pause();        // 暂停音乐
+        } else {
+            wasPlayingBeforeStop = false;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 当 Activity 重新回到前台（可见）时执行
+        if (wasPlayingBeforeStop && mediaPlayer != null) {
+            mediaPlayer.start();        // 恢复播放
+        }
     }
 }

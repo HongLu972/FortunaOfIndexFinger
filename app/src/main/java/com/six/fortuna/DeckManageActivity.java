@@ -1,6 +1,7 @@
 package com.six.fortuna;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ public class DeckManageActivity extends AppCompatActivity {
 
     private static final long UPGRADE_HP_COST = 50000L; // 5万眼
     private static final int UPGRADE_HP_AMOUNT = 10;
+    private MediaPlayer mediaPlayer;
+    private boolean wasPlayingBeforeStop;
 
     private PrescriptStore store;
     private TextView tvEyes, tvBonusHp;
@@ -43,6 +46,10 @@ public class DeckManageActivity extends AppCompatActivity {
         setContentView(R.layout.deck_manage);
 
         store = new PrescriptStore(this);
+        mediaPlayer = MediaPlayer.create(this, R.raw.limbusextract);
+        mediaPlayer.setVolume(store.loadVolume(), store.loadVolume());
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         tvEyes = findViewById(R.id.tv_eyes);
         tvBonusHp = findViewById(R.id.tv_bonus_hp);
@@ -100,10 +107,12 @@ public class DeckManageActivity extends AppCompatActivity {
                     .show();
         });
 
-        findViewById(R.id.nav_home).setOnClickListener(v ->
-                startActivity(new Intent(this, MainActivity.class)));
-        findViewById(R.id.nav_stats).setOnClickListener(v ->
-                startActivity(new Intent(this, StatsActivity.class)));
+        findViewById(R.id.nav_home).setOnClickListener(v ->{
+            startActivity(new Intent(this, MainActivity.class));
+        });
+        findViewById(R.id.nav_stats).setOnClickListener(v ->{
+            startActivity(new Intent(this, StatsActivity.class));
+        });
 
         refreshAll();
     }
@@ -179,5 +188,48 @@ public class DeckManageActivity extends AppCompatActivity {
         store.saveOwnedCardKeys(deckKeys);
         Toast.makeText(this, "已装备 " + FortunaCards.displayName(key) + "，下次出战会带上", Toast.LENGTH_SHORT).show();
         refreshAll();
+    }
+
+    public void changeMusic(int musicResId){
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();   // 停止
+            mediaPlayer.release(); // 释放
+        }
+
+        // 加载
+        mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 当 Activity 进入后台（不可见）时执行
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            wasPlayingBeforeStop = true; // 记录状态：本来正在播放
+            mediaPlayer.pause();        // 暂停音乐
+        } else {
+            wasPlayingBeforeStop = false;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 当 Activity 重新回到前台（可见）时执行
+        if (wasPlayingBeforeStop && mediaPlayer != null) {
+            mediaPlayer.start();        // 恢复播放
+        }
     }
 }

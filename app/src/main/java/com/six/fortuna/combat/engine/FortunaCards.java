@@ -233,6 +233,74 @@ public class FortunaCards{
         for(int i = 0; i < 5; i++) m.tremorBurst(enemy);
     }
 
+    public void randomStrength(Entity player, Entity enemy){
+        switch (m.randint(1,6)){
+            case 1:
+                enemy.burn_strength += 3;
+                break;
+            case 2:
+                enemy.rapture_strength += 3;
+                break;
+            case 3:
+                enemy.sinking_strength += 3;
+                break;
+            case 4:
+                enemy.tremor_strength += 3;
+                break;
+            case 5:
+                enemy.bleed_strength += 3;
+                break;
+            case 6:
+                player.poise_strength += 3;
+                break;
+        }
+    }
+
+    public void randomTerm(Entity player, Entity enemy){
+        switch (m.randint(1,6)){
+            case 1:
+                enemy.burn_term += 2;
+                break;
+            case 2:
+                enemy.rapture_term += 2;
+                break;
+            case 3:
+                enemy.sinking_term += 2;
+                break;
+            case 4:
+                enemy.tremor_term += 2;
+                break;
+            case 5:
+                enemy.bleed_term += 2;
+                break;
+            case 6:
+                player.poise_term += 2;
+                break;
+        }
+    }
+
+    public void randomTrigger(Entity enemy){
+        switch (m.randint(1, 5)){
+            case 1:
+                m.burn(enemy);
+                break;
+            case 2:
+                enemy.hp -= enemy.rapture_strength;
+                enemy.rapture_term--;
+                break;
+            case 3:
+                m.sinking(enemy);
+                break;
+            case 4:
+                m.amplitudeConversion(enemy, m.randint(1, 3));
+                m.tremorBurst(enemy);
+                break;
+            case 5:
+                m.bleedActivate(enemy);
+                break;
+        }
+    }
+
     public void effect_ProliferatingG(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
         //G公司来的
         if(player.energy <= 0){
@@ -246,67 +314,13 @@ public class FortunaCards{
         }
 
         for(int i = 0; i < 7 + (deck.drawPile.size() + deck.discardPile.size()) / 10; i++){
-            switch (m.randint(1,6)){
-                case 1:
-                    enemy.burn_strength += 2;
-                    break;
-                case 2:
-                    enemy.rapture_strength += 2;
-                    break;
-                case 3:
-                    enemy.sinking_strength += 2;
-                    break;
-                case 4:
-                    enemy.tremor_strength += 2;
-                    break;
-                case 5:
-                    enemy.bleed_strength += 2;
-                    break;
-                case 6:
-                    player.poise_strength += 2;
-                    break;
-            }
+            randomStrength(player, enemy);
         }
         for (int i = 0; i < 12 + (deck.drawPile.size() + deck.discardPile.size())/7; i++){
-            switch (m.randint(1,6)){
-                case 1:
-                    enemy.burn_term += 2;
-                    break;
-                case 2:
-                    enemy.rapture_term += 2;
-                    break;
-                case 3:
-                    enemy.sinking_term += 2;
-                    break;
-                case 4:
-                    enemy.tremor_term += 2;
-                    break;
-                case 5:
-                    enemy.bleed_term += 2;
-                    break;
-                case 6:
-                    player.poise_term += 2;
-                    break;
-            }
+            randomTerm(player, enemy);
         }
         for(int i = 0; i < 3 + (deck.discardPile.size() + deck.drawPile.size())/150; i++){
-            switch (m.randint(1, 5)){
-                case 1:
-                    m.burn(enemy);
-                    break;
-                case 2:
-                    m.dealDamage(1, enemy, player);
-                    break;
-                case 3:
-                    m.sinking(enemy);
-                    break;
-                case 4:
-                    m.amplitudeConversion(enemy, m.randint(1, 3));
-                    m.tremorBurst(enemy);
-                case 5:
-                    m.bleedActivate(enemy);
-                    break;
-            }
+            randomTrigger(enemy);
         }
         m.dealDamage(8+(deck.drawPile.size() + deck.discardPile.size())/33, enemy, player);
         m.defend(8+(deck.drawPile.size() + deck.discardPile.size())/33, player);
@@ -441,7 +455,21 @@ public class FortunaCards{
         if(enemy.strength > 0) enemy.strength = 0;
         enemy.poise_strength = 0;
         enemy.poise_term = 0;
+        enemy.charge_term = 0;
+        enemy.charge_strength = 1;
         enemy.buff.reset_Buff();
+        new android.app.AlertDialog.Builder(s)
+                .setTitle("锁血是否解除")
+                .setMessage("是否要解除对面锁血？这很有可能会导致不那么好的体验")
+                .setCancelable(false)
+                .setPositiveButton("是", (dialog, which) -> {
+                    enemy.buff.lockedHealth = 0;
+                    Toast.makeText(s, "但这一切...值得么？", Toast.LENGTH_LONG).show();
+                })
+                .setNegativeButton("不了", (dialog, which) -> {
+                    Toast.makeText(s, "好", LENGTH_SHORT).show();
+                })
+                .show();
     }
 
     public void SeedofLight(Entity player, Entity enemy){
@@ -474,7 +502,7 @@ public class FortunaCards{
 
     public void effect_setDanger(Entity player, Entity enemy){
         final EditText input = new EditText(s);
-        input.setHint("加护获得");
+        input.setHint("危险度设置");
         new android.app.AlertDialog.Builder(s)
                 .setTitle("调试卡·危险度设置")
                 .setMessage("你希望危险度为？")
@@ -502,7 +530,7 @@ public class FortunaCards{
 
     public void effect_300lunacy(Entity player, Entity enemy){
         enemy.current_intent = new EnemyAction("那还说什么呢？这回合给你了呗", null);
-        Toast.makeText(s, "朋友费，你在哪？快到我邮箱里来啊！我能听见你的声音，但愿...\n---开发者", Toast.LENGTH_LONG);
+        Toast.makeText(s, "朋友费，你在哪？快到我邮箱里来啊！我能听见你的声音，但愿...\n---开发者", Toast.LENGTH_LONG).show();
     }
 
     public void effect_ququ(Entity player, Entity enemy){
@@ -588,17 +616,17 @@ public class FortunaCards{
         }
     }
 
-    public void effect_Si(Entity player, Entity enemy){
+    public void effect_Si(Entity player, Entity enemy) {
         int k = 100;
         int j = 5;
-        for(int i = 0; i < 3; i++){
-            if(m.randint(1, k) < player.poise_strength * 5){
+        for (int i = 0; i < 3; i++) {
+            if (m.randint(1, k) < player.poise_strength * 5) {
                 i--;
                 k += j;
                 j *= j;
             }
             player.poise_term++;
-            if(m.dealDamage(9, enemy, player)){
+            if (m.dealDamage(9, enemy, player)) {
                 enemy.rapture_strength += 5;
                 enemy.rapture_term += 3;
                 enemy.buff.poison += enemy.rapture_strength + enemy.rapture_term * 2;
@@ -606,7 +634,103 @@ public class FortunaCards{
         }
     }
 
+    public void effect_littleBird(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
+        Toast.makeText(s, "小鸟时不时出来遛弯，顺带用喙惩罚犯错的人", LENGTH_SHORT).show();
+        if(player.buff.bigbird == 1 && player.buff.tallbird == 1){
+            switch (m.randint(0,2)){
+                case 0:
+                    Toast.makeText(s, "呱，你们仨别贴起来啊。主管尖锐地爆鸣道。", LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Toast.makeText(s, "动物朋友们大喊，是那个怪物！", LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(s, "主管们哭喊着，我的TT2————", LENGTH_SHORT).show();
+            }
+            deck.addCard(BigMonster(deck, logger), logger);
+            player.buff.tallbird = 0;
+            player.buff.bigbird = 0;
+        }else{
+            player.buff.littlebird = 1;
+        }
+    }
+
+    public void effect_tallBird(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
+        Toast.makeText(s, "高鸟裁定着人们的罪孽", LENGTH_SHORT).show();
+        if(player.buff.littlebird == 1 && player.buff.bigbird == 1){
+            switch (m.randint(0,2)){
+                case 0:
+                    Toast.makeText(s, "呱，你们仨别贴起来啊。主管尖锐地爆鸣道。", LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Toast.makeText(s, "动物朋友们大喊，是那个怪物！", LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(s, "主管们哭喊着，我的TT2————", LENGTH_SHORT).show();
+            }
+            deck.addCard(BigMonster(deck, logger), logger);
+            player.buff.littlebird = 0;
+            player.buff.bigbird = 0;
+            player.buff.Apocalypse_Bird++;
+        }else{
+            enemy.buff.reset_Buff();
+            player.buff.tallbird = 1;
+        }
+    }
+
+    public void effect_bigBird(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
+        Toast.makeText(s, "The Big Bird Is Watching You", LENGTH_SHORT).show();
+        if(player.buff.littlebird == 1 && player.buff.tallbird == 1){
+            switch (m.randint(0,2)){
+                case 0:
+                    Toast.makeText(s, "呱，你们仨别贴起来啊。主管尖锐地爆鸣道。", LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Toast.makeText(s, "动物朋友们大喊，是那个怪物！", LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(s, "主管们哭喊着，我的TT2————", LENGTH_SHORT).show();
+            }
+            deck.addCard(BigMonster(deck, logger), logger);
+            player.buff.littlebird = 0;
+            player.buff.tallbird = 0;
+        }else{
+            player.staggerLine = new double[] {0.0, 0.0, 0.0};
+            player.buff.bigbird = 1;
+        }
+    }
+
+    public void effect_BigMonster(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
+        deck.drawCard(player, logger);
+        Card BigMonster = BigMonster(deck, logger);
+        deck.drawPile.add(BigMonster);
+        if(m.dealDamage(200, enemy, player)){
+            for(int i = 0; i < 12 + 2 * player.buff.Apocalypse_Bird; i++){
+                randomTerm(player, enemy);
+            }
+            for(int i = 0; i < 12 + 2 * player.buff.Apocalypse_Bird; i++){
+                randomStrength(player, enemy);
+            }
+            for(int i = 0; i < 12 + 2 * player.buff.Apocalypse_Bird; i++){
+                randomTrigger(enemy);
+            }
+            player.buff.Apocalypse_Bird++;
+        }
+    }
+
     // --- 构造出实际的Card对象（对应 cards.c 底部的全局卡牌定义）---
+    public Card littleBird(CardDeck deck, Mechanics.Logger logger){
+        return new Card("littleBird", "小鸟/惩戒鸟", 1, (player, enemy) -> effect_littleBird(player, enemy, deck, logger), 3, 1);
+    }
+    public Card tallBird(CardDeck deck, Mechanics.Logger logger){
+        return new Card("tallBird", "高鸟/审判鸟", 2, (player, enemy) -> effect_tallBird(player, enemy, deck, logger), 3, 1);
+    }
+    public Card bigBird(CardDeck deck, Mechanics.Logger logger){
+        return new Card("bigBird", "大鸟", 3, (player, enemy) -> effect_bigBird(player, enemy, deck, logger), 3, 1);
+    }
+    public Card BigMonster(CardDeck deck, Mechanics.Logger logger){
+        return new Card("BigMonster", "大怪兽/终末鸟", 7, (player, enemy) -> effect_BigMonster(player, enemy, deck,logger), 3, 1);
+    }
     public Card Si(){
         return new Card("Si", "疯狂の蛇(绝命巳乱)", 2, this::effect_Si, 3, 0);
     }
@@ -752,7 +876,8 @@ public class FortunaCards{
             "Noself", "WordPower_Death", "EGO_RedBeauty", "ComboShoot", "Disposal", "ProliferatingG",
             "budaijiezou", "budaijiezoufree", "@AllHeiShou", "shankailaozizijilai", "Purify", "wudile",
             "SeedofLight", "CollectLight", "Tiphereth", "setDanger", "cogito", "300Lunacy", "ququ", "Thunder",
-            "CurrentGeneration", "CalmBrain", "rainbow", "charge", "sixthSense", "EGOMagicBullet", "Si"
+            "CurrentGeneration", "CalmBrain", "rainbow", "charge", "sixthSense", "EGOMagicBullet", "Si",
+            "littleBird", "tallBird", "bigBird", "BigMonster"
     };
 
     /** 战斗掉落奖励池：诅咒牌不算奖励，排除在外 */
@@ -762,7 +887,7 @@ public class FortunaCards{
             , "RendSpace", "EGO_RedBeauty", "ComboShoot", "Disposal", "ProliferatingG", "budaijiezou",
             "@AllHeiShou", "beheading", "Purify", "wudile", "SeedofLight", "CollectLight", "Tiphereth",
             "cogito", "300Lunacy", "ququ", "Thunder", "CurrentGeneration", "CalmBrain", "rainbow", "charge",
-            "sixthSense", "EGOMagicBullet", "Si"
+            "sixthSense", "EGOMagicBullet", "Si", "littleBird", "tallBird", "bigBird"
     };
 
     /** 卡牌稀有度查表（对应各Card工厂方法里设的rareness：1普通/2稀有/3金卡），用于按危险度加权掉落 */
@@ -775,6 +900,10 @@ public class FortunaCards{
             case "Purify":
             case "cogito":
             case "SeedofLight":
+            case "littleBird":
+            case "tallBird":
+            case "bigBird":
+            case "BigMonster":
             case "swordflashing":
             case "afterimage_step":
             case "kaidao":
@@ -850,6 +979,10 @@ public class FortunaCards{
             case "sixthSense": return sixthSense();
             case "EGOMagicBullet": return EGOMagicBullet();
             case "Si": return Si();
+            case "littleBird": return littleBird(deck, logger);
+            case "tallBird": return tallBird(deck, logger);
+            case "bigBird": return bigBird(deck, logger);
+            case "BigMonster": return BigMonster(deck, logger);
             default: return strikeCard();
         }
     }
@@ -894,6 +1027,10 @@ public class FortunaCards{
             case "sixthSense": return "第六感";
             case "EGOMagicBullet": return "脑叶公司E.G.O::魔弹";
             case "Si": return "疯狂の蛇(绝命巳乱)";
+            case "littleBird": return "小鸟/惩戒鸟";
+            case "tallBird": return "高鸟/审判鸟";
+            case "bigBird": return "大鸟";
+            case "BigMonster": return "大怪兽/终末鸟";
             default: return key;
         }
     }

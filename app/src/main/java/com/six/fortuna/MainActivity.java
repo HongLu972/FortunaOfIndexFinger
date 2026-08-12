@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout stackContainer;
     private Button btnAdd;
     private Button btnAdd100;
+    private boolean wasPlayingBeforeStop = false;
     private TextView tvKarma, tvBlessing, tvTitle;
 
     // 数据
     public int coolDown = 0*1000; // 获取指令的冷却时长（毫秒，基准值，实际会加随机浮动）
     public Prescripts prescripts;
+    private MediaPlayer mediaPlayer;
     public IndexFingerLevel_CN indexFingerLevel;
     private final Random r = new Random();
 
@@ -127,13 +130,19 @@ public class MainActivity extends AppCompatActivity {
         tvBlessing = findViewById(R.id.tv_blessing);
         tvTitle = findViewById(R.id.tv_title);
 
+
+
         // 初始化持久化存储
         store = new PrescriptStore(this);
         codename = store.loadCodename();
         if (codename == null || codename.trim().isEmpty()) {
             askForCodename();
         }
-
+        //音乐
+        mediaPlayer = MediaPlayer.create(this, R.raw.childrenofthecity);
+        mediaPlayer.setVolume(store.loadVolume(), store.loadVolume());
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
         // 初始化职阶（先建对象，再用存储覆盖数值——没存过就保持默认0）
         indexFingerLevel = new IndexFingerLevel_CN();
         store.loadStats(indexFingerLevel);
@@ -186,10 +195,12 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.nav_home).setOnClickListener(v ->
             Toast.makeText(this, "你点击这个有何意义？", Toast.LENGTH_SHORT).show());
-        findViewById(R.id.nav_stats).setOnClickListener(v ->
-                startActivity(new Intent(this, StatsActivity.class)));
-        findViewById(R.id.nav_setting).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingActivity.class)));
+        findViewById(R.id.nav_stats).setOnClickListener(v ->{
+            startActivity(new Intent(this, StatsActivity.class));
+        });
+        findViewById(R.id.nav_setting).setOnClickListener(v ->{
+            startActivity(new Intent(this, SettingActivity.class));
+        });
     }
 
     @Override
@@ -213,6 +224,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         tickHandler.removeCallbacks(ticker);
+
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     private boolean isCoolingDown() {
@@ -429,4 +446,38 @@ public class MainActivity extends AppCompatActivity {
             instance.addNewPrescript(item);
         }
     }
+
+    public void changeMusic(int musicResId){
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();   // 停止
+            mediaPlayer.release(); // 释放
+        }
+
+        // 加载
+        mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 当 Activity 进入后台（不可见）时执行
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            wasPlayingBeforeStop = true; // 记录状态：本来正在播放
+            mediaPlayer.pause();        // 暂停音乐
+        } else {
+            wasPlayingBeforeStop = false;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 当 Activity 重新回到前台（可见）时执行
+        if (wasPlayingBeforeStop && mediaPlayer != null) {
+            mediaPlayer.start();        // 恢复播放
+        }
+    }
+
 }
