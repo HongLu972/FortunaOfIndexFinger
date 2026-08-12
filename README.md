@@ -8,7 +8,7 @@
 
 本项目是非商业同人作品,仅供爱好者交流学习使用。
 
-项目中涉及的部分角色、设定、文本等元素分别引用自:
+项目中涉及的部分角色、设定、文本、音乐等元素分别引用自:
 - 《边狱巴士》(Limbus Company) © Project Moon
 - 《脑叶公司》(Lobotomy Corporation) © Project Moon
 - 《废墟图书馆》(Library of Ruina) © Project Moon
