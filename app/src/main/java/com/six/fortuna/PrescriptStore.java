@@ -40,6 +40,14 @@ public class PrescriptStore {
         prefs.edit().putLong(KEY_EYES, eyes).apply();
     }
 
+    public void saveVolume(int volume){
+        prefs.edit().putInt("Volume", volume).apply();
+    }
+
+    public float loadVolume(){
+        return (prefs.getInt("Volume", 60))/100.0f;
+    }
+
     public long loadEyes() {
         return prefs.getLong(KEY_EYES, 0L);
     }

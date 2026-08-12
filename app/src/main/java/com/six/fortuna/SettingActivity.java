@@ -5,9 +5,11 @@ import static com.six.fortuna.R.*;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +28,10 @@ public class SettingActivity extends AppCompatActivity {
 
     private PrescriptStore store;
     private IndexFingerLevel_CN indexFingerLevel;
-    private TextView tvKarma, tvBlessing, tvTitle;
+    private boolean wasPlayingBeforeStop = false;
+    private TextView tvKarma, tvBlessing, tvTitle, tvVolume;
+    private SeekBar volume;
+    private MediaPlayer mediaPlayer;
     private EditText inputRename;
     private EditText cheatcode;
 
@@ -44,11 +49,45 @@ public class SettingActivity extends AppCompatActivity {
         store.loadStats(indexFingerLevel); // 只读职阶数值，不改动
 
         tvKarma = findViewById(id.tv_karma);
+        volume = findViewById(id.volumeBar);
+        mediaPlayer = MediaPlayer.create(this, raw.lobotomy_2);
+        mediaPlayer.setVolume(store.loadVolume(), store.loadVolume());
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+        tvVolume = findViewById(id.volumeText);
         tvBlessing = findViewById(id.tv_blessing);
         tvTitle = findViewById(id.tv_title);
         inputRename = findViewById(id.inputRename);
 
         refreshStatsUI();
+
+        volume.setMax(100);
+
+        volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    // 存到store
+                    store.saveVolume(progress);
+                    tvVolume.setText("音量: "+progress);
+                    // 将 0~100 的进度转换为 0.0~1.0 的浮点数
+                    float volume = progress / 100.0f;
+
+                    // 应用到 MediaPlayer
+                    if (mediaPlayer != null) {
+                        mediaPlayer.setVolume(volume, volume);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
 
         findViewById(id.rename).setOnClickListener(v -> {
             String name = inputRename.getText().toString().trim();
@@ -194,8 +233,9 @@ public class SettingActivity extends AppCompatActivity {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });
-        findViewById(id.nav_stats).setOnClickListener(v ->
-                startActivity(new Intent(this, StatsActivity.class)));
+        findViewById(id.nav_stats).setOnClickListener(v ->{
+            startActivity(new Intent(this, StatsActivity.class));
+        });
         findViewById(id.nav_setting).setOnClickListener(v -> {}); // 已经在设置页
     }
 
@@ -208,5 +248,48 @@ public class SettingActivity extends AppCompatActivity {
             name += " " + codename;
         }
         tvTitle.setText(name);
+    }
+
+    public void changeMusic(int musicResId){
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();   // 停止
+            mediaPlayer.release(); // 释放
+        }
+
+        // 加载
+        mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 当 Activity 进入后台（不可见）时执行
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            wasPlayingBeforeStop = true; // 记录状态：本来正在播放
+            mediaPlayer.pause();        // 暂停音乐
+        } else {
+            wasPlayingBeforeStop = false;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 当 Activity 重新回到前台（可见）时执行
+        if (wasPlayingBeforeStop && mediaPlayer != null) {
+            mediaPlayer.start();        // 恢复播放
+        }
     }
 }

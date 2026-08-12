@@ -1,6 +1,7 @@
 package com.six.fortuna;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 
 public class AnnounceActivity extends AppCompatActivity {
     private int currentIndex = 0;
+    private PrescriptStore store;
+    private MediaPlayer mediaPlayer;
+    private boolean wasPlayingBeforeStop = false;
     public void addAnnounce(String e, ArrayList<String> announce){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             announce.addFirst(e);
@@ -23,6 +27,11 @@ public class AnnounceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        store = new PrescriptStore(this);
+        mediaPlayer = MediaPlayer.create(this, R.raw.lobotomy_2);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(store.loadVolume(), store.loadVolume());
+        mediaPlayer.start();
         setContentView(R.layout.announce);
 
         ArrayList<String> announces = new ArrayList<>();
@@ -132,12 +141,24 @@ public class AnnounceActivity extends AppCompatActivity {
                 "6. 由于某些敌人(伞神和瓦伦希娜)的超强防守能力，言灵死有点弱势了，故而加强\n" +
                 "7. 修复了大量锁血相关的bug\n" +
                 "8. 修复了克罗默重复触发转阶段锁血的bug[符合原著了属于是]", announces);
+        addAnnounce("v0.5音乐更新\n" +
+                "调整\n" +
+                "1. 原先打算先做三只可爱的小鸟所对应的手牌的，但想到现在也该做音乐了，就做了\n" +
+                "2. 这真算是一次大更新啊，5个Activity 1个Store全部进行了翻新\n" +
+                "3. 设置里面现在可以设置音量了！\n" +
+                "4. 目前来说只有战斗有自己独自的音乐，当然，抄的脑叶的\n" +
+                "5. 好了，现在我们最重要的界面(可能并非)，有自己独特的音乐了，食指应援曲，Children Of The City!!!\n" +
+                "6. 诶呀卧槽，这净化太坏了，竟然会驱散锁血，这个特性我修了(绝对不是因为这样会导致我辛辛苦苦绑上去的克罗默二阶段音乐没人听)\n" +
+                "7. 某些特殊的敌人被施加了神秘的音乐\n" +
+                "8. 三鸟最终还是做出来了，累死我了累死我了累死我了\n" +
+                "9. 新的轮椅已经出现，以及费用最高的卡牌出现了，大怪兽，属性是随机，和增殖的G一样\n", announces);
 
         TextView tvAnnounce = findViewById(R.id.Announcement);
         refreshUI(tvAnnounce, announces, currentIndex);
 
-        findViewById(R.id.done).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingActivity.class))
+        findViewById(R.id.done).setOnClickListener(v -> {
+                startActivity(new Intent(this, SettingActivity.class));
+            }
         );
 
         findViewById(R.id.toNext).setOnClickListener(v -> {
@@ -161,5 +182,48 @@ public class AnnounceActivity extends AppCompatActivity {
 
     public void refreshUI(TextView area, ArrayList<String> announces, int index) {
         area.setText(announces.get(index));
+    }
+
+    public void changeMusic(int musicResId){
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();   // 停止
+            mediaPlayer.release(); // 释放
+        }
+
+        // 加载
+        mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 当 Activity 进入后台（不可见）时执行
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            wasPlayingBeforeStop = true; // 记录状态：本来正在播放
+            mediaPlayer.pause();        // 暂停音乐
+        } else {
+            wasPlayingBeforeStop = false;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 当 Activity 重新回到前台（可见）时执行
+        if (wasPlayingBeforeStop && mediaPlayer != null) {
+            mediaPlayer.start();        // 恢复播放
+        }
     }
 }

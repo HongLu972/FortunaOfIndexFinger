@@ -166,6 +166,11 @@ public class Mechanics {
             target.strength += 2;
         }
 
+        if(target.buff.littlebird == 1){
+            target.strength += 3;
+            target.max_hp *= 1.2;
+        }
+
         // 5. 护盾抵扣伤害结算
         if (target.block >= damage) {
             target.block -= damage;
@@ -299,7 +304,7 @@ public class Mechanics {
         double staggerLine = target.staggerLine[target.stagger_count];
         int checkPoint = (int) (target.outside_max_hp * staggerLine);
 
-        if (target.health < checkPoint && target.stagger_count < 3 && target.buff.lockedHealth == 0) {
+        if (target.health < checkPoint && target.stagger_count < 3 && target.buff.UnlockedHealth > 0) {
             target.stagger_panic_term += 1;
             target.stagger_count++;
             log("!!! 破防 !!! " + target.name + " 被破防了！本回合跳过，护盾清零。");

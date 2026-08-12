@@ -36,11 +36,15 @@ public class Buff {
     public int Tiphereth;
     public int expireSwift;
     public int noSelf; //无我
+    public int Apocalypse_Bird;
     public int rainoftears;
     public ArrayList chargeBalls = new ArrayList();
     public int chargeBallSize = 3;
     private int chargeBallCount = 0;
     public int UnlockedHealth;
+    public int littlebird;
+    public int tallbird;
+    public int bigbird;
     public void turnEndActivate(){
         m.defend(armored, self);
     }
@@ -195,6 +199,12 @@ public class Buff {
             activateChargeBalls((Integer) chargeBalls.get(i), target);
         }
         if(self.EntityId != 8) cibei = 0;
+        if(Apocalypse_Bird >= 1){
+            self.energy = self.max_energy;
+            self.max_hp *= 1.2;
+            self.strength *= 1.05;
+            self.strength += 2;
+        }
     }
 
     public void reset(){
@@ -214,14 +224,16 @@ public class Buff {
         chargeBallCount = chargeBalls.size();
         chargeBallSize = 3;
         rainoftears = 0;
-        lockedHealth = 0;
+        bigbird = 0;
+        tallbird = 0;
+        littlebird = 0;
+        Apocalypse_Bird = 0;
     }
 
     public void reset_Debuff(){
         expireSwift = 0;
         poison = 0;
         noSelf = 0;
-        lockedHealth = 0;
     }
 
     public String translation_chargeball(int chargeBallType){
@@ -273,6 +285,10 @@ public class Buff {
             o.put("expireswift", expireSwift);
             o.put("noself", noSelf);
             //正面效果
+            o.put("littlebird", littlebird);
+            o.put("tallbird", tallbird);
+            o.put("bigbird", bigbird);
+            o.put("bigmonster", Apocalypse_Bird);
             o.put("unlockedhealth", UnlockedHealth);
             o.put("lockedhealth", lockedHealth);
             o.put("nextturnlight", nextTurnLight);
@@ -307,6 +323,10 @@ public class Buff {
         b.noSelf = o.optInt("noself", 0);
         b.UnlockedHealth = o.optInt("unlockedhealth", 0);
         //正面效果
+        b.littlebird = o.optInt("littlebird", 0);
+        b.tallbird = o.optInt("tallbird", 0);
+        b.bigbird = o.optInt("bigbird", 0);
+        b.Apocalypse_Bird = o.optInt("bigmonster", 0);
         b.lockedHealth = o.optInt("lockedhealth", 0);
         b.nextTurnLight = o.optInt("nextturnlight", 0);
         b.armored = o.optInt("armored", 0);

@@ -121,8 +121,33 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/newsArea"
         android:layout_below="@id/cheatArea"
+        android:id="@+id/volumeArea"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:id="@+id/volumeText"
+            android:textSize="20dp"
+            android:text="音量"/>
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="60"
+            android:id="@+id/volumeBar"
+            android:progressTint="@color/玉色"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/newsArea"
+        android:layout_below="@id/volumeArea"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
