@@ -297,10 +297,13 @@ public class StatsActivity extends AppCompatActivity {
         switch (mechanics.randint(1, 3)){
             case 1:
                 spawnHajimi();
+                break;
             case 2:
                 spawnEnemy("?!心脏?!", 1000, new double[] {0.3, 0.2, 0.1}, 6);
+                break;
             case 3:
                 spawnEnemy("雷元素精灵", 1000, new double[] {0.6, 0.4, 0.2}, 9);
+                break;
         }
     }
 
@@ -324,8 +327,10 @@ public class StatsActivity extends AppCompatActivity {
                 break;
             case 2:
                 spawnEnemy("被遗弃的杀人魔", 3000, new double[] {0.2, 0.4, 0.6}, 4);
+                break;
             case 3:
                 spawnEnemy("艾兰虫", 10000, new double[] {0, 0, 0}, 8);
+                break;
         }
     }
 
@@ -349,6 +354,7 @@ public class StatsActivity extends AppCompatActivity {
                 break;
             case 5:
                 spawnEnemy("克罗默", 10000, new double[]{0.7, 0.3, 0.0}, 11);
+                break;
         }
     }
     private void spawnRein(){
@@ -398,6 +404,9 @@ public class StatsActivity extends AppCompatActivity {
 
     private void endTurn() {
         appendLog("——— 回合结束 ———");
+        if(enemy.EntityId == 11 && enemy.buff.UnlockedHealth > 0){
+            playSong(this, R.raw.betweentwoworlds_2, mediaPlayer);
+        }
         deck.discardHand();
         player.buff.turnEndActivate();
         enemy.buff.turnEndActivate();

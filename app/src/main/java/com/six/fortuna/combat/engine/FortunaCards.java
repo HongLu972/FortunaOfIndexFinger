@@ -1,7 +1,6 @@
 package com.six.fortuna.combat.engine;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static androidx.core.content.ContextCompat.startActivity;
 
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ public class FortunaCards{
 
     private final Mechanics m;
     private final StatsActivity s;
+    private static final int MAX_LOOP = 50;
 
     public void chargeCycle(Entity self, int cycleLevel){
         while(self.charge_consume >= cycleLevel){
@@ -301,6 +301,64 @@ public class FortunaCards{
         }
     }
 
+    public void TermforTooMush(Entity enemy, Entity player, int loop){
+        player.poise_term += 2 * loop / 6;
+        enemy.rapture_term += 2 * loop / 6;
+        enemy.sinking_term += 2 * loop / 6;
+        enemy.tremor_term += 2 * loop / 6;
+        enemy.burn_term += 2 * loop / 6;
+        enemy.bleed_term += 2 * loop / 6;
+    }
+
+    public void StrengthforTooMush(Entity enemy, Entity player, int loop){
+        player.poise_strength += 3 * loop / 6;
+        enemy.rapture_strength += 3 * loop / 6;
+        enemy.sinking_strength += 3 * loop / 6;
+        enemy.tremor_strength += 3 * loop / 6;
+        enemy.burn_strength += 3 * loop / 6;
+        enemy.bleed_strength += 3 * loop / 6;
+    }
+
+    public void TriggerforTooMuch(Entity enemy, Entity player, int loop){
+        int temp = enemy.buff.sidestep;
+        int tempStrength = enemy.poise_strength;
+        int tempTerm = enemy.poise_term;
+        enemy.poise_strength = 0;
+        enemy.poise_term = 0;
+        enemy.buff.sidestep = 0;
+        m.dealDamage(enemy.rapture_strength * loop / 5 - enemy.strength, enemy, enemy);
+        enemy.rapture_term -= loop / 5;
+        enemy.sanity -= enemy.sinking_strength * loop / 5;
+        if(enemy.sanity < -45) enemy.hp -= (enemy.sanity + 45) * -1;
+        m.sanityReturn(enemy);
+        enemy.sinking_term -= loop / 5;
+        m.amplitudeConversion(enemy, 1);
+        enemy.burn_strength += (int) (enemy.tremor_strength * 0.01) / (loop / 15);
+        enemy.burn_term += (int) (enemy.tremor_term * 0.3) / (loop / 15);
+        m.dealDamage(enemy.burn_strength * loop / 15 - enemy.strength, enemy, enemy);
+        enemy.burn_term -= loop / 15;
+        m.amplitudeConversion(enemy, 2);
+        enemy.sinking_term++;
+        if (enemy.tremor_strength > 500) {
+            enemy.sinking_strength += 5 * (loop / 15);
+        } else {
+            enemy.sinking_strength += (int) (enemy.tremor_strength * 0.01) * (loop / 15);
+        }
+        enemy.sanity -= enemy.sinking_strength * (loop / 15);
+        if(enemy.sanity < -45) enemy.hp -= (enemy.sanity + 45) * -1;
+        m.sanityReturn(enemy);
+        m.amplitudeConversion(enemy, 3);
+        enemy.this_turn_strength -= (int) (enemy.tremor_strength * 0.03 + 1) * (loop / 15);
+        enemy.tremor_term -= loop / 5;
+        m.dealDamage(enemy.burn_strength * loop / 5 - enemy.strength, enemy, enemy);
+        enemy.burn_term -= loop / 5;
+        m.dealDamage(enemy.bleed_strength * loop / 5 - enemy.strength, enemy, enemy);
+        enemy.bleed_term -= loop / 5;
+        enemy.buff.sidestep = temp;
+        enemy.poise_strength = tempStrength;
+        enemy.poise_term = tempTerm;
+    }
+
     public void effect_ProliferatingG(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
         //G公司来的
         if(player.energy <= 0){
@@ -314,12 +372,24 @@ public class FortunaCards{
         }
 
         for(int i = 0; i < 7 + (deck.drawPile.size() + deck.discardPile.size()) / 10; i++){
-            randomStrength(player, enemy);
-        }
-        for (int i = 0; i < 12 + (deck.drawPile.size() + deck.discardPile.size())/7; i++){
+            if(7 + (deck.drawPile.size() + deck.discardPile.size()) / 10 > MAX_LOOP){
+                TermforTooMush(enemy, player, 7 + (deck.drawPile.size() + deck.discardPile.size()) / 10);
+                break;
+            }
             randomTerm(player, enemy);
         }
+        for (int i = 0; i < 12 + (deck.drawPile.size() + deck.discardPile.size()) / 7; i++){
+            if(12 + (deck.drawPile.size() + deck.discardPile.size()) / 7 > MAX_LOOP){
+                StrengthforTooMush(enemy, player, 12 + (deck.drawPile.size() + deck.discardPile.size()) / 7);
+                break;
+            }
+            randomStrength(player, enemy);
+        }
         for(int i = 0; i < 3 + (deck.discardPile.size() + deck.drawPile.size())/150; i++){
+            if(3 + (deck.discardPile.size() + deck.drawPile.size())/150 > MAX_LOOP){
+                TriggerforTooMuch(enemy, player, 3 + (deck.discardPile.size() + deck.drawPile.size())/150);
+                break;
+            }
             randomTrigger(enemy);
         }
         m.dealDamage(8+(deck.drawPile.size() + deck.discardPile.size())/33, enemy, player);
@@ -338,7 +408,7 @@ public class FortunaCards{
                 .setPositiveButton("@全体黑兽 ，收到扣三技能！", (dialog, which) -> {
                     switch (m.randint(1, 2)){
                         case 1:
-                            deck.addCard(budaijiezou(0), logger);
+                            deck.addCard(budaijiezou(deck, logger, 0), logger);
                             break;
                         case 2:
                             Card s = Si();
@@ -347,7 +417,7 @@ public class FortunaCards{
                             deck.addCard(s, logger);
                             break;
                         default:
-                            deck.addCard(budaijiezou(0), logger);
+                            deck.addCard(budaijiezou(deck, logger, 0), logger);
                     }
                     deck.addCard(kaidao_Card(), logger);
                     s.runOnUiThread(() -> {
@@ -391,7 +461,7 @@ public class FortunaCards{
         }
     }
 
-    public void effect_budaijiezou(Entity player, Entity enemy){
+    public void effect_budaijiezou(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
         for(int i = 0; i < (player.swift >= 10 ? 4 : 3); i++){
             player.this_turn_strength += 3;
             enemy.rapture_term += 4;
@@ -402,15 +472,17 @@ public class FortunaCards{
             player.tianjiustarblade += 10 + player.swift / 15;
         }
         if(player.tianjiustarblade >= 75){
-            effect_xiangxinwuhunzhenshen(player, enemy);
+            player.tianjiustarblade -= 75;
+            deck.addCard(xiangxinwuhunzhenshen(), logger);
         }
     }
 
-    public void effect_wudile(Entity player, Entity enemy){
+    public void effect_wudile(Entity player, Entity enemy, CardDeck deck, Mechanics.Logger logger){
         for (int i = 0; i < 2; i++) m.defend(1, player);
         Toast.makeText(s, "无敌了无敌了！", LENGTH_SHORT).show();
         if(player.tianjiustarblade >= 75){
-            effect_xiangxinwuhunzhenshen(player, enemy);
+            player.tianjiustarblade -= 75;
+            deck.addCard(xiangxinwuhunzhenshen(), logger);
         }else{
             player.swift += 5;
             player.tianjiustarblade += 2;
@@ -419,13 +491,12 @@ public class FortunaCards{
 
     public void effect_xiangxinwuhunzhenshen(Entity player, Entity enemy){
         Toast.makeText(s, "相信武魂真身！", LENGTH_SHORT).show();
+        player.tianjiustarblade += 75;
         player.this_turn_strength += player.swift / 1.5;
         enemy.rapture_strength += 5 + player.swift / 2 + player.this_turn_strength / 3 + player.tianjiustarblade / 7;
         enemy.rapture_term += 3 + player.tianjiustarblade / 5;
         player.this_turn_strength += enemy.rapture_term;
-        while(enemy.rapture_term > 1){
-            m.dealDamage(0, enemy, player);
-        }
+        enemy.hp -= enemy.rapture_strength * (enemy.rapture_term - 1);
         enemy.rapture_term = enemy.rapture_strength;
         enemy.rapture_strength = player.tianjiustarblade;
         player.tianjiustarblade = 0;
@@ -650,6 +721,7 @@ public class FortunaCards{
             deck.addCard(BigMonster(deck, logger), logger);
             player.buff.tallbird = 0;
             player.buff.bigbird = 0;
+            player.buff.Apocalypse_Bird++;
         }else{
             player.buff.littlebird = 1;
         }
@@ -694,6 +766,7 @@ public class FortunaCards{
             deck.addCard(BigMonster(deck, logger), logger);
             player.buff.littlebird = 0;
             player.buff.tallbird = 0;
+            player.buff.Apocalypse_Bird++;
         }else{
             player.staggerLine = new double[] {0.0, 0.0, 0.0};
             player.buff.bigbird = 1;
@@ -704,14 +777,26 @@ public class FortunaCards{
         deck.drawCard(player, logger);
         Card BigMonster = BigMonster(deck, logger);
         deck.drawPile.add(BigMonster);
-        if(m.dealDamage(200, enemy, player)){
+        if(m.dealDamage(600, enemy, player)){
             for(int i = 0; i < 12 + 2 * player.buff.Apocalypse_Bird; i++){
+                if(12 + 2 * player.buff.Apocalypse_Bird > MAX_LOOP){
+                    TermforTooMush(enemy, player, 12 + 2 * player.buff.Apocalypse_Bird);
+                    break;
+                }
                 randomTerm(player, enemy);
             }
             for(int i = 0; i < 12 + 2 * player.buff.Apocalypse_Bird; i++){
+                if(12 + 2 * player.buff.Apocalypse_Bird > MAX_LOOP){
+                    StrengthforTooMush(enemy, player, 12 + 2 * player.buff.Apocalypse_Bird);
+                    break;
+                }
                 randomStrength(player, enemy);
             }
             for(int i = 0; i < 12 + 2 * player.buff.Apocalypse_Bird; i++){
+                if(12 + 2 * player.buff.Apocalypse_Bird > MAX_LOOP){
+                    TriggerforTooMuch(enemy, player, 12 + 2 * player.buff.Apocalypse_Bird);
+                    break;
+                }
                 randomTrigger(enemy);
             }
             player.buff.Apocalypse_Bird++;
@@ -719,6 +804,9 @@ public class FortunaCards{
     }
 
     // --- 构造出实际的Card对象（对应 cards.c 底部的全局卡牌定义）---
+    public Card xiangxinwuhunzhenshen(){
+        return new Card("xiangxinwuhunzhenshen", "相信武魂真身", 0, this::effect_xiangxinwuhunzhenshen, 3, 1);
+    }
     public Card littleBird(CardDeck deck, Mechanics.Logger logger){
         return new Card("littleBird", "小鸟/惩戒鸟", 1, (player, enemy) -> effect_littleBird(player, enemy, deck, logger), 3, 1);
     }
@@ -782,8 +870,8 @@ public class FortunaCards{
     public Card CollectLight(){
         return new Card("CollectLight", "收集光芒", 0, this::CollectLight, 1, 1);
     }
-    public Card wudile(){
-        return new Card("wudile", "无敌了无敌了！", 1, this::effect_wudile, 2, 0);
+    public Card wudile(CardDeck deck, Mechanics.Logger logger){
+        return new Card("wudile", "无敌了无敌了！", 1, (player, enemy) -> effect_wudile(player, enemy, deck, logger), 2, 0);
     }
     public Card Purify(){
         return new Card("Purify", "净化！", 3, this::effect_Purify, 3, 1);
@@ -798,11 +886,11 @@ public class FortunaCards{
         return new Card("@AllHeiShou", "@全体黑兽 ，收到扣三技能", 3,
                 (player, enemy) -> effect_AnswerMeAllHeiShouPack(player, enemy, deck, logger), 3, 0);
     }
-    public Card budaijiezou(int cost){
-        return new Card("budaijiezoufree", "不带节奏(目不能追，耳未可及)", cost, this::effect_budaijiezou, 3, 1);
+    public Card budaijiezou(CardDeck deck, Mechanics.Logger logger, int cost){
+        return new Card("budaijiezoufree", "不带节奏(目不能追，耳未可及)", cost, (player, enemy) -> effect_budaijiezou(player, enemy, deck, logger), 3, 1);
     }
-    public Card budaijiezou(){
-        return new Card("budaijiezou", "不带节奏(目不能追，耳未可及)", 2, this::effect_budaijiezou, 3, 0);
+    public Card budaijiezou(CardDeck deck, Mechanics.Logger logger){
+        return new Card("budaijiezou", "不带节奏(目不能追，耳未可及)", 2, (player, enemy) -> effect_budaijiezou(player, enemy, deck, logger), 3, 0);
     }
     public Card PoliferatingG_Card(CardDeck deck, Mechanics.Logger logger){
         return new Card("ProliferatingG", "增殖的G", 0,
@@ -877,7 +965,7 @@ public class FortunaCards{
             "budaijiezou", "budaijiezoufree", "@AllHeiShou", "shankailaozizijilai", "Purify", "wudile",
             "SeedofLight", "CollectLight", "Tiphereth", "setDanger", "cogito", "300Lunacy", "ququ", "Thunder",
             "CurrentGeneration", "CalmBrain", "rainbow", "charge", "sixthSense", "EGOMagicBullet", "Si",
-            "littleBird", "tallBird", "bigBird", "BigMonster"
+            "littleBird", "tallBird", "bigBird", "BigMonster", "xiangxinwuhunzhenshen"
     };
 
     /** 战斗掉落奖励池：诅咒牌不算奖励，排除在外 */
@@ -902,6 +990,7 @@ public class FortunaCards{
             case "SeedofLight":
             case "littleBird":
             case "tallBird":
+            case "xiangxinwuhunzhenshen":
             case "bigBird":
             case "BigMonster":
             case "swordflashing":
@@ -960,12 +1049,12 @@ public class FortunaCards{
             case "ComboShoot": return comboshoot();
             case "Disposal": return disposal();
             case "ProliferatingG": return PoliferatingG_Card(deck, logger);
-            case "budaijiezou": return budaijiezou();
-            case "budaijiezoufree": return budaijiezou(0);
+            case "budaijiezou": return budaijiezou(deck, logger, 0);
+            case "budaijiezoufree": return budaijiezou(deck, logger, 0);
             case "@AllHeiShou": return AnswerMeAllHeiShouPack_Card(deck, logger);
             case "kaidao": return kaidao_Card();
             case "shankailaozizijilai": return shankailaozizijilai();
-            case "wudile": return wudile();
+            case "wudile": return wudile(deck, logger);
             case "CollectLight": return CollectLight();
             case "Tiphereth": return Tiphereth();
             case "300Lunacy": return _300Lunacy();
@@ -1031,6 +1120,7 @@ public class FortunaCards{
             case "tallBird": return "高鸟/审判鸟";
             case "bigBird": return "大鸟";
             case "BigMonster": return "大怪兽/终末鸟";
+            case "xiangxinwuhunzhenshen": return "相信武魂真身";
             default: return key;
         }
     }

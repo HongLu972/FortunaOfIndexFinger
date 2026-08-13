@@ -152,6 +152,13 @@ public class AnnounceActivity extends AppCompatActivity {
                 "7. 某些特殊的敌人被施加了神秘的音乐\n" +
                 "8. 三鸟最终还是做出来了，累死我了累死我了累死我了\n" +
                 "9. 新的轮椅已经出现，以及费用最高的卡牌出现了，大怪兽，属性是随机，和增殖的G一样\n", announces);
+        addAnnounce("v0.6更新\n" +
+                "调整/修复bug\n" +
+                "1. 修复了相信武魂真身的引爆破裂逻辑\n" +
+                "2. 精简了大怪兽的施加dot的逻辑\n" +
+                "3. 精简了增殖的G的施加dot的逻辑，然后防止一些卡死\n" +
+                "4. 在使用不带节奏和无敌了时是放进手牌而非直接使用\n" +
+                "5. 修复了怪物错误的生成逻辑", announces);
 
         TextView tvAnnounce = findViewById(R.id.Announcement);
         refreshUI(tvAnnounce, announces, currentIndex);
