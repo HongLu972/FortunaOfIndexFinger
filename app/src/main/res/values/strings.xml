@@ -1,3 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">福尔图娜的纸条</string>
+    <string name="next_stagger">距离混乱的距离</string>
+    <string name="shield">护盾</string>
+    <string name="sanity">理智</string>
+    <string name="strength">力量</string>
+    <string name="this_turn_strength">本回合内力量</string>
+    <string name="haste">迅捷</string>
+    <string name="burn">烧伤</string>
+    <string name="bleed">流血</string>
+    <string name="tremor">震颤</string>
+    <string name="sinking">沉沦</string>
+    <string name="rapture">破裂</string>
+    <string name="poise">呼吸法</string>
+    <string name="blade">剑痕</string>
+    <string name="shin">心</string>
+    <string name="charge">充能</string>
+    <string name="stagger">混乱层数</string>
+    <string name="restrictions">制约</string>
+    <string name="krama">业</string>
+    <string name="krama_ex">业(福尔图娜)</string>
+    <string name="grace">加护</string>
+    <string name="grace_ex">指令加护</string>
+    <string name="Hermes">代行::赫尔墨斯</string>
+    <string name="TianjiuStarBlade">天究星刀</string>
+    <string name="NoEffect">你身上不存在状态效果</string>
+    <string name="hp">生命值</string>
+    <string name="level">等级</string>
+    <string name="exp">经验: </string>
+    <string name="light">光芒</string>
+    <string name="intent">意图</string>
+    <string name="battleover">战斗已结束</string>
+    <string name="battlestart">战斗开始，当前危险度：</string>
+    <string name="onStagger">哇☺️🌸，你已经陷入混乱了呢~</string>
+    <string name="noCard">哇☺️🌸，你似乎无牌可用了呢~</string>
+    <string name="noChoose">哇☺️🌸，你似乎需要选一个合法的牌呢~</string>
+    <string name="restart">哇☺️🌸，你失败了，重开并危险度归零吧~</string>
+    <string name="nextbattle">哇☺️🌸，你赢了，继续吧~</string>
+    <string name="end_turn">结束回合</string>
+    <!-- 纸条指令（Prescripts） -->
+    <string name="prescript_000">在今天内睡800小时</string>
+    <string name="prescript_001">今天吃饭，写字，开枪时均使用右手</string>
+    <string name="prescript_002">在下次运动前进行暖身活动</string>
+    <string name="prescript_003">停止执行赫尔墨斯的指令，转而使用福尔图娜的</string>
+    <string name="prescript_004">在一个陌生人的车上放一瓶冰红茶和一张写有\"不好意思给你车划到了，给你一瓶冰红茶，我走了哈\"</string>
+    <string name="prescript_005">在下一次看到任何追击时，由衷感叹艾兰市区</string>
+    <string name="prescript_006">在下一次看到任何追击时，说问了么</string>
+    <string name="prescript_007">在脑叶公司观赏过白干乐团的演奏后不重开，直到结束这一天</string>
+    <string name="prescript_008">聆听Mili的任意一首歌并由衷赞叹</string>
+    <string name="prescript_009">在使用0星光的情况下通关满制约15牢</string>
+    <string name="prescript_010">盘一个你身边的物体，持续一分钟</string>
+    <string name="prescript_011">坐起来，伸一次懒腰</string>
+    <string name="prescript_012">完整观看废墟图书馆的OP</string>
+    <string name="prescript_013">停止当前一切非理性行为，静坐30秒</string>
+    <string name="prescript_014">为自己做好午餐，并到家外边食用</string>
+    <string name="prescript_015">不使用零协汉化的情况下通关满制约镜牢</string>
+    <string name="prescript_016">开发一个月计的二创游戏</string>
+    <string name="prescript_017">在接下来1小时内绷住</string>
+    <string name="prescript_018">下一次听到有人诋毁血魔时大喊血魔不市区</string>
+    <string name="prescript_019">告诉萌新伞神是神</string>
+    <string name="prescript_020">揭露经典骗局之伞夫是神</string>
+    <string name="prescript_021">众所不周知，在作弊那打出set.*rnfmabj会有惊喜</string>
+    <string name="prescript_022">接下来一天不要吃宵夜</string>
+    <string name="prescript_023">当你能看到这个的时候，你无敌了，直面手贱，斩去纸条</string>
+    <string name="prescript_024">不要把这个当作记事本！不会出这功能的，大概。</string>
+    <string name="prescript_025">打开广告宣传的劣质小游戏一次，并保持游玩至少1分钟</string>
+    <string name="prescript_026">前往leetCode并完成一个Hard难度的习题</string>
+    <string name="prescript_027">通过一次Tiphereth核心抑制 -- 强制熔毁的憧憬</string>
+    <string name="prescript_028">使用卓尔不凡的视力查看视野里离你最远的人在干嘛</string>
+    <string name="prescript_029">喂饱尸山的决意 -- 击败三球尸(糯米)山(团子)</string>
+    <string name="prescript_030">对一个月计入发\"主管主管主管主管主管...\"</string>
+    <string name="prescript_031">打一次水漂，至少要在水上弹3次</string>
+    <string name="prescript_032">使用一次金枝能力</string>
+    <string name="prescript_033">制作一些会吸引首脑的东西，如安吉拉</string>
+    <string name="prescript_034">今天在后巷深宵的时候在外游荡至少10分钟</string>
+    <string name="prescript_035">删除边狱巴士，然后重新下回来</string>
+    <string name="prescript_036">作为来宾前往废墟图书馆</string>
+    <string name="prescript_037">击败里恩1次</string>
+    <string name="prescript_038">保持狂气大于1300至少30秒</string>
+    <string name="prescript_039">保持任一罪人人格碎片>=400至少2周</string>
+    <string name="prescript_040">喝一杯奶茶</string>
+    <string name="prescript_041">执行阳所伪造的指令</string>
+    <string name="prescript_042">今天忽略一切让你出门的指令，呆在家中</string>
+    <string name="prescript_043">反杀你身后的3个代行者和7个苦行者 -- 骗你的，没有</string>
+    <string name="prescript_044">以防你不知道，我作弊码检测用的是regex，即.*代表任意长度的任意字符</string>
+    <string name="prescript_045">清道夫好吃么，所以</string>
+    <string name="prescript_046">当你看到需要-1秒完成的指令基本都是我的碎碎念，对</string>
+    <string name="prescript_047">不知道接下来该开发什么功能了。。。大悲</string>
+    <string name="prescript_048">开发者燃尽了已经</string>
+    <!-- ========== 卡牌名称 ========== -->
+    <string name="card_name_strike">斩击</string>
+    <string name="card_name_defend">防御</string>
+    <string name="card_name_burning_curse">灼烧(诅咒)</string>
+    <string name="card_name_jishixingle">及时行乐</string>
+    <string name="card_name_swordflashing">森罗火象</string>
+    <string name="card_name_beheading">斩首</string>
+    <string name="card_name_memorial_procession">追悼游行</string>
+    <string name="card_name_inevitable_slash">必然杀</string>
+    <string name="card_name_afterimage_step">残像步</string>
+    <string name="card_name_rendspace">空间斩</string>
+    <string name="card_name_rendspace_yuan">空间斩[缘]</string>
+    <string name="card_name_noself">无我</string>
+    <string name="card_name_wordpower_death">言灵【死】[测试用]</string>
+    <string name="card_name_ego_redbeauty">劣化侵蚀E.G.O:红艳煞</string>
+    <string name="card_name_comboshoot">连续射击</string>
+    <string name="card_name_disposal">处置</string>
+    <string name="card_name_proliferatingg">增殖的G</string>
+    <string name="card_name_budaijiezou">不带节奏(目不能追，耳未可及)</string>
+    <string name="card_name_heishou">/@全体黑兽 ，收到扣三技能</string>
+    <string name="card_name_shankai">闪开，老子自己来</string>
+    <string name="card_name_kaidao">开·道(开辟君主之道吧！)</string>
+    <string name="card_name_wudile">无敌了无敌了！</string>
+    <string name="card_name_purify">净化！</string>
+    <string name="card_name_seedoflight">光之种计划</string>
+    <string name="card_name_collectlight">收集光芒</string>
+    <string name="card_name_tiphereth">存在意义的憧憬</string>
+    <string name="card_name_setdanger">危险度设置</string>
+    <string name="card_name_cogito">Cogito</string>
+    <string name="card_name_300lunacy">小金の朋友费</string>
+    <string name="card_name_ququ">艾兰市区</string>
+    <string name="card_name_zhuizhui">既见慈悲，为何不笑？</string>
+    <string name="card_name_thunder">雷动</string>
+    <string name="card_name_currentgeneration">电流相生</string>
+    <string name="card_name_calmbrain">冷静头脑</string>
+    <string name="card_name_rainbow">虹彩</string>
+    <string name="card_name_charge">充电</string>
+    <string name="card_name_sixthsense">第六感</string>
+    <string name="card_name_egomagicbullet">脑叶公司E.G.O::魔弹</string>
+    <string name="card_name_si">疯狂の蛇(绝命巳乱)</string>
+    <string name="card_name_littlebird">小鸟/惩戒鸟</string>
+    <string name="card_name_tallbird">高鸟/审判鸟</string>
+    <string name="card_name_bigbird">大鸟</string>
+    <string name="card_name_bigmonster">大怪兽/终末鸟/天启鸟</string>
+    <string name="card_name_xiangxin">相信武魂真身</string>
+    <string name="card_name_bloodstainedtears_start">E.G.O::污血泣泪[始]</string>
+    <string name="card_name_bloodstainedtears_finale">E.G.O::污血泣泪[终]</string>
+
+    <!-- ========== Toast 消息 ========== -->
+    <string name="toast_yan_trigger_2light">触发了森罗焱象，恢复2光芒</string>
+    <string name="toast_yan_trigger_1light">触发了森罗炎象，恢复1光芒</string>
+    <string name="toast_wudile">无敌了无敌了！</string>
+    <string name="toast_xiangxin">相信武魂真身！</string>
+    <string name="toast_300lunacy">朋友费，你在哪？快到我邮箱里来啊！我能听见你的声音，但愿...\n---开发者</string>
+    <string name="toast_littlebird_intro">小鸟时不时出来遛弯，顺带用喙惩罚犯错的人</string>
+    <string name="toast_threebirds_1">呱，你们仨别贴起来啊。主管尖锐地爆鸣道。</string>
+    <string name="toast_threebirds_2">动物朋友们大喊，是那个怪物！</string>
+    <string name="toast_threebirds_3">主管们哭喊着，我的TT2————</string>
+    <string name="toast_tallbird_intro">高鸟裁定着人们的罪孽</string>
+    <string name="toast_bigbird_intro">The Big Bird Is Watching You</string>
+    <string name="toast_lock_yes">但这一切...值得么？</string>
+    <string name="toast_lock_no">好</string>
+    <string name="toast_setdanger_error">请输入合法数字</string>
+
+    <!-- ========== 对话框 ========== -->
+    <string name="dialog_heishou_title">是否要召集黑兽？</string>
+    <string name="dialog_heishou_message">还是说让她们闪开，自己来？</string>
+    <string name="dialog_heishou_positive">/@全体黑兽 ，收到扣三技能！</string>
+    <string name="dialog_heishou_negative">闪开，老子自己来！</string>
+
+    <string name="dialog_lock_title">锁血是否解除</string>
+    <string name="dialog_lock_message">是否要解除对面锁血？这很有可能会导致不那么好的体验</string>
+    <string name="dialog_lock_positive">是</string>
+    <string name="dialog_lock_negative">不了</string>
+
+    <string name="dialog_tiphereth_message">警告：SEPHIRAH的核心崩溃导致逆卡巴拉能量实体化，需要立刻抑制Sephirah的核心</string>
+    <string name="dialog_tiphereth_button">知道了</string>
+
+    <string name="dialog_setdanger_title">调试卡·危险度设置</string>
+    <string name="dialog_setdanger_message">你希望危险度为？</string>
+    <string name="dialog_setdanger_positive">确定</string>
+
+    <!-- ========== 日志 ========== -->
+    <string name="log_currentgeneration">由于本次电流相生生成闪电充能球过多，会导致卡死等不太好的操作，故而统一结算，下次使用时，会生成闪电充能球数为%d</string>
+    <!-- 意图 -->
+    <string name="lunacy">那还说什么呢，这回合给你了呗</string>
+    <!-- ========== 敌人名称 ========== -->
+    <string name="enemy_name_ailan_worm">因为变区而哭嚎的艾兰虫</string>
+    <string name="enemy_name_kromo_original">欲成原初的克罗默</string>
+    <string name="enemy_name_god">伞神</string>
+    <string name="enemy_name_bound_king">被缚之王</string>
+
+    <!-- ========== 哈基米 招式 ========== -->
+    <string name="enemy_action_ha">这只猫看起来很生气……</string>
+    <string name="enemy_action_zhamao">猫毛炸起来了，像针一样……</string>
+    <string name="enemy_action_enhanced">猫的爪子开始蠢蠢欲动</string>
+    <string name="enemy_action_stagger_null">混乱中，不会行动</string>
+
+    <!-- ========== Hearts 招式 ========== -->
+    <string name="enemy_action_hearts_strongmove">剧↑烈↓搏↑动↓</string>
+    <string name="enemy_action_hearts_normal">被本攻击打中有奇效~</string>
+    <string name="enemy_action_hearts_stagger">混乱了呢☺️❀</string>
+
+    <!-- ========== Thunder Spirit 招式 ========== -->
+    <string name="enemy_action_thunder_storm">墨云卷地碾青山</string>
+    <string name="enemy_action_thunder_thundering">雷动于九天之上</string>
+    <string name="enemy_action_thunder_flashing">雷车动地电火明</string>
+    <string name="enemy_action_thunder_sound">雷声催雨千峰暗</string>
+    <string name="enemy_action_thunder_stagger">纷纷云散心安在，隐隐雷收气未平</string>
+
+    <!-- ========== Forgotten Killer 招式 ========== -->
+    <string name="enemy_action_forgotten_grasp">俺...俺喘不上气了...</string>
+    <string name="enemy_action_forgotten_enhanced">放，放俺出去！</string>
+
+    <!-- ========== Albina 招式 ========== -->
+    <string name="enemy_action_albina_fascia">法西娅正在挨饿呢~</string>
+    <string name="enemy_action_albina_time">我会好好利用你身上的血管的</string>
+    <string name="enemy_action_albina_depressed">受压肉体的解放！</string>
+    <string name="enemy_action_albina_premium">我已启动</string>
+
+    <!-- ========== QuQu 招式 ========== -->
+    <string name="enemy_action_ququ_stater">如果就这么让加强离开，那么我一辈子都会变成区吧...</string>
+    <string name="enemy_action_ququ_atk">孩子们，你们到底问了没？</string>
+    <string name="enemy_action_ququ_waw">同是瓦夜人格，怎会。。。</string>
+    <string name="enemy_action_ququ_qwq">...原来，我生来就只是区么，卡门女士。。。</string>
+    <string name="enemy_action_ququ_stk">创造出了我又不给出强度，小金，都是你的错！</string>
+    <string name="enemy_action_ququ_ttk">强度不行还不给EGO，金智勋，还是你的错！</string>
+    <string name="enemy_action_ququ_ftk">出五破了都不给我加强，张施娜，又是你的错！</string>
+
+    <!-- ========== Rein 招式 ========== -->
+    <string name="enemy_action_rein_announce">如果就这样让你离开，那么你永远都不会回来了吧...</string>
+    <string name="enemy_action_rein_1">一</string>
+    <string name="enemy_action_rein_2">二</string>
+    <string name="enemy_action_rein_3">三(trois)</string>
+    <string name="enemy_action_rein_4">四</string>
+    <string name="enemy_action_rein_5">五</string>
+    <string name="enemy_action_rein_6">六(six)</string>
+    <string name="enemy_action_rein_7">七，还剩二</string>
+    <string name="enemy_action_rein_8">八，还剩一</string>
+    <string name="enemy_action_rein_9">九(neuf)，完成</string>
+    <string name="enemy_action_rein_null">哈哈哈，挺厉害的嘛</string>
+    <string name="enemy_action_rein_estagger">就连那副模样，也依然如此美丽么？</string>
+    <string name="enemy_action_rein_furioso_first">啊，结果……还是到了这一天啊。</string>
+    <string name="enemy_action_rein_furioso">女儿。你知道的吧？预测是没有意义的。</string>
+    <string name="enemy_action_rein_cresendo_fst">无需踏上旅途，这里就是你该待的地狱不是么？</string>
+    <string name="enemy_action_rein_cresendo_1">这奈落就是你该待的地方。</string>
+    <string name="enemy_action_rein_cresendo_2">活在被定制的人生中的愚蠢之人。那正是你。也是我啊。</string>
+    <string name="enemy_action_rein_cresendo_3">事到如今你也无法自由地活下去了。就算你逃跑，神的兵卒也会来追捕你。</string>
+    <string name="enemy_action_rein_requiem_1">这是不能被斩断的，女儿。……你不能擅自斩断它。</string>
+    <string name="enemy_action_rein_requiem_2">女儿。别怨恨我。一码归一码。</string>
+    <string name="enemy_action_rein_requiem_3">只有撕开天空……把那些想带走我女儿的东西统统清除。</string>
+
+    <!-- ========== Valencina 招式 ========== -->
+    <string name="enemy_action_valencina_disposal">烦死了烦死了，你和券券全都烦死了！</string>
+    <string name="enemy_action_valencina_jielu">哪个*拇指粗口*说这招叫解开就🦌的？！</string>
+    <string name="enemy_action_valencina_null">由于对拇指妈可能过于难以启动，故而让其静坐一回合---开发者</string>
+    <string name="enemy_action_valencina_stagger">混乱了呢☺️❀</string>
+
+    <!-- ========== Yoshide 招式 ========== -->
+    <string name="enemy_action_yoshide_painted">涂抹</string>
+    <string name="enemy_action_yoshide_clear">将口抹去，也将口口抹口</string>
+    <string name="enemy_action_yoshide_pinted">口抹</string>
+    <string name="enemy_action_yoshide_pante">涂口</string>
+    <string name="enemy_action_yoshide_ptd">口口</string>
+    <string name="enemy_action_yoshide_duan">断·口</string>
+    <string name="enemy_action_yoshide_yuan">口·缘</string>
+    <string name="enemy_action_yoshide_nothing">口·口</string>
+    <string name="enemy_action_yoshide_stagger">陷·混</string>
+
+    <!-- ========== Kromo 招式 ========== -->
+    <string name="enemy_action_kromo_purify">净↑化↓</string>
+    <string name="enemy_action_kromo_whistle">辛克莱哟~(神秘の哨音)</string>
+    <string name="enemy_action_kromo_hold">就由我来执握</string>
+    <string name="enemy_action_kromo_greatpurify">崇高的净↑化↓</string>
+    <string name="enemy_action_kromo_loyalful">荣耀の执握</string>
+
+    <!-- ========== GOD (伞神) 招式 ========== -->
+    <string name="enemy_action_god_hajia">哈加！</string>
+    <string name="enemy_action_god_kai">开！</string>
+    <string name="enemy_action_god_corride">这些绳子既是绷带，也是枷锁……到底何时才能让我解放！！</string>
+
+    <!-- ========== Toast 消息 ========== -->
+    <string name="toast_rein_unlock_1">无我梦中</string>
+    <string name="toast_rein_unlock_2">阿鼻叫唤</string>
+    <string name="toast_rein_unlock_3">支离灭裂</string>
+    <string name="toast_god_corride">这些绳子既是绷带，也是枷锁……到底何时才能让我解放！！</string>
+
+    <!-- ========== 日志消息 ========== -->
+    <string name="log_god_corride">那一天的伞夫，侵蚀起来~</string>
+
+    <!-- ========== 公告文本 ========== -->
+    <string name="announce_1">修复已知部分bug\n1. 使用？！区区？！时重复引用useCard导致产生无限递归的bug\n2. 修复作弊码中ququ无法指向艾兰市区的问题\n3. 没找到其他bug，其实是上线前我就修了，比如艾兰虫(敌人)慈悲会打自己之类的\n全新机制\n1. 玩过昨天的版本的人都知道状态栏里多了一项充能球，对，现在充能球已经制作完毕了！可以使用了！\n不全新卡牌\n1. 电流相生，代码为CurrentGeneration，效果不多赘述\n2. 雷动，代码为Thunder，生成2闪电充能球\n相信未来会有更多bug等待修</string>
+
+    <string name="announce_2">修复已知bug\n1. 由于没绑manifest导致上个版本实际上无法看到公告，怒修之\n2. 似乎没了\n全新机制：冰霜充能球\n我希望各位没忘记冰霜充能球什么效果，但我还是说一下冰霜充能球的效果吧\n[摧毁时]获得大量护盾，使敌方迅捷-3\n[回合结束]获得一定护盾\n不全新卡牌\n这次并没有全新的卡牌，难道不感觉敌人数量太少了么？所以本次更新着重于敌方目标，也就是你还玩不到冰霜充能球🤡\n全新敌人/强度调整\n1. [普通敌人]雷元素精灵：具有闪电充能球和充能两大强力机制的敌人，但因为其只是普通敌人，故而其数值限制了其发展\n2. [首领]瓦伦希娜：瓦伦希娜听说自己被当作路边一条踢死了，气炸了，所以现在其获得了数项加强\nI   瓦伦希娜不会在首回合不行动\nII  瓦伦希娜将会闪避\nIII 瓦伦希娜解鹿在加速弹低于3的情况下不会减少本回合力量\nIV  瓦伦希娜处置中dot提高，伤害提高，增幅提高\nV   预知眼层数上限提高至20，使用处置后会立刻将预知眼层数设为10\n3. [首领]里恩：赫尔墨斯让他干的\nI  现在玩家陷入恐慌会直接导致其陷入混乱\nII 在与里恩的战斗中，玩家的沉沦强度不会低于5\n4. [首领]无我  秀，          \nI  无我    自身  命  上限  害降低\nII 无  增    度  低\n     无  良秀  乱条  为 -0 2,  ,  . ]\nIV       秀  得2  锁血，  发时    值上限    命  设为局外    值  0.2倍\nV  无      不会在    护盾的  况下    败</string>
+
+    <string name="announce_3">修复已知bug/调整:\n1.  由于之前太着急下班，导致公告区会存在异常的错误，现在修了\n2.  忘了里恩小技能不施加沉沦，所以现在他小技能施加了\n3.  修复无我良秀锁血后恢复的血量不受制约影响的bug\n4.  无我良秀伤害似乎有点过高，直接翻转成负数了，故而做出了限制\n5.  冰霜充能球现在有获得方式了！冷静头脑可以获得集中和冰霜充能球[代码：CalmBrain]\n6.  新充能球：离子充能球，激发(摧毁)和回合开始时可以获得额外光芒(这还是月计二创么？给我创哪来了)相关卡牌：\n   I  虹彩[代码：rainbow](3)：消耗，依次获得1个闪电，冰霜和离子充能球\n   II 充电[代码：charge](1)：根据充能强度获得效果：&lt;=3:获得大量充能层数并全部消耗；4-5:获得2能量，少量充能层数并全部消耗；>6:获得1离子充能球\n7.  无我良秀改动：\n   I  无我良秀将    去，也  我    伤害上    低\n   II 无我  超过300直接使用        , 也      去\n8.  瓦伦希娜调整：\n   I  瓦伦希娜在预知眼>6的情况下受到直接伤害将会消耗6预知眼闪避本次伤害\n   II 瓦伦希娜的本回合迅捷bug太多了！所以移除了\n9.  所以有人还记得这本来应该是个指令终端么？\n10. 新卡：第六感[代码：sixthSense](1):获得一定闪避和敏捷\n11. 新卡：脑叶公司E.G.O::魔弹[代码：EGOMagicBullet](0)</string>
+
+    <string name="announce_4">v0.2改 小更新\n修复已知bug/调整：\n1. 修复了连续射击和调用连续射击的处置产生死循环的bug\n2. 里恩沉沦过高，叠起来后可能直接每回合都使玩家混乱，故而怒削之[绝对不是我被打死档了]\n3. 修复了魔弹不消耗子弹和第七弹-绝望会递归导致瞬秒自己的问题\n4. 新的卡牌出现:疯狂の蛇(绝命巳乱)[代码：Si](2):根据自身呼吸法强度重复攻击数次，最少3次，每次攻击均会施加破裂强度和层数，然后根据其强度和层数施加剧毒\n5. @全体黑兽 ，收到扣三技能 现在可以印出疯狂の蛇(绝命巳乱)了，这算平调(?)，破裂队，你崛起吧！\n6. 比起开·道，闪开，老子自己来似乎有点牢了，于是加强了其伤害等数值，并且为其施加了新时代卡牌特有的重放\n7. 里恩增加部分悬浮文本，如\"无我梦中\", 这里里恩真是我最用心做的了，但还是有待完善，一个人的抛瓦真的不够\n8. 准备制作克罗默/欲成原初的克罗默, 机制预告：\n   I   克罗默会大量施加流血，并且使用净化时会根据目标身上的流血重投本技能，无上限\n   II  克罗默还会使用神秘の哨声在本次战斗内削弱玩家并增强自身，但神秘の哨声不会施加流血层数，如果...?\n9. 准备制作神\n   I   神会通过基础技能削减自己的理智\n   II  当神受到攻击时会为自己施加沉沦\n   III 当神的理智降低至-45，应该不会有什么不好的事情发生的...吧？（憋笑）</string>
+
+    <string name="announce_5">v0.3更新\n修复的bug/调整：\n1. 我很好奇我为什么要边听Yesod和Hod的核心抑制音乐边写代码\n2. 感觉Hod的核心抑制音乐真阳间，只是听完后感觉敲不动键盘了\n3. 扯远了，总之现在画的饼已经完成了一部分了，我们的伞神的逻辑已经全部写好了，如下：\n   I   受到攻击时，根据自身沉沦层数获得{0}0%的减伤，不超过50%\n   II  受到攻击时，获得+1沉沦层数和+1沉沦强度, 且伞神技能具有大量自沉沦施加\n   III 剩下的机制不足道矣了，总之，伞神就是一个纯纯的沙包，相信我\n4. 克罗默还在等待，懒得做了是这样的\n5. 修复危险度设置输入框提示是加护的bug\n6. 提醒各位，以下行为会导致存档的消失\n   I   设置界面的将你抹去，也将我抹去\n   II  设置界面作弊码填入/kill\n   III 删除并重新安装本软件\n7. 一些好玩的卡以及其对应的代码，可以用getCard作弊码获取\n   1. cogito是卡牌Cogito的识别码，Cogito是个十分有趣的牌，可以试试卡组只带2张Cogito然后碰运气\n   2. WordPower_Death是言灵【死】的识别码，不会吧不会吧，不会到现在都有人不知道秒杀的牌的获取方式吧\n   3. @AllHeiShou是@全体黑兽，收到扣三技能的识别码，未来其召唤的黑兽种类会更多\n   4. setDanger是危险度设置的识别码，可以用于设置危险度，不会有人不知道这张牌吧？\n   5. 作弊码填入getCard后确认会有弹窗让你输入卡牌识别码，注意，识别码区分大小写</string>
+
+    <string name="announce_6">v0.3.1紧急修复\n修复的bug/调整:\n1. 由于刷怪逻辑漏洞导致新敌人伞神实际成了棍木\n   如何从randint(1,3)里得出4\n2. 一不小心闪开，老子自己来就死循环了，现在不会了\n3. 由于这是紧急修复，故而没有其他内容</string>
+
+    <string name="announce_7">v0.4更新\n修复的bug/调整\n1. 覆写了锁血的代码，以及里恩现在具有锁血了\n2. 里恩获得了2次转阶段锁血\n3. 伞神的生命值由2万变为1w，但其被动泪雨的减伤上限由50%提高至90%并获得1次锁血\n4. 修了一下触发锁血后因为混乱导致被迫双方静坐3回合的问题\n5. 新增了敌人，克罗默\n6. 由于某些敌人(伞神和瓦伦希娜)的超强防守能力，言灵死有点弱势了，故而加强\n7. 修复了大量锁血相关的bug\n8. 修复了克罗默重复触发转阶段锁血的bug[符合原著了属于是]</string>
+
+    <string name="announce_8">v0.5音乐更新\n调整\n1. 原先打算先做三只可爱的小鸟所对应的手牌的，但想到现在也该做音乐了，就做了\n2. 这真算是一次大更新啊，5个Activity 1个Store全部进行了翻新\n3. 设置里面现在可以设置音量了！\n4. 目前来说只有战斗有自己独自的音乐，当然，抄的脑叶的\n5. 好了，现在我们最重要的界面(可能并非)，有自己独特的音乐了，食指应援曲，Children Of The City!!!\n6. 诶呀卧槽，这净化太坏了，竟然会驱散锁血，这个特性我修了(绝对不是因为这样会导致我辛辛苦苦绑上去的克罗默二阶段音乐没人听)\n7. 某些特殊的敌人被施加了神秘的音乐\n8. 三鸟最终还是做出来了，累死我了累死我了累死我了\n9. 新的轮椅已经出现，以及费用最高的卡牌出现了，大怪兽，属性是随机，和增殖的G一样</string>
+
+    <string name="announce_9">v0.6更新\n调整/修复bug\n1. 修复了相信武魂真身的引爆破裂逻辑\n2. 精简了大怪兽的施加dot的逻辑\n3. 精简了增殖的G的施加dot的逻辑，然后防止一些卡死\n4. 在使用不带节奏和无敌了时是放进手牌而非直接使用\n5. 修复了怪物错误的生成逻辑\n
+    6. &lt;以下均是v0.6.1的更新&gt;添加了大量的英文翻译，但还有部分有待修改\n
+    7. 然后添加了污血泣泪这样破裂队的终端\n
+    8. 累死了累死了，试图修复了克罗默音乐转变延迟的问题。。。</string>
+
+    <!-- ========== Toast 消息 ========== -->
+    <string name="toast_no_newer">没有更新的公告啦！</string>
+    <string name="toast_no_older">没有更旧的公告啦！</string>
 </resources>

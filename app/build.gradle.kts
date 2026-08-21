@@ -14,8 +14,8 @@ android {
         applicationId = "com.six.fortuna"
         minSdk = 24
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.6"
+        versionCode = 9
+        versionName = "0.6.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

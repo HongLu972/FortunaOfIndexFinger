@@ -191,7 +191,7 @@ public class SettingActivity extends AppCompatActivity {
                                 List<String> i = store.loadCardCollection();
                                 i.add(raw);
                                 store.saveCardCollection(i);
-                                Toast.makeText(this, "成功添加卡牌: "+FortunaCards.displayName(raw), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "成功添加卡牌: "+FortunaCards.displayName(raw, getResources()), Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(this, "失败", Toast.LENGTH_LONG).show();
                             }
