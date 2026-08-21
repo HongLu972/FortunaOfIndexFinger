@@ -42,6 +42,7 @@ public class Buff {
     public int chargeBallSize = 3;
     private int chargeBallCount = 0;
     public int UnlockedHealth;
+    public int bloodstainedTears;
     public int littlebird;
     public int tallbird;
     public int bigbird;
@@ -156,6 +157,13 @@ public class Buff {
         }
     }
     public void turnStartActivate(Entity target){
+        if(bloodstainedTears > 0) {
+            if (bloodstainedTears < 3) {
+                bloodstainedTears++;
+            } else if (bloodstainedTears >= 3) {
+                self.hp -= (int) (self.max_hp * 0.05);
+            }
+        }
         self.swift -= expireSwift;
         expireSwift = 0;
         self.hp -= poison;
@@ -253,6 +261,7 @@ public class Buff {
         if(SeedofLight > 0) output.add("🕯️光之种"+SeedofLight+"  ");
         if(cibei > 0) output.add("🐛?!艾兰?! "+cibei+"  ");
         if(noSelf > 0) output.add("◼️无我"+noSelf+"  ");
+        if(bloodstainedTears > 0) output.add("🪡葬花针"+bloodstainedTears+"  ");
         if(sidestep > 0) output.add("✨闪避"+sidestep+"  ");
         if(Unlock > 0) output.add("🌸解放"+Unlock+"  ");
         if(armored > 0) output.add("🛡️覆甲"+armored+"  ");
@@ -306,6 +315,7 @@ public class Buff {
             o.put("concentration", concentration);
             o.put("currentgeneration", currentgeneration);
             o.put("rainoftears", rainoftears);
+            o.put("bloodstainedTears", bloodstainedTears);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -343,6 +353,7 @@ public class Buff {
         b.concentration = o.optInt("concentration", 0);
         b.currentgeneration = o.optInt("currentgeneration", 0);
         b.rainoftears = o.optInt("rainoftears", 0);
+        b.bloodstainedTears = o.optInt("bloodstainedTears", 0);
         return b;
     }
 }

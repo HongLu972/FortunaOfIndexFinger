@@ -33,9 +33,9 @@ import java.util.List;
 
 public class StatsActivity extends AppCompatActivity {
 
-    private static final String END_TURN_LABEL = "🔚 结束回合";
-    private static final String NEXT_BATTLE_LABEL = "🔁 开始下一场战斗";
-    private static final String RETRY_LABEL = "🔁 重新开始（危险度已重置）";
+    private String END_TURN_LABEL;
+    private String NEXT_BATTLE_LABEL;
+    private String RETRY_LABEL;
     private static final int HAND_SIZE = 5;
 
     private int currentSongResId;
@@ -76,6 +76,9 @@ public class StatsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stats);
+        END_TURN_LABEL = "🔚 " + getString(R.string.end_turn);
+        NEXT_BATTLE_LABEL = "🔁 " + getString(R.string.nextbattle);
+        RETRY_LABEL = "🔁 " + getString(R.string.restart);
 
         store = new PrescriptStore(this);
         indexFingerLevel = new IndexFingerLevel_CN();
@@ -106,7 +109,7 @@ public class StatsActivity extends AppCompatActivity {
             int pos = spinnerCards.getSelectedItemPosition();
             List<String> names = currentSpinnerNames();
             if (pos < 0 || pos >= names.size()) {
-                Toast.makeText(this, "请选择一个操作", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.noChoose), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (names.get(pos).equals(END_TURN_LABEL)) {
@@ -114,11 +117,11 @@ public class StatsActivity extends AppCompatActivity {
                 return;
             }
             if (deck.hand.isEmpty() || pos >= deck.hand.size()) {
-                Toast.makeText(this, "没有可用的卡牌", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.noCard), Toast.LENGTH_SHORT).show();
                 return;
             }
             if(player.stagger_panic_term > 0){
-                Toast.makeText(this, "你已经陷入混乱了☺️🌸", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.onStagger), Toast.LENGTH_SHORT).show();
                 return;
             }
             useCard(deck.hand.get(pos));
@@ -177,8 +180,9 @@ public class StatsActivity extends AppCompatActivity {
         initPlayer();
         initDeckFromOwnedCards();
         spawnByDifficulty();
+        playSong(this, R.raw.lobotomy_1, mediaPlayer);
         enemy.current_intent = computeEnemyIntent();
-        appendLog("========== 新的战斗开始，当前危险度: " + player.difficulty + " ==========");
+        appendLog("==========" + getString(R.string.battlestart) + player.difficulty + " ==========");
         startTurn();
     }
 
@@ -282,12 +286,13 @@ public class StatsActivity extends AppCompatActivity {
             case 10:
                 return enemyDefs.brainGOD(enemy, player);
             case 11:
+                EnemyAction temp = enemyDefs.brainKromo(enemy, player);
                 if(enemy.countC == 2){
                     playSong(this, R.raw.betweentwoworlds_2, mediaPlayer);
                 }else{
                     playSong(this, R.raw.betweentwoworlds_1, mediaPlayer);
                 }
-                return enemyDefs.brainKromo(enemy, player);
+                return temp;
             default:
                 return null;
         }
@@ -380,6 +385,14 @@ public class StatsActivity extends AppCompatActivity {
         appendLog("——— 回合开始 ———");
         appendLog("牌库："+deck.drawPile.size());
         appendLog("弃牌堆："+deck.discardPile.size());
+        if(player.buff.UnlockedHealth > 0 || player.hp < 0){
+            player.buff.UnlockedHealth = 0;
+            player.buff.lockedHealth--;
+            player.hp = (int) (player.max_hp * 0.5);
+            if(player.buff.bloodstainedTears > 0){
+                deck.addCard(cardDefs.BloodstainedTears_finale(), mechanics.logger);
+            }
+        }
         player.buff.turnStartActivate(enemy);
         enemy.buff.turnStartActivate(player);
         player.this_turn_strength = 0;
@@ -466,7 +479,7 @@ public class StatsActivity extends AppCompatActivity {
 
         refreshAllUI();
 
-        if (player.hp <= 0) {
+        if (player.hp <= 0 && player.buff.lockedHealth <= 0) {
             player.hp = 0;
             onDefeat();
             return;
@@ -585,14 +598,13 @@ public class StatsActivity extends AppCompatActivity {
             store.saveCardCollection(collection);
             String qualityTag = FortunaCards.rarenessOf(dropKey) == 3 ? "🌟金卡"
                     : FortunaCards.rarenessOf(dropKey) == 2 ? "🔷稀有" : FortunaCards.rarenessOf(dropKey) == 1 ? "⚪普通" : "⚙️测试";
-            appendLog("🃏 获得新卡：" + qualityTag + " " + FortunaCards.displayName(dropKey) + "（已放入牌库，去养成界面装备）");
-            Toast.makeText(this, "获得新卡：" + FortunaCards.displayName(dropKey), Toast.LENGTH_LONG).show();
+            appendLog("🃏 获得新卡：" + qualityTag + " " + FortunaCards.displayName(dropKey, getResources()) + "（已放入牌库，去养成界面装备）");
+            Toast.makeText(this, "获得新卡：" + FortunaCards.displayName(dropKey, getResources()), Toast.LENGTH_LONG).show();
         }
 
         // 战斗结束，快照没意义了，清掉；危险度已经在spawnByDifficulty时存过，留着给下一场用
         store.clearBattleSnapshot();
         battleOver = true;
-        playSong(this, R.raw.lobotomy_1, mediaPlayer);
         showBattleOverSpinner(NEXT_BATTLE_LABEL);
         refreshAllUI();
     }
@@ -629,7 +641,6 @@ public class StatsActivity extends AppCompatActivity {
         store.clearBattleSnapshot();
         battleOver = true;
         showBattleOverSpinner(RETRY_LABEL);
-        playSong(this, R.raw.lobotomy_1, mediaPlayer);
         refreshAllUI();
     }
 
@@ -735,46 +746,46 @@ public class StatsActivity extends AppCompatActivity {
 
     private String buildStatusChips(Entity e) {
         StringBuilder sb = new StringBuilder();
-        sb.append("🧠理智 ").append(e.sanity).append("  ");
+        sb.append("🧠"+getString(R.string.sanity)+" ").append(e.sanity).append("  ");
         sb.append(e.getAmmo()).append("  ");
         if (e.stagger_count < 3){
-            sb.append("😖下次混乱还需造成").append(e.health - e.staggerLine[e.stagger_count]*e.outside_max_hp).append("伤害  ");
+            sb.append("😖"+getString(R.string.next_stagger)).append(e.health - e.staggerLine[e.stagger_count]*e.outside_max_hp).append("伤害  ");
         }
-        if (e.block > 0) sb.append("🛡护盾").append(e.block).append("  ");
-        if (e.strength != 0) sb.append("💪力量").append(e.strength).append("  ");
-        if (e.this_turn_strength != 0) sb.append("⚡本回合力量").append(e.this_turn_strength).append("  ");
-        if (e.swift != 0) sb.append("⬆迅捷").append(e.swift).append("  ");
-        if (e.burn_term > 0) sb.append("🔥灼烧").append(e.burn_strength).append("x").append(e.burn_term).append("  ");
-        if (e.bleed_term > 0) sb.append("🩸流血").append(e.bleed_strength).append("x").append(e.bleed_term).append("  ");
-        if (e.tremor_term > 0) sb.append("🌀震颤").append(e.tremor_strength).append("x").append(e.tremor_term).append("  ");
-        if (e.sinking_term > 0) sb.append("💧沉沦").append(e.sinking_strength).append("x").append(e.sinking_term).append("  ");
-        if (e.rapture_term > 0) sb.append("💔破裂").append(e.rapture_strength).append("x").append(e.rapture_term).append("  ");
-        if (e.poise_term > 0) sb.append("🌫️呼吸法").append(e.poise_strength).append("x").append(e.poise_term).append("  ");
-        if (e.blade > 0) sb.append("🗡剑痕").append(e.blade).append("  ");
-        if (e.shin > 0) sb.append("💛心").append(e.shin).append("  ");
-        if (e.charge_term > 0 || e.charge_strength > 1) sb.append("🔋充能").append(e.charge_strength).append("-").append(e.charge_term).append("  ");
-        if (e.stagger_panic_term > 0) sb.append("😵混乱层数").append(e.stagger_panic_term).append("  ");
-        if (e.restrictions > 0) sb.append("⛓制约").append(e.restrictions).append("  ");
-        if (e.krama > 0) sb.append("‼️业").append(e.krama).append("  ");
-        if (e.EntityId == 3) sb.append("⚜️代行:赫尔墨斯").append(e.grace).append("  ");
-        if (e.tianjiustarblade > 0) sb.append("🔪天究星刀").append(e.tianjiustarblade).append("  ");
+        if (e.block > 0) sb.append("🛡"+getString(R.string.shield)).append(e.block).append("  ");
+        if (e.strength != 0) sb.append("💪"+getString(R.string.strength)).append(e.strength).append("  ");
+        if (e.this_turn_strength != 0) sb.append("⚡"+getString(R.string.this_turn_strength)).append(e.this_turn_strength).append("  ");
+        if (e.swift != 0) sb.append("⬆"+getString(R.string.haste)).append(e.swift).append("  ");
+        if (e.burn_term > 0) sb.append("🔥"+getString(R.string.burn)).append(e.burn_strength).append("x").append(e.burn_term).append("  ");
+        if (e.bleed_term > 0) sb.append("🩸"+getString(R.string.bleed)).append(e.bleed_strength).append("x").append(e.bleed_term).append("  ");
+        if (e.tremor_term > 0) sb.append("🌀"+getString(R.string.tremor)).append(e.tremor_strength).append("x").append(e.tremor_term).append("  ");
+        if (e.sinking_term > 0) sb.append("💧"+getString(R.string.sinking)).append(e.sinking_strength).append("x").append(e.sinking_term).append("  ");
+        if (e.rapture_term > 0) sb.append("💔"+getString(R.string.rapture)).append(e.rapture_strength).append("x").append(e.rapture_term).append("  ");
+        if (e.poise_term > 0) sb.append("🌫️"+getString(R.string.poise)).append(e.poise_strength).append("x").append(e.poise_term).append("  ");
+        if (e.blade > 0) sb.append("🗡"+getString(R.string.blade)).append(e.blade).append("  ");
+        if (e.shin > 0) sb.append("💛"+getString(R.string.shin)).append(e.shin).append("  ");
+        if (e.charge_term > 0 || e.charge_strength > 1) sb.append("🔋"+getString(R.string.charge)).append(e.charge_strength).append("-").append(e.charge_term).append("  ");
+        if (e.stagger_panic_term > 0) sb.append("😵"+getString(R.string.stagger)).append(e.stagger_panic_term).append("  ");
+        if (e.restrictions > 0) sb.append("⛓"+getString(R.string.restrictions)).append(e.restrictions).append("  ");
+        if (e.krama > 0) sb.append("‼️"+getString(R.string.krama)).append(e.krama).append("  ");
+        if (e.EntityId == 3) sb.append("⚜️"+getString(R.string.Hermes)).append(e.grace).append("  ");
+        if (e.tianjiustarblade > 0) sb.append("🔪"+getString(R.string.TianjiuStarBlade)).append(e.tianjiustarblade).append("  ");
         ArrayList<String> a = e.buff.getString();
         for(int i = 0; i < a.size(); i++){
             sb.append(a.get(i));
         }
-        if (sb.length() == 0) sb.append("（无异常状态）");
+        if (sb.length() == 0) sb.append(getString(R.string.NoEffect));
         return sb.toString().trim();
     }
 
     public void refreshAllUI() {
-        tvKarma.setText("业(福尔图娜): " + indexFingerLevel.krama);
-        tvBlessing.setText("指令加护: " + indexFingerLevel.grace);
+        tvKarma.setText(getString(R.string.krama_ex) + ": " + indexFingerLevel.krama);
+        tvBlessing.setText(getString(R.string.grace_ex) + ": " + indexFingerLevel.grace);
         String name = indexFingerLevel.getName();
         String codename = store.loadCodename();
         if (codename != null && !codename.isEmpty()) name += " " + codename;
         tvTitle.setText(name);
 
-        tvHP.setText("生命值: " + player.hp + "/" + player.max_hp);
+        tvHP.setText(getString(R.string.hp) + ": " + player.hp + "/" + player.max_hp);
         //tvSanity.setText("理智值: " + player.sanity);
 
         if (hpBar != null) {
@@ -788,21 +799,21 @@ public class StatsActivity extends AppCompatActivity {
 
         int exp = indexFingerLevel.grace;
         int maxExp = 100;
-        tvEXP.setText("EXP: " + exp + "/" + maxExp);
-        tvLevel.setText("Lv. " + indexFingerLevel.level);
+        tvEXP.setText(getString(R.string.exp) + exp + "/" + maxExp);
+        tvLevel.setText(getString(R.string.level) + indexFingerLevel.level);
         if (expBar != null) {
             expBar.setMax(maxExp);
             expBar.setProgress(Math.max(0, Math.min(exp, maxExp)));
         }
 
-        tvLight.setText("光芒: \n" + getLight());
+        tvLight.setText(getString(R.string.light) + ": \n" + getLight());
         if (tvPlayerStatus != null) tvPlayerStatus.setText(buildStatusChips(player));
 
         if (enemy != null) {
-            tvEnemyName.setText("敌人：" + enemy.name + "  " + enemy.hp + "/" + enemy.max_hp
-                    + (enemy.block > 0 ? "  护盾:" + enemy.block : ""));
+            tvEnemyName.setText(enemy.name + "  " + enemy.hp + "/" + enemy.max_hp
+                    + (enemy.block > 0 ? getString(R.string.shield) + "  :" + enemy.block : ""));
             String intentText = (enemy.current_intent != null) ? enemy.current_intent.description : "——";
-            tvEnemyIntent.setText("意图：" + (battleOver ? "战斗已结束" : intentText));
+            tvEnemyIntent.setText(getString(R.string.intent) + "：" + (battleOver ? getString(R.string.battleover) : intentText));
             if (tvEnemyStatus != null) tvEnemyStatus.setText(buildStatusChips(enemy));
             if (enemyHpBar != null) {
                 enemyHpBar.setMax(Math.max(1, enemy.max_hp));

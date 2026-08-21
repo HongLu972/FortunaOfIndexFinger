@@ -1,0 +1,5 @@
+# DragonBonesJAVA
+
+```
+./gradlew check
+```

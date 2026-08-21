@@ -162,7 +162,7 @@ public class DeckManageActivity extends AppCompatActivity {
 
             int rareness = FortunaCards.rarenessOf(entry.getKey());
             String qualityTag = rareness == 3 ? "🌟" : rareness == 2 ? "🔷" : rareness == 1 ? "⚪" : "⚙️";
-            tvName.setText(qualityTag + " " + FortunaCards.displayName(entry.getKey()) + "  x" + entry.getValue());
+            tvName.setText(qualityTag + " " + FortunaCards.displayName(entry.getKey(), getResources()) + "  x" + entry.getValue());
             btnAction.setText(buttonLabel);
             btnAction.setOnClickListener(v -> action.act(entry.getKey()));
 
@@ -176,7 +176,7 @@ public class DeckManageActivity extends AppCompatActivity {
         collectionKeys.add(key);
         store.saveOwnedCardKeys(deckKeys);
         store.saveCardCollection(collectionKeys);
-        Toast.makeText(this, "已卸下 " + FortunaCards.displayName(key) + "，放回大牌库", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "已卸下 " + FortunaCards.displayName(key, getResources()) + "，放回大牌库", Toast.LENGTH_SHORT).show();
         refreshAll();
     }
 
@@ -186,7 +186,7 @@ public class DeckManageActivity extends AppCompatActivity {
         deckKeys.add(key);
         store.saveCardCollection(collectionKeys);
         store.saveOwnedCardKeys(deckKeys);
-        Toast.makeText(this, "已装备 " + FortunaCards.displayName(key) + "，下次出战会带上", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "已装备 " + FortunaCards.displayName(key, getResources()) + "，下次出战会带上", Toast.LENGTH_SHORT).show();
         refreshAll();
     }
 

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fortuna\'s Slit </string>
+    <string name="next_stagger">Distance to Stagger</string>
+    <string name="shield">Shield</string>
+    <string name="sanity">Sanity</string>
+    <string name="strength">Strength</string>
+    <string name="this_turn_strength">This-Turn-Strength</string>
+    <string name="haste">Haste</string>
+    <string name="burn">Burn</string>
+    <string name="bleed">Bleed</string>
+    <string name="tremor">Tremor</string>
+    <string name="sinking">Sinking</string>
+    <string name="rapture">Rapture</string>
+    <string name="poise">Poise</string>
+    <string name="blade">Blade Mark</string>
+    <string name="shin">Shin</string>
+    <string name="charge">Charge</string>
+    <string name="stagger">Stagger Terms</string>
+    <string name="restrictions">Restrictions</string>
+    <string name="krama">Krama</string>
+    <string name="krama_ex">Krama(Fortuna)</string>
+    <string name="grace">Grace</string>
+    <string name="grace_ex">Grace</string>
+    <string name="Hermes">Procuration::Hermes</string>
+    <string name="TianjiuStarBlade">Tianjiu Star\'s Blade</string>
+    <string name="NoEffect">There\'s no Buff on you</string>
+    <string name="hp">Health</string>
+    <string name="level">lv.</string>
+    <string name="exp">EXP: </string>
+    <string name="light">Light</string>
+    <string name="intent">Intent</string>
+    <string name="battleover">The Battle is Over</string>
+    <string name="battlestart">The Battle starts, the difficulty is: </string>
+    <string name="onStagger">You\'re staggered, no move!</string>
+    <string name="noCard">You\'ve no card in your hand, end the turn!</string>
+    <string name="noChoose">You need to choose a valid card</string>
+    <string name="restart">Restart here and make difficulty into 0</string>
+    <string name="nextbattle">This battle is over, new one will come soon</string>
+    <string name="end_turn">End this turn</string>
+    <!-- Prescripts (English) -->
+    <string name="prescript_000">Sleep for a total of 800 hours per today</string>
+    <string name="prescript_001">Eat, write, or pull the trigger with your right hand only</string>
+    <string name="prescript_002">Warm up before you play</string>
+    <string name="prescript_003">Stop following Hermes\' orders and use Fortuna\'s instead</string>
+    <string name="prescript_004">Leave a bottle of iced tea and a note saying \"Sorry I scratched your car, here\'s some iced tea, I\'m off\" on a stranger\'s car</string>
+    <string name="prescript_005">When you see any pursuit next time, sincerely exclaim \'Ailan City District\'</string>
+    <string name="prescript_006">When you see any pursuit next time, say \'Did you ask?\'</string>
+    <string name="prescript_007">After watching the White Dry Orchestra performance in Lobotomy Corp, don\'t restart until the day ends</string>
+    <string name="prescript_008">Listen to any Mili song and sincerely appreciate it</string>
+    <string name="prescript_009">Clear the full-restriction 15-cell dungeon with 0 Starlight</string>
+    <string name="prescript_010">Spin an object near you for one minute</string>
+    <string name="prescript_011">Sit up and stretch once</string>
+    <string name="prescript_012">Watch the full opening of Library of Ruina</string>
+    <string name="prescript_013">Stop all irrational behavior and sit quietly for 30 seconds</string>
+    <string name="prescript_014">Prepare lunch for yourself and eat it outside</string>
+    <string name="prescript_015">Clear the full-restriction Mirror Dungeon without using Zero Association translation</string>
+    <string name="prescript_016">Develop a fan game based on Project Moon</string>
+    <string name="prescript_017">Hold on (stay composed) for the next 1 hour</string>
+    <string name="prescript_018">When you hear someone slander Bloodfiends, shout \'Bloodfiends don\'t belong to the city\'</string>
+    <string name="prescript_019">Tell newbies that \'Umbrella God is God\'</string>
+    <string name="prescript_020">Expose the classic scam: \'Umbrella Man is God\'</string>
+    <string name="prescript_021">As everyone doesn\'t know, typing \'set.*rnfmabj\' in the cheat console will give a surprise</string>
+    <string name="prescript_022">Don\'t eat midnight snacks for the next day</string>
+    <string name="prescript_023">When you see this, you are invincible. Face your hand and cut off the note</string>
+    <string name="prescript_024">Don\'t treat this as a notepad! This feature probably won\'t be added.</string>
+    <string name="prescript_025">Open a low-quality ad game and play it for at least 1 minute</string>
+    <string name="prescript_026">Go to LeetCode and solve one Hard-difficulty problem</string>
+    <string name="prescript_027">Clear Tiphereth\'s Core Suppression – Aspiration of Forced Meltdown</string>
+    <string name="prescript_028">Use your extraordinary eyesight to check what the farthest person in your sight is doing</string>
+    <string name="prescript_029">Feed the resolve of Corpse Mountain – Defeat the three-ball Corpse Mountain (sticky rice dumpling)</string>
+    <string name="prescript_030">Send \"Manager manager manager...\" to a Project Moon fan</string>
+    <string name="prescript_031">Skip a stone on water, at least 3 skips</string>
+    <string name="prescript_032">Use a Golden Bough ability once</string>
+    <string name="prescript_033">Make something that would attract the Head, e.g., Angela</string>
+    <string name="prescript_034">Wander outside in the Backstreets late at night for at least 10 minutes today</string>
+    <string name="prescript_035">Delete Limbus Company, then reinstall it</string>
+    <string name="prescript_036">Visit the Library of Ruina as a guest</string>
+    <string name="prescript_037">Defeat Rien once</string>
+    <string name="prescript_038">Keep Madness above 1300 for at least 30 seconds</string>
+    <string name="prescript_039">Keep any Sinner\'s E.G.O fragment ≥400 for at least 2 weeks</string>
+    <string name="prescript_040">Drink a cup of milk tea</string>
+    <string name="prescript_041">Execute the forged order from Yang</string>
+    <string name="prescript_042">Ignore all orders that tell you to go out today and stay home</string>
+    <string name="prescript_043">Counter-kill the 3 Procurators and 7 Penitents behind you – kidding, there are none</string>
+    <string name="prescript_044">Just in case you didn\'t know, the cheat code detection uses regex, i.e., \'.*\' matches any string of any length</string>
+    <string name="prescript_045">Are Sweepers tasty? So…</string>
+    <string name="prescript_046">When you see instructions with -1 seconds, they are basically my ramblings, yes</string>
+    <string name="prescript_047">I don\'t know what feature to develop next... so sad</string>
+    <string name="prescript_048">The dev is already burned out</string>
+    <!-- ========== Card Names ========== -->
+    <string name="card_name_strike">Strike</string>
+    <string name="card_name_defend">Guard</string>
+    <string name="card_name_burning_curse">Burn (Curse)</string>
+    <string name="card_name_jishixingle">Carpe Diem</string>
+    <string name="card_name_swordflashing">Forest Fire Image</string>
+    <string name="card_name_beheading">Decapitation</string>
+    <string name="card_name_memorial_procession">Memorial Procession</string>
+    <string name="card_name_inevitable_slash">Inevitable Slash</string>
+    <string name="card_name_afterimage_step">Afterimage Step</string>
+    <string name="card_name_rendspace">Rend Space</string>
+    <string name="card_name_rendspace_yuan">Rend Space (Fate)</string>
+    <string name="card_name_noself">No Self</string>
+    <string name="card_name_wordpower_death">Word of Death (Test)</string>
+    <string name="card_name_ego_redbeauty">Degraded E.G.O: Red Beauty</string>
+    <string name="card_name_comboshoot">Combo Shoot</string>
+    <string name="card_name_disposal">Disposal</string>
+    <string name="card_name_proliferatingg">Proliferating G</string>
+    <string name="card_name_budaijiezou">No Rhythm (Eyes can\'t follow, ears can\'t reach)</string>
+    <string name="card_name_heishou">/@All Black Beasts, reply with skill 3</string>
+    <string name="card_name_shankai">Move aside, I\'ll do it myself</string>
+    <string name="card_name_kaidao">Open the Way (Open the Monarch\'s Path!)</string>
+    <string name="card_name_wudile">Invincible!</string>
+    <string name="card_name_purify">Purify!</string>
+    <string name="card_name_seedoflight">Seed of Light Plan</string>
+    <string name="card_name_collectlight">Collect Light</string>
+    <string name="card_name_tiphereth">Aspiration of Existence</string>
+    <string name="card_name_setdanger">Set Danger Level</string>
+    <string name="card_name_cogito">Cogito</string>
+    <string name="card_name_300lunacy">Kim\'s Friend Fee (300 Lunacy)</string>
+    <string name="card_name_ququ">Ailan City District</string>
+    <string name="card_name_zhuizhui">Seeing Mercy, Why Not Smile?</string>
+    <string name="card_name_thunder">Thunder Strike</string>
+    <string name="card_name_currentgeneration">Current Generation</string>
+    <string name="card_name_calmbrain">Calm Brain</string>
+    <string name="card_name_rainbow">Rainbow</string>
+    <string name="card_name_charge">Charge</string>
+    <string name="card_name_sixthsense">Sixth Sense</string>
+    <string name="card_name_egomagicbullet">Lobotomy E.G.O: Magic Bullet</string>
+    <string name="card_name_si">Mad Snake (Fatal Chaos)</string>
+    <string name="card_name_littlebird">Little Bird / Punishment Bird</string>
+    <string name="card_name_tallbird">Tall Bird / Judgment Bird</string>
+    <string name="card_name_bigbird">Big Bird</string>
+    <string name="card_name_bigmonster">Big Monster / Apocalypse Bird</string>
+    <string name="card_name_xiangxin">Believe in the Martial Soul</string>
+    <string name="card_name_bloodstainedtears_start">E.G.O: Bloodstained Tears (Start)</string>
+    <string name="card_name_bloodstainedtears_finale">E.G.O: Bloodstained Tears (Finale)</string>
+
+    <!-- ========== Toasts ========== -->
+    <string name="toast_yan_trigger_2light">Triggered Forest Flame, restored 2 Light</string>
+    <string name="toast_yan_trigger_1light">Triggered Forest Fire, restored 1 Light</string>
+    <string name="toast_wudile">Invincible!</string>
+    <string name="toast_xiangxin">Believe in the Martial Soul!</string>
+    <string name="toast_300lunacy">Friend fee, where are you? Come to my inbox! I can hear your voice, hopefully...\n---Dev</string>
+    <string name="toast_littlebird_intro">Little Bird comes out for a stroll, punishing wrongdoers with its beak</string>
+    <string name="toast_threebirds_1">Gwaa, don\'t stick together you three! The Manager screeched sharply.</string>
+    <string name="toast_threebirds_2">The animal friends shouted, \"It\'s that monster!\"</string>
+    <string name="toast_threebirds_3">The Managers cried out, \"My TT2————\"</string>
+    <string name="toast_tallbird_intro">Tall Bird judges people\'s sins</string>
+    <string name="toast_bigbird_intro">The Big Bird Is Watching You</string>
+    <string name="toast_lock_yes">But was it all... worth it?</string>
+    <string name="toast_lock_no">Okay</string>
+    <string name="toast_setdanger_error">Please enter a valid number</string>
+
+    <!-- ========== Dialogs ========== -->
+    <string name="dialog_heishou_title">Summon the Black Beasts?</string>
+    <string name="dialog_heishou_message">Or shall they step aside and let you handle it yourself?</string>
+    <string name="dialog_heishou_positive">/@All Black Beasts, reply with skill 3!</string>
+    <string name="dialog_heishou_negative">Move aside, I\'ll do it myself!</string>
+
+    <string name="dialog_lock_title">Unlock the locked health?</string>
+    <string name="dialog_lock_message">Do you want to unlock the enemy\'s locked health? This may lead to a less pleasant experience.</string>
+    <string name="dialog_lock_positive">Yes</string>
+    <string name="dialog_lock_negative">No</string>
+
+    <string name="dialog_tiphereth_message">Warning: SEPHIRAH\'s core collapse has materialized the inverse Kabbalah energy. You must suppress the Sephirah\'s core immediately.</string>
+    <string name="dialog_tiphereth_button">Understood</string>
+
+    <string name="dialog_setdanger_title">Debug Card - Set Danger Level</string>
+    <string name="dialog_setdanger_message">What danger level do you want?</string>
+    <string name="dialog_setdanger_positive">Confirm</string>
+
+    <!-- ========== Log ========== -->
+    <string name="log_currentgeneration">Due to too many lightning charge balls generated by this Current Generation, which may cause lags or crashes, we settle them all at once. Next time you use it, the number of charge balls will be %d.</string>
+    <!-- Intent -->
+    <string name="lunacy">What shall I say? I will just give you this turn~</string>
+    <!-- ========== Enemy Names ========== -->
+    <string name="enemy_name_ailan_worm">Ailan Worm Howling for Becoming a District</string>
+    <string name="enemy_name_kromo_original">Kromer Aspiring to the Original</string>
+    <string name="enemy_name_god">Umbrella God</string>
+    <string name="enemy_name_bound_king">Bound King</string>
+
+    <!-- ========== Hajimi Actions ========== -->
+    <string name="enemy_action_ha">This cat looks very angry...</string>
+    <string name="enemy_action_zhamao">The cat\'s fur is bristling like needles...</string>
+    <string name="enemy_action_enhanced">The cat\'s claws are starting to stir</string>
+    <string name="enemy_action_stagger_null">Staggered, cannot act</string>
+
+    <!-- ========== Hearts Actions ========== -->
+    <string name="enemy_action_hearts_strongmove">In↑ten↓se↑ly↓ Be↑at↓ing↓</string>
+    <string name="enemy_action_hearts_normal">Getting hit by this attack has a wonderful effect~</string>
+    <string name="enemy_action_hearts_stagger">Staggered! ☺️❀</string>
+
+    <!-- ========== Thunder Spirit Actions ========== -->
+    <string name="enemy_action_thunder_storm">Dark clouds roll over the green mountains</string>
+    <string name="enemy_action_thunder_thundering">Thunder roars above the ninth heaven</string>
+    <string name="enemy_action_thunder_flashing">Thunder chariots shake the earth with lightning fire</string>
+    <string name="enemy_action_thunder_sound">Thunder drives rain, darkening a thousand peaks</string>
+    <string name="enemy_action_thunder_stagger">Clouds scatter, peace remains; thunder fades, the air is still unsettled</string>
+
+    <!-- ========== Forgotten Killer Actions ========== -->
+    <string name="enemy_action_forgotten_grasp">I... I can\'t breathe...</string>
+    <string name="enemy_action_forgotten_enhanced">Let, let me out!</string>
+
+    <!-- ========== Albina Actions ========== -->
+    <string name="enemy_action_albina_fascia">Fascia is hungry~</string>
+    <string name="enemy_action_albina_time">I\'ll make good use of your blood vessels</string>
+    <string name="enemy_action_albina_depressed">Liberation of the oppressed flesh!</string>
+    <string name="enemy_action_albina_premium">I\'ve already started</string>
+
+    <!-- ========== QuQu Actions ========== -->
+    <string name="enemy_action_ququ_stater">If I just let this buff go, I\'ll be a district forever...</string>
+    <string name="enemy_action_ququ_atk">Kids, have you asked or not?</string>
+    <string name="enemy_action_ququ_waw">Both W Corp identities, how could...</string>
+    <string name="enemy_action_ququ_qwq">...So I was born as just a district, Ms. Carmen...</string>
+    <string name="enemy_action_ququ_stk">You created me but didn\'t give me power, Kim, it\'s all your fault!</string>
+    <string name="enemy_action_ququ_ttk">Weak and no E.G.O either, Kim Jihoon, it\'s still your fault!</string>
+    <string name="enemy_action_ququ_ftk">Even after Uptie 5, no buff for me, Jang Sina, it\'s your fault again!</string>
+
+    <!-- ========== Rein Actions ========== -->
+    <string name="enemy_action_rein_announce">If I let you leave like this, you\'ll never come back, will you...</string>
+    <string name="enemy_action_rein_1">One</string>
+    <string name="enemy_action_rein_2">Two</string>
+    <string name="enemy_action_rein_3">Three (trois)</string>
+    <string name="enemy_action_rein_4">Four</string>
+    <string name="enemy_action_rein_5">Five</string>
+    <string name="enemy_action_rein_6">Six (six)</string>
+    <string name="enemy_action_rein_7">Seven, two left</string>
+    <string name="enemy_action_rein_8">Eight, one left</string>
+    <string name="enemy_action_rein_9">Nine (neuf), complete</string>
+    <string name="enemy_action_rein_null">Hahaha, not bad at all</string>
+    <string name="enemy_action_rein_estagger">Even in that state, still so beautiful?</string>
+    <string name="enemy_action_rein_furioso_first">Ah, so... it\'s come to this day after all.</string>
+    <string name="enemy_action_rein_furioso">Daughter. You know that, right? Predictions are meaningless.</string>
+    <string name="enemy_action_rein_cresendo_fst">No need to embark on a journey; this is the hell you belong to, isn\'t it?</string>
+    <string name="enemy_action_rein_cresendo_1">This Naraka is where you belong.</string>
+    <string name="enemy_action_rein_cresendo_2">A fool living a predetermined life. That is you. And me too.</string>
+    <string name="enemy_action_rein_cresendo_3">By now, you can no longer live freely. Even if you run, God\'s soldiers will hunt you down.</string>
+    <string name="enemy_action_rein_requiem_1">This cannot be severed, daughter. ...You cannot sever it on your own.</string>
+    <string name="enemy_action_rein_requiem_2">Daughter. Don\'t resent me. One thing is another.</string>
+    <string name="enemy_action_rein_requiem_3">I must tear open the sky... and wipe out everything that wants to take my daughter away.</string>
+
+    <!-- ========== Valencina Actions ========== -->
+    <string name="enemy_action_valencina_disposal">So annoying! You and the tickets are all annoying!</string>
+    <string name="enemy_action_valencina_jielu">Which *thumb curse* said this move is called \"Jie Lu\"?!</string>
+    <string name="enemy_action_valencina_null">Since she might be too hard to start, she sits still for one turn --- Dev</string>
+    <string name="enemy_action_valencina_stagger">Staggered! ☺️❀</string>
+
+    <!-- ========== Yoshide Actions ========== -->
+    <string name="enemy_action_yoshide_painted">Smear</string>
+    <string name="enemy_action_yoshide_clear">Erase   , and erase         </string>
+    <string name="enemy_action_yoshide_pinted">S  ar</string>
+    <string name="enemy_action_yoshide_pante">  ea </string>
+    <string name="enemy_action_yoshide_ptd">     </string>
+    <string name="enemy_action_yoshide_duan">Sever·    </string>
+    <string name="enemy_action_yoshide_yuan">     ·Fate</string>
+    <string name="enemy_action_yoshide_nothing">     ·    </string>
+    <string name="enemy_action_yoshide_stagger">Fall·Stagger</string>
+
+    <!-- ========== Kromo Actions ========== -->
+    <string name="enemy_action_kromo_purify">Pu↑ri↓fy↓</string>
+    <string name="enemy_action_kromo_whistle">Sinclair~ (Mysterious whistle)</string>
+    <string name="enemy_action_kromo_hold">I will hold it</string>
+    <string name="enemy_action_kromo_greatpurify">Sublime Pu↑ri↓fy↓</string>
+    <string name="enemy_action_kromo_loyalful">Glorious Hold</string>
+
+    <!-- ========== GOD (Umbrella God) Actions ========== -->
+    <string name="enemy_action_god_hajia">Hajia!</string>
+    <string name="enemy_action_god_kai">Kai!</string>
+    <string name="enemy_action_god_corride">These ropes are both bandages and shackles... When will they finally set me free!!</string>
+
+    <!-- ========== Toasts ========== -->
+    <string name="toast_rein_unlock_1">Dream of No-Self</string>
+    <string name="toast_rein_unlock_2">Avīci Cries</string>
+    <string name="toast_rein_unlock_3">Fragmented Oblivion</string>
+    <string name="toast_god_corride">These ropes are both bandages and shackles... When will they finally set me free!!</string>
+
+    <!-- ========== Logs ========== -->
+    <string name="log_god_corride">That day, the Umbrella Man corroded~</string>
+
+    <!-- ========== Announcements ========== -->
+    <string name="announce_1">Fixed known bugs:\n1. Fixed infinite recursion bug caused by repeated useCard reference when using \"?! Mere?!\"\n2. Fixed issue where \"ququ\" cheat code couldn\'t target Ailan City District\n3. Didn\'t find other bugs; actually fixed before launch, e.g., Ailan Worm (enemy) hitting itself with Mercy\nNew Mechanics:\n1. Anyone who played yesterday\'s version knows there\'s a new charge ball in the status bar. Yes, charge balls are now fully implemented and usable!\nNot-So-New Cards:\n1. Current Generation (code: CurrentGeneration) – effects omitted for brevity\n2. Thunder Strike (code: Thunder) – generates 2 Lightning Charge Balls\nBelieve there will be more bugs to fix in the future</string>
+
+    <string name="announce_2">Fixed known bugs:\n1. Manifest wasn\'t bound, so the previous version couldn\'t actually show announcements. Fixed angrily.\n2. Seems like that\'s all.\nNew Mechanics: Frost Charge Balls\nI hope you haven\'t forgotten what Frost Charge Balls do, but I\'ll explain anyway:\n[On Destruction] Gain a large amount of shield, reduce enemy Swiftness by 3\n[End of Turn] Gain some shield\nNot-So-New Cards:\nNo new cards this time. Don\'t you feel there are too few enemies? So this update focuses on enemy targets – meaning you still can\'t play with Frost Charge Balls 🤡\nNew Enemies / Balance Adjustments:\n1. [Normal Enemy] Thunder Elemental Spirit: Has both Lightning Charge Balls and Charge mechanics, but being a normal enemy, its numbers limit its potential.\n2. [Boss] Valencina: Valencina was pissed off when she heard she was kicked aside like a roadside trash, so she got several buffs:\nI   Valencina will no longer skip the first turn\nII  Valencina will now dodge\nIII Valencina\'s \"Jie Lu\" won\'t reduce this-turn strength when acceleration bullets are below 3\nIV  Valencina\'s Disposal: DOT, damage, and scaling increased\nV   Precognition Eye cap raised to 20; using Disposal will immediately set it to 10\n3. [Boss] Rein: Hermes made him do it\nI   Player Panic now directly causes them to become Staggered\nII  In battle against Rein, player\'s Sinking strength won\'t go below 5\n4. [Boss] No-Self Yoshide:\nI   No-Self Yoshide\'s own HP cap reduced\nII  No-Self Yoshide\'s damage reduced\nIII No-Self Yoshide\'s Stagger line adjusted to -0 2,  ,  . ]\nIV  Yoshide gains 2 locked health; on trigger, HP cap and HP set to 0.2x outside HP\nV   No-Self Yoshide won\'t fail while having shield</string>
+
+    <string name="announce_3">Fixed known bugs/Adjustments:\n1. Previously rushed to leave work, causing errors in the announcement section. Fixed now.\n2. Forgot that Rein\'s small skills didn\'t apply Sinking, so now they do.\n3. Fixed bug where No-Self Yoshide\'s recovered HP after locked health wasn\'t affected by Restrictions.\n4. No-Self Yoshide\'s damage seemed a bit too high, flipping into negative, so restrictions were applied.\n5. Frost Charge Balls now have a way to obtain! Calm Brain gives Concentration and Frost Charge Balls [code: CalmBrain].\n6. New Charge Ball: Ion Charge Ball. On trigger (destruction) and turn start, gain extra Light (Is this still a Project Moon fan game? Where am I even?) Related cards:\n   I   Rainbow [code: rainbow] (3): Consumption – gain 1 Lightning, 1 Frost, and 1 Ion Charge Ball in sequence\n   II  Charge [code: charge] (1): Effect depends on Charge strength: &lt;=3: gain lots of Charge stacks and consume all; 4-5: gain 2 Energy, some Charge stacks and consume all; >6: gain 1 Ion Charge Ball\n7. No-Self Yoshide changes:\n   I   No-Self Yoshide will... also... damage reduced\n   II  No-Self Yoshide over 300 will directly use..., also...\n8. Valencina adjustments:\n   I   If Valencina has Precognition Eye >6 when taking direct damage, she consumes 6 stacks to dodge the damage\n   II  Valencina\'s this-turn Swiftness had too many bugs, so removed\n9. So... does anyone remember this was supposed to be a command terminal?\n10. New Card: Sixth Sense [code: sixthSense] (1): Gain some Dodge and Agility\n11. New Card: Lobotomy Corp E.G.O::Magic Bullet [code: EGOMagicBullet] (0)</string>
+
+    <string name="announce_4">v0.2b Small Update\nFixed known bugs/Adjustments:\n1. Fixed infinite loop bug with Combo Shoot and Disposal (which calls Combo Shoot)\n2. Rein\'s Sinking was too high, stacking could cause player to be Staggered every turn, so nerfed (definitely not because I died to it)\n3. Fixed Magic Bullet not consuming ammo and the 7th shot - Despair causing recursive self-KO\n4. New card: Mad Snake (Fatal Chaos) [code: Si] (2): Repeats attacks based on Poise strength, at least 3 times; each attack applies Rapture strength and count, then applies poison based on them\n5. @All Black Beasts, reply with skill 3 can now generate Mad Snake (Fatal Chaos). This is a sidegrade (?) – Rapture team, rise up!\n6. Compared to Open the Way, \"Move aside, I\'ll do it myself\" felt a bit weak, so buffed its damage and added the new-era card replay feature\n7. Rein got some floating text like \"Dream of No-Self\". I really put the most effort into Rein, but still needs polish – one person\'s power really isn\'t enough\n8. Preparing to make Kromer / Kromer Aspiring to the Original. Mechanics preview:\n   I   Kromer applies lots of Bleed, and when using Purify, re-rolls this skill based on target\'s Bleed, no upper limit\n   II  Kromer also uses Mysterious Whistle to weaken the player and buff herself for the battle, but Mysterious Whistle doesn\'t apply Bleed count. If...?\n9. Preparing to make GOD\n   I   GOD reduces own Sanity through basic skills\n   II  When GOD is attacked, applies Sinking to self\n   III When GOD\'s Sanity drops to -45, nothing bad should happen... right? (holding back laughter)</string>
+
+    <string name="announce_5">v0.3 Update\nFixed bugs/Adjustments:\n1. I wonder why I\'m writing code while listening to Yesod and Hod\'s core suppression music\n2. Hod\'s core suppression music is really upbeat, but after listening, I can\'t type anymore\n3. Anyway, the plans are partially complete. Our Umbrella God\'s logic is fully written, as follows:\n   I   On being attacked, gain {0}0% damage reduction based on own Sinking count, capped at 50%\n   II  On being attacked, gain +1 Sinking count and +1 Sinking strength, and Umbrella God\'s skills apply lots of self-Sinking\n   III The rest of the mechanics are negligible. In short, Umbrella God is a pure punching bag, trust me\n4. Kromer is still waiting; too lazy to do her\n5. Fixed bug where Set Danger Level input hint was \"Grace\"\n6. Reminder: The following actions will erase your save data:\n   I   \"Erase you, erase me\" in Settings\n   II  Entering /kill in Settings cheat code\n   III Delete and reinstall this app\n7. Some fun cards and their codes, obtainable with the getCard cheat code:\n   1. cogito is the code for Cogito. Cogito is a very fun card – try a deck with only 2 Cogitos and see what happens\n   2. WordPower_Death is the code for Word of Death. You can\'t still not know how to get the instant-kill card, right?\n   3. @AllHeiShou is the code for @All Black Beasts, reply with skill 3. More types of Black Beasts will be summonable in the future\n   4. setDanger is the code for Set Danger Level. You can use it to set danger level. Who doesn\'t know this card?\n   5. After entering getCard in the cheat code, a popup will ask for the card code. Note: codes are case-sensitive</string>
+
+    <string name="announce_6">v0.3.1 Emergency Fix\nFixed bugs/Adjustments:\n1. Due to a spawn logic bug, the new enemy Umbrella God essentially became a punching bag\n   How to get 4 from randint(1,3)\n2. \"Move aside, I\'ll do it myself\" accidentally caused an infinite loop; fixed now\n3. Since this is an emergency fix, no other content</string>
+
+    <string name="announce_7">v0.4 Update\nFixed bugs/Adjustments:\n1. Overhauled locked health code; Rein now has locked health\n2. Rein gained 2 phase-transition locked health\n3. Umbrella God\'s HP reduced from 20,000 to 10,000, but passive Rain of Tears damage reduction cap increased from 50% to 90%, and gained 1 locked health\n4. Fixed issue where both sides would sit idle for 3 turns after locked health trigger due to Stagger\n5. New enemy added: Kromer\n6. Due to some enemies (Umbrella God and Valencina) having strong defense, Word of Death was a bit weak, so buffed\n7. Fixed a lot of locked health related bugs\n8. Fixed Kromer repeatedly triggering phase-transition locked health bug (lore accurate)</string>
+
+    <string name="announce_8">v0.5 Music Update\nAdjustments:\n1. Originally planned to make the three adorable birds\' cards first, but figured it\'s time for music, so did that\n2. This is really a big update – 5 Activities and 1 Store all revamped\n3. You can now adjust volume in Settings!\n4. Currently only battle has its own music, borrowed from Lobotomy Corp of course\n5. Now our most important screen (maybe not) has its own unique music: The Index\'s anthem, Children Of The City!!!\n6. Oh wow, Purify is so nasty – it dispels locked health! I fixed that (definitely not because it prevented people from hearing Kromer\'s phase 2 music that I painstakingly bound)\n7. Some special enemies now have mysterious music\n8. The three birds are finally done. I\'m exhausted, exhausted, exhausted\n9. A new wheelchair has arrived, along with the highest-cost card: Big Monster. Its attributes are random, just like Proliferating G</string>
+
+    <string name="announce_9">v0.6 Update\nAdjustments/Fixes\n1. Fixed the Rapture detonation logic of \"Believe in the Martial Soul\"\n2. Streamlined Big Monster\'s DOT application logic\n3. Streamlined Proliferating G\'s DOT application logic to prevent some freezes\n4. \"No Rhythm\" and \"Invincible!\" now go to hand rather than being played directly\n5. Fixed incorrect monster spawn logic\n6. &lt;Below are updates for v0.6.1&gt; Added a large amount of English translations, though some still need improvement\n7. Also added Bloodstained Tears as a finisher for Rapture teams\n8. So tired, so tired; tried to fix the delay in Kromer\'s music transition...</string>
+
+    <!-- ========== Toast Messages ========== -->
+    <string name="toast_no_newer">No newer announcements!</string>
+    <string name="toast_no_older">No older announcements!</string>
+</resources>

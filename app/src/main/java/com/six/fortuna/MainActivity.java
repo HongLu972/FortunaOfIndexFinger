@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         cooldownDeadline = store.loadCooldownDeadline();
 
         // 初始化指令池
-        prescripts = new Prescripts_CN(); // 使用中文指令
+        prescripts = new Prescripts_CN(getResources()); // 使用中文指令
 
         // 更新UI
         updateStats();
@@ -289,8 +289,8 @@ public class MainActivity extends AppCompatActivity {
      * 更新所有UI（业、护、称号）
      */
     public void updateStats() {
-        tvKarma.setText("业(福尔图娜): " + indexFingerLevel.krama);
-        tvBlessing.setText("指令加护: " + indexFingerLevel.grace);
+        tvKarma.setText(getString(R.string.krama_ex) +  ": " + indexFingerLevel.krama);
+        tvBlessing.setText(getString(R.string.grace_ex)+": " + indexFingerLevel.grace);
         String name = indexFingerLevel.getName();
         if (codename != null && !codename.isEmpty()) {
             name += " " + codename;
