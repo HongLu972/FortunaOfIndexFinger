@@ -92,7 +92,7 @@ public class StatsActivity extends AppCompatActivity {
         bindViews();
         tvCombatLog.setMovementMethod(new ScrollingMovementMethod());
 
-        mechanics = new Mechanics(this::appendLog);
+        mechanics = new Mechanics(this::appendLog, getResources());
         cardDefs = new FortunaCards(mechanics, this);
         enemyDefs = new FortunaEnemies(mechanics, this);
         deck = new CardDeck(mechanics);
@@ -132,7 +132,7 @@ public class StatsActivity extends AppCompatActivity {
         });
         findViewById(R.id.nav_stats).setOnClickListener(v -> {});
         findViewById(R.id.nav_setting).setOnClickListener(v -> {
-                startActivity(new Intent(this, SettingActivity.class));
+            startActivity(new Intent(this, SettingActivity.class));
         });
         Button navDeck = findViewById(R.id.nav_deck);
         if (navDeck != null) {
@@ -182,7 +182,7 @@ public class StatsActivity extends AppCompatActivity {
         spawnByDifficulty();
         playSong(this, R.raw.lobotomy_1, mediaPlayer);
         enemy.current_intent = computeEnemyIntent();
-        appendLog("==========" + getString(R.string.battlestart) + player.difficulty + " ==========");
+        appendLog(String.format(getString(R.string.log_battle_start), getString(R.string.battlestart), player.difficulty));
         startTurn();
     }
 
@@ -231,17 +231,17 @@ public class StatsActivity extends AppCompatActivity {
         if (player.difficulty <= 10) {
             NormalBattle();
             player.difficulty += mechanics.randint(1, 2);
-            appendLog("当前危险度: " + player.difficulty + "[注:高于10可能引发精英战斗]");
+            appendLog(String.format(getString(R.string.log_restrictions_note), player.difficulty));
         } else if (player.difficulty <= 50) {
             if(mechanics.randint(100, 799) <= 325) {
                 NormalBattle();
             }
             EliteBattle();
             player.difficulty += mechanics.randint(1, 5);
-            appendLog("当前危险度: " + player.difficulty + "[注:高于50可能引发BOSS战]");
+            appendLog(String.format(getString(R.string.log_restrictions_elite), player.difficulty));
         } else {
             player.difficulty += mechanics.randint(4, 12);
-            appendLog("当前危险度: " + player.difficulty + "[注:可能触发BOSS战，制约开始出现]");
+            appendLog(String.format(getString(R.string.log_restrictions_boss), player.difficulty));
             if(mechanics.randint(1, 100) < player.difficulty - 50 && !(mechanics.randint(1, 100) == 1)) {
                 player.restrictions = (int) ((1 + 0.01 * mechanics.randint(1, 50)) * (player.difficulty / 10));
                 BossBattle();
@@ -304,17 +304,17 @@ public class StatsActivity extends AppCompatActivity {
                 spawnHajimi();
                 break;
             case 2:
-                spawnEnemy("?!心脏?!", 1000, new double[] {0.3, 0.2, 0.1}, 6);
+                spawnEnemy(getString(R.string.enemy_heart), 1000, new double[] {0.3, 0.2, 0.1}, 6);
                 break;
             case 3:
-                spawnEnemy("雷元素精灵", 1000, new double[] {0.6, 0.4, 0.2}, 9);
+                spawnEnemy(getString(R.string.enemy_thunder_spirit), 1000, new double[] {0.6, 0.4, 0.2}, 9);
                 break;
         }
     }
 
     private void spawnHajimi() {
         enemy = new Entity(mechanics, this);
-        enemy.name = "哈基米";
+        enemy.name = getString(R.string.enemy_hajimi);
         enemy.max_hp = 1000;
         enemy.EntityId = 1;
         enemy.outside_max_hp = 1000;
@@ -331,16 +331,16 @@ public class StatsActivity extends AppCompatActivity {
                 spawnAlbina();
                 break;
             case 2:
-                spawnEnemy("被遗弃的杀人魔", 3000, new double[] {0.2, 0.4, 0.6}, 4);
+                spawnEnemy(getString(R.string.enemy_forgotten_killer), 3000, new double[] {0.2, 0.4, 0.6}, 4);
                 break;
             case 3:
-                spawnEnemy("艾兰虫", 10000, new double[] {0, 0, 0}, 8);
+                spawnEnemy(getString(R.string.enemy_ailan_worm), 10000, new double[] {0, 0, 0}, 8);
                 break;
         }
     }
 
     private void spawnAlbina(){
-        spawnEnemy("阿尔比娜", 2000, new double[]{0.8, 0.6, 0.4}, 2);
+        spawnEnemy(getString(R.string.enemy_albina), 2000, new double[]{0.8, 0.6, 0.4}, 2);
     }
 
     private void BossBattle(){
@@ -349,21 +349,21 @@ public class StatsActivity extends AppCompatActivity {
                 spawnRein();
                 break;
             case 2:
-                spawnEnemy("瓦伦希娜", 8000, new double[]{0.9, 0.5, 0.2}, 5);
+                spawnEnemy(getString(R.string.enemy_valencina), 8000, new double[]{0.9, 0.5, 0.2}, 5);
                 break;
             case 3:
-                spawnEnemy("无我良秀", 10000, new double[]{-0.2, -0.5, -1.0}, 7);
+                spawnEnemy(getString(R.string.enemy_yoshide), 10000, new double[]{-0.2, -0.5, -1.0}, 7);
                 break;
             case 4:
-                spawnEnemy("伞神", 10000, new double[]{0.8, 0.6, 0.3}, 10);
+                spawnEnemy(getString(R.string.enemy_god), 10000, new double[]{0.8, 0.6, 0.3}, 10);
                 break;
             case 5:
-                spawnEnemy("克罗默", 10000, new double[]{0.7, 0.3, 0.0}, 11);
+                spawnEnemy(getString(R.string.enemy_kromer), 10000, new double[]{0.7, 0.3, 0.0}, 11);
                 break;
         }
     }
     private void spawnRein(){
-        spawnEnemy("里恩", 10000, new double[]{0.7, 0.5, 0.2}, 3);
+        spawnEnemy(getString(R.string.enemy_rein), 10000, new double[]{0.7, 0.5, 0.2}, 3);
     }
 
     private void spawnEnemy(String name, int outside_max_hp, double[] staggerLine, int id){
@@ -382,9 +382,9 @@ public class StatsActivity extends AppCompatActivity {
     // ===================== 回合循环 =====================
 
     private void startTurn() {
-        appendLog("——— 回合开始 ———");
-        appendLog("牌库："+deck.drawPile.size());
-        appendLog("弃牌堆："+deck.discardPile.size());
+        appendLog(getString(R.string.log_turn_start));
+        appendLog(String.format(getString(R.string.log_deck_size), deck.drawPile.size()));
+        appendLog(String.format(getString(R.string.log_discard_size), deck.discardPile.size()));
         if(player.buff.UnlockedHealth > 0 || player.hp < 0){
             player.buff.UnlockedHealth = 0;
             player.buff.lockedHealth--;
@@ -416,7 +416,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void endTurn() {
-        appendLog("——— 回合结束 ———");
+        appendLog(getString(R.string.log_turn_end));
         if(enemy.EntityId == 11 && enemy.buff.UnlockedHealth > 0){
             playSong(this, R.raw.betweentwoworlds_2, mediaPlayer);
         }
@@ -429,26 +429,26 @@ public class StatsActivity extends AppCompatActivity {
         }
 
         if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0 )&& enemy.current_intent != null && enemy.current_intent.execute != null) {
-            appendLog(enemy.name + ": " + enemy.current_intent.description);
+            appendLog(String.format(getString(R.string.log_enemy_action), enemy.name, enemy.current_intent.description));
             enemy.current_intent.execute.execute(enemy, player);
             if(enemy.buff.cibei > 0){
                 if(enemy.countB == 1){
-                    Toast.makeText(this, "艾兰不市区", Toast.LENGTH_SHORT).show();
-                    appendLog("我开源了追击，你们怎么可以笑我！");
+                    Toast.makeText(this, getString(R.string.toast_ailan_not_district), Toast.LENGTH_SHORT).show();
+                    appendLog(getString(R.string.log_compassion_mass));
                     for(int i = 0; i < player.buff.cibei; i++){
-                        appendLog("？！慈悲？！");
+                        appendLog(getString(R.string.log_compassion_trigger));
                         enemy.this_turn_strength += 3;
                         useCard(cardDefs.zhuizhui());
                     }
                 }else{
-                    Toast.makeText(this, "纵使此身被区之名覆盖...", Toast.LENGTH_SHORT).show();
-                    appendLog("所有笑我的人和小金，一同和我化为永恒的区吧！");
+                    Toast.makeText(this, getString(R.string.toast_grace_compassion), Toast.LENGTH_SHORT).show();
+                    appendLog(getString(R.string.log_compassion_eternal));
                     for(int i = 0; i < enemy.buff.cibei; i++){
                         if(enemy.buff.cibei > 15){
                             enemy.this_turn_strength += enemy.buff.cibei - 15;
                             enemy.buff.cibei = 15;
                         }
-                        appendLog("就由我来开源追击！");
+                        appendLog(getString(R.string.log_compassion_open_source));
                         useCard(cardDefs.Elanzhuizhui());
                         if(i > 15){
                             break;
@@ -506,7 +506,7 @@ public class StatsActivity extends AppCompatActivity {
 
     private void useCard(Card card) {
         if (player.energy < card.cost) {
-            Toast.makeText(this, "光芒不足！需要 " + card.cost + " 点", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format(getString(R.string.toast_energy_insufficient), card.cost), Toast.LENGTH_SHORT).show();
             return;
         }
         if(player.sanity <= -45){
@@ -514,16 +514,16 @@ public class StatsActivity extends AppCompatActivity {
             player.sanity = 0;
         }
         if(player.stagger_panic_term > 0){
-            appendLog("混乱中。。。");
+            appendLog(getString(R.string.toast_staggered));
             return;
         }
         player.energy -= card.cost;
         card.play.play(player, enemy);
         if(player.buff.cibei > 0){
-            Toast.makeText(this, "见·追·笑，艾兰市区", Toast.LENGTH_SHORT).show();
-            appendLog("既见区区，为何不笑？");
+            Toast.makeText(this, getString(R.string.toast_chase_laugh), Toast.LENGTH_SHORT).show();
+            appendLog(getString(R.string.log_compassion_seeing));
             for(int i = 0; i < player.buff.cibei; i++){
-                appendLog("？！慈悲？！");
+                appendLog(getString(R.string.log_compassion_trigger));
                 useCard(cardDefs.zhuizhui(), 1);
             }
         }
@@ -533,8 +533,8 @@ public class StatsActivity extends AppCompatActivity {
         refreshAllUI();
         persistBattleSnapshot();
 
-        appendLog("牌库："+deck.drawPile.size());
-        appendLog("弃牌堆："+deck.discardPile.size());
+        appendLog(String.format(getString(R.string.log_deck_size), deck.drawPile.size()));
+        appendLog(String.format(getString(R.string.log_discard_size), deck.discardPile.size()));
 
         if (enemy.hp <= 0) {
             if(enemy.EntityId == 7 && enemy.block > 0){
@@ -551,7 +551,7 @@ public class StatsActivity extends AppCompatActivity {
 
     private void useCard(Card card, int i) {
         if (player.energy < card.cost) {
-            Toast.makeText(this, "光芒不足！需要 " + card.cost + " 点", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format(getString(R.string.toast_energy_insufficient), card.cost), Toast.LENGTH_SHORT).show();
             return;
         }
         player.energy -= card.cost;
@@ -562,8 +562,8 @@ public class StatsActivity extends AppCompatActivity {
         refreshAllUI();
         persistBattleSnapshot();
 
-        appendLog("牌库："+deck.drawPile.size());
-        appendLog("弃牌堆："+deck.discardPile.size());
+        appendLog(String.format(getString(R.string.log_deck_size), deck.drawPile.size()));
+        appendLog(String.format(getString(R.string.log_discard_size), deck.discardPile.size()));
 
         if (enemy.hp <= 0) {
             enemy.hp = 0;
@@ -574,20 +574,20 @@ public class StatsActivity extends AppCompatActivity {
     // ===================== 胜负结算 =====================
 
     private void onVictory() {
-        Toast.makeText(this, "🎉 击败了 " + enemy.name, Toast.LENGTH_LONG).show();
-        appendLog("🎉 战斗胜利！");
+        Toast.makeText(this, String.format(getString(R.string.toast_victory), enemy.name), Toast.LENGTH_LONG).show();
+        appendLog(getString(R.string.log_victory));
 
         // 1. 指令加护：按危险度 1:1 发放
         int graceGain = Math.max(1, player.difficulty) / 10;
         indexFingerLevel.grace += graceGain;
         store.saveStats(indexFingerLevel);
-        appendLog("🏵 获得指令加护 +" + graceGain);
+        appendLog(String.format(getString(R.string.log_grace_gain), graceGain));
 
         // 2. "眼"：按危险度换算，1点危险度=1万眼
         long eyeGain = (long) Math.max(1, player.difficulty) * 10000L;
         long totalEyes = store.loadEyes() + eyeGain;
         store.saveEyes(totalEyes);
-        appendLog("👁 获得「眼」+" + (eyeGain / 10000) + "万，当前共 " + (totalEyes / 10000) + "万");
+        appendLog(String.format(getString(R.string.log_eye_gain), eyeGain / 10000, totalEyes / 10000));
 
         // 3. 掉卡：掉落概率、掉落质量都跟危险度走，掉的卡进"大牌库"（不直接进出战牌组，得去养成界面手动装备）
         int dropChance = Math.min(90, 20 + graceGain * 3);
@@ -598,8 +598,9 @@ public class StatsActivity extends AppCompatActivity {
             store.saveCardCollection(collection);
             String qualityTag = FortunaCards.rarenessOf(dropKey) == 3 ? "🌟金卡"
                     : FortunaCards.rarenessOf(dropKey) == 2 ? "🔷稀有" : FortunaCards.rarenessOf(dropKey) == 1 ? "⚪普通" : "⚙️测试";
-            appendLog("🃏 获得新卡：" + qualityTag + " " + FortunaCards.displayName(dropKey, getResources()) + "（已放入牌库，去养成界面装备）");
-            Toast.makeText(this, "获得新卡：" + FortunaCards.displayName(dropKey, getResources()), Toast.LENGTH_LONG).show();
+            String displayName = cardDefs.displayName(dropKey, getResources());
+            appendLog(String.format(getString(R.string.log_new_card), qualityTag, displayName));
+            Toast.makeText(this, String.format(getString(R.string.toast_new_card), displayName), Toast.LENGTH_LONG).show();
         }
 
         // 战斗结束，快照没意义了，清掉；危险度已经在spawnByDifficulty时存过，留着给下一场用
@@ -635,8 +636,8 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void onDefeat() {
-        Toast.makeText(this, "💀 你被击倒了", Toast.LENGTH_LONG).show();
-        appendLog("💀 战斗失败，危险度重置为0");
+        Toast.makeText(this, getString(R.string.toast_defeat), Toast.LENGTH_LONG).show();
+        appendLog(getString(R.string.log_defeat));
         store.saveBattleDifficulty(0);
         store.clearBattleSnapshot();
         battleOver = true;
@@ -695,8 +696,8 @@ public class StatsActivity extends AppCompatActivity {
             player.buff.m = mechanics;
             enemy.buff.m = mechanics;
             player.m = mechanics;
-            player.m = mechanics;
-            appendLog("========== 已恢复上次未完成的战斗 ==========");
+            enemy.m = mechanics;
+            appendLog(getString(R.string.log_restored_battle));
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -730,7 +731,7 @@ public class StatsActivity extends AppCompatActivity {
         spinnerAdapter.clear();
         spinnerAdapter.addAll(names);
         spinnerAdapter.notifyDataSetChanged();
-        btnConfirm.setText("确认使用书页");
+        btnConfirm.setText(getString(R.string.button_use_card));
     }
 
     public void appendLog(String msg) {

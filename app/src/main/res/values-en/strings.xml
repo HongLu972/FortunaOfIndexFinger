@@ -300,4 +300,132 @@
     <!-- ========== Toast Messages ========== -->
     <string name="toast_no_newer">No newer announcements!</string>
     <string name="toast_no_older">No older announcements!</string>
+
+    <!-- ========== Toast ========== -->
+    <string name="toast_energy_insufficient">Insufficient Light! Need %d</string>
+    <string name="toast_staggered">Staggered...</string>
+    <string name="toast_chase_laugh">See·Chase·Laugh, Ailan City District</string>
+    <string name="toast_victory">🎉 Defeated %s</string>
+    <string name="toast_defeat">💀 You have been defeated</string>
+    <string name="toast_ailan_not_district">Ailan is not a district</string>
+    <string name="toast_grace_compassion">Even if this body is covered by the name of district...</string>
+    <string name="toast_compassion">Seeing a mere district, why not laugh?</string>
+    <string name="toast_new_card">Obtained new card: %s</string>
+
+    <!-- ========== Log ========== -->
+    <string name="log_deck_size">Deck: %d</string>
+    <string name="log_discard_size">Discard pile: %d</string>
+    <string name="log_turn_start">——— Turn Start ———</string>
+    <string name="log_turn_end">——— Turn End ———</string>
+    <string name="log_victory">🎉 Victory!</string>
+    <string name="log_defeat">💀 Defeated, danger level reset to 0</string>
+    <string name="log_grace_gain">🏵 Gained Grace +%d</string>
+    <string name="log_eye_gain">👁 Gained \"Eyes\" +%d0k, total %d0k</string>
+    <string name="log_new_card">🃏 Obtained new card: %s%s (added to collection, equip in deck management)</string>
+    <string name="log_battle_start">========== %s%d ==========</string>
+    <string name="log_restored_battle">========== Restored previous unfinished battle ==========</string>
+    <string name="log_enemy_action">%s: %s</string>
+    <string name="log_compassion_trigger">？！Mercy？！</string>
+    <string name="log_compassion_mass">I open-sourced the pursuit, how dare you laugh at me!</string>
+    <string name="log_compassion_eternal">All who laugh at me and Kim, turn into eternal districts with me!</string>
+    <string name="log_compassion_open_source">Let me open-source the pursuit!</string>
+    <string name="log_compassion_seeing">Seeing a mere district, why not laugh?</string>
+    <string name="log_restrictions_note">Current danger: %d [Note: above 10 may trigger elite battle]</string>
+    <string name="log_restrictions_elite">Current danger: %d [Note: above 50 may trigger boss fight]</string>
+    <string name="log_restrictions_boss">Current danger: %d [Note: may trigger boss fight, restrictions begin]</string>
+
+    <!-- ========== Enemy Names ========== -->
+    <string name="enemy_hajimi">Hajimi</string>
+    <string name="enemy_heart">？！Heart？！</string>
+    <string name="enemy_thunder_spirit">Thunder Elemental Spirit</string>
+    <string name="enemy_albina">Albina</string>
+    <string name="enemy_forgotten_killer">Forgotten Killer</string>
+    <string name="enemy_ailan_worm">Ailan Worm</string>
+    <string name="enemy_rein">Rein</string>
+    <string name="enemy_valencina">Valencina</string>
+    <string name="enemy_yoshide">No-Self Yoshide</string>
+    <string name="enemy_god">Umbrella God</string>
+    <string name="enemy_kromer">Kromer</string>
+
+    <!-- ========== Button ========== -->
+    <string name="button_use_card">Confirm Use Page</string>
+
+    <!-- ========== Index Promotion Messages ========== -->
+    <string name="index_promote_penitent">You have been promoted, you are now a Penitent</string>
+    <string name="index_promote_procurator">You have been promoted, you are now a Procurator</string>
+    <string name="index_promote_herald">You have been promoted, you are now a Herald</string>
+    <string name="index_promote_oracle">You have been promoted, you are now an Oracle Procurator</string>
+    <string name="index_promote_weaver">You have been promoted, you are now a Weaver</string>
+    <string name="index_promote_note_1">Your path of instructions has almost reached its end</string>
+    <string name="index_promote_note_2">You cannot raise your rank further, but you can still level up</string>
+
+    <!-- ========== Index Rank Titles ========== -->
+    <string name="index_rank_0">Index Irregular Member  </string>
+    <string name="index_rank_1">Index Penitent Lv.%d  </string>
+    <string name="index_rank_2">Index Procurator Lv.%d  </string>
+    <string name="index_rank_3">Index Herald Lv.%d  </string>
+    <string name="index_rank_4">Index Oracle Procurator Lv.%d  </string>
+    <string name="index_rank_5">Index Weaver Lv.%d  </string>
+    <string name="index_rank_6">Index\'s God Lv.%d  </string>
+    <string name="index_rank_bug">Bug: OutOfIndexInLevel</string>
+
+    <!-- ========== Combat Engine - Amplitude Conversion ========== -->
+    <string name="mechanic_amplitude_hot">Tremor·Scorching</string>
+    <string name="mechanic_amplitude_sinking">Tremor·Sinking</string>
+    <string name="mechanic_amplitude_weak">Tremor·Weakness</string>
+    <string name="mechanic_amplitude_unknown">Tremor·Unknown</string>
+
+    <!-- ========== Combat Engine - Logs ========== -->
+    <string name="mechanic_log_amplitude">Convert %s\'s amplitude to %s</string>
+    <string name="mechanic_log_dodge">%s dodged %d damage! Can\'t hit? Remaining dodge: %d</string>
+    <string name="mechanic_log_shield_block">%s\'s shield blocked all damage, remaining shield: %d</string>
+    <string name="mechanic_log_damage">%s took %d damage! HP: %d/%d</string>
+    <string name="mechanic_log_burn">%s took %d burn damage!</string>
+    <string name="mechanic_log_bleed">%s is bleeding! Dealt %d damage.</string>
+    <string name="mechanic_log_sinking">%s is affected by Sinking, lost %d sanity, remaining sanity: %d</string>
+    <string name="mechanic_log_tremor">Triggering Tremor Burst on %s!</string>
+    <string name="mechanic_log_stagger">!!! Stagger !!! %s is staggered! This turn skipped, shield cleared.</string>
+
+    <!-- ========== Tiphereth Quotes ========== -->
+    <string name="tiphereth_1">Even if I\'m alone, I can manage every containment unit!</string>
+    <string name="tiphereth_2">This song is called \"Tiphereth\'s Elegy\", written for Tiphereth...</string>
+    <string name="tiphereth_3">May this song... soothe our souls...</string>
+    <string name="tiphereth_4">We are two people, and also one person. You know what that means, right?</string>
+    <string name="tiphereth_5">The central HQ is too big, everyone is swamped with work.</string>
+    <string name="tiphereth_6">Again... another one to replace? Time to go to the warehouse...</string>
+    <string name="tiphereth_7">Did Tiphereth get what he wanted? No... what was he even expecting from the start...</string>
+    <string name="tiphereth_8">Don\'t look at me with those eyes! You have already... already... been abandoned by me!!!</string>
+    <string name="tiphereth_9">I wish I could hold your hand and walk along the seaside again... the waves making cheerful sounds behind us...</string>
+    <string name="tiphereth_10">If you could hear this song...</string>
+    <string name="tiphereth_11">When the real Tiphereth returns, I want to show him my most mature side... I want him to know... know... I... I... I really did it...</string>
+    <string name="tiphereth_12">You told me... \"Everything will be alright\"...</string>
+    <string name="tiphereth_13">Was it all... worth it...</string>
+
+    <!-- ========== Charge Ball Names ========== -->
+    <string name="chargeball_lightning">⚡Lightning Charge Ball</string>
+    <string name="chargeball_frost">🧊Frost Charge Ball</string>
+    <string name="chargeball_ion">💡Ion Charge Ball</string>
+
+    <!-- ========== Buff Status Labels ========== -->
+    <string name="buff_seed_of_light">🕯️Seed of Light %d  </string>
+    <string name="buff_cibei">🐛?!Ailan?! %d  </string>
+    <string name="buff_no_self">◼️No Self %d  </string>
+    <string name="buff_bloodstained_tears">🪡Bloodstained Tears %d  </string>
+    <string name="buff_sidestep">✨Dodge %d  </string>
+    <string name="buff_unlock">🌸Unlock %d  </string>
+    <string name="buff_armored">🛡️Armored %d  </string>
+    <string name="buff_poison">🍄Poison %d  </string>
+    <string name="buff_next_turn_light">☀️Next Turn Light %d  </string>
+    <string name="buff_precognition">👁️‍🗨️Precognition %d  </string>
+    <string name="buff_expire_swift">🐢Expiring Swiftness %d  </string>
+    <string name="buff_tiphereth_in_progress">Tiphereth Core Suppression in Progress %d  </string>
+    <string name="buff_tiphereth_done">Tiphereth Core Suppression Complete  </string>
+    <string name="buff_concentration">💠Concentration %d  </string>
+    <string name="buff_charge_balls">Charge Balls[%s]  </string>
+
+    <!-- ========== Buff Logs ========== -->
+    <string name="buff_log_shield">Charge ball applied %2$d shield to %1$s.</string>
+    <string name="buff_log_dodge_all">Charge ball dealt %2$d damage to %1$s but it was fully dodged. Can\'t hit?</string>
+    <string name="buff_log_shield_block">Charge ball dealt %2$d damage to %1$s but it was fully blocked. Remaining shield: %3$d</string>
+    <string name="buff_log_damage">Charge ball dealt %2$d damage to %1$s, remaining HP: %3$d</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.six.fortuna.combat.engine;
 
+import android.content.res.Resources;
 import android.widget.Toast;
 
+import com.six.fortuna.R;
 import com.six.fortuna.StatsActivity;
 
 import org.json.JSONException;
@@ -12,15 +14,18 @@ import java.util.ArrayList;
 public class Buff {
     public Mechanics m;
     public StatsActivity s;
+    public Resources res;
     Entity self;
 
-    public Buff(Mechanics mechanics, StatsActivity s, Entity self) {
+    public Buff(Mechanics mechanics, StatsActivity s, Entity self, Resources res) {
         this.m = mechanics;
         this.s = s;
         this.self = self;
+        this.res = res;
         chargeBallSize = 3;
         chargeBallCount = 0;
     }
+
     //这里定义了所有效果的参数
     public int poison; //剧毒
     public int Precongization;
@@ -46,35 +51,36 @@ public class Buff {
     public int littlebird;
     public int tallbird;
     public int bigbird;
-    public void turnEndActivate(){
+
+    public void turnEndActivate() {
         m.defend(armored, self);
     }
 
-    public void addChargeBalls(int ballType, Entity target){
+    public void addChargeBalls(int ballType, Entity target) {
         chargeBalls.add(0, ballType);
-        if(ballType == 1) currentgeneration++;
+        if (ballType == 1) currentgeneration++;
         chargeBallCount++;
-        if(chargeBallCount > chargeBallSize){
-            onDestoryChargeBalls((int)chargeBalls.get(chargeBallCount-1), target);
+        if (chargeBallCount > chargeBallSize) {
+            onDestoryChargeBalls((int) chargeBalls.get(chargeBallCount - 1), target);
             chargeBalls.remove(chargeBallSize - 1);
             chargeBallCount--;
         }
     }
 
-    public void ballDefense(int amount, Entity self){
+    public void ballDefense(int amount, Entity self) {
         amount += self.buff.concentration;
-        if(amount >= 0){
+        if (amount >= 0) {
             self.block += amount;
-            s.appendLog("充能球对"+self.name+"施加了"+amount+"的护盾。");
+            s.appendLog(String.format(res.getString(R.string.buff_log_shield), self.name, amount));
         }
     }
 
-    public boolean ballDamage(int amount, Entity self, Entity target){
+    public boolean ballDamage(int amount, Entity self, Entity target) {
         amount += self.buff.concentration;
-        if(target.buff.sidestep > 0) {
+        if (target.buff.sidestep > 0) {
             if (target.buff.sidestep >= amount) {
                 target.buff.sidestep--;
-                s.appendLog("充能球对"+target.name+"造成了"+amount+"点伤害但全被闪掉了，怎么，打不中么?");
+                s.appendLog(String.format(res.getString(R.string.buff_log_dodge_all), target.name, amount));
                 return false;
             } else {
                 target.buff.sidestep = 0;
@@ -82,26 +88,26 @@ public class Buff {
             }
         }
 
-        if(target.block > 0){
-            if(target.block > amount){
+        if (target.block > 0) {
+            if (target.block > amount) {
                 target.block -= amount;
-                s.appendLog("充能球对"+target.name+"造成了"+amount+"点伤害但全被护盾格挡了，其剩余护盾为"+target.block);
-            }else{
+                s.appendLog(String.format(res.getString(R.string.buff_log_shield_block), target.name, amount, target.block));
+            } else {
                 amount -= target.block;
             }
         }
         target.hp -= amount;
-        s.appendLog("充能球对"+target.name+"造成了"+amount+"点伤害，其剩余生命为"+target.hp);
+        s.appendLog(String.format(res.getString(R.string.buff_log_damage), target.name, amount, target.hp));
         return true;
     }
 
-    public void onDestoryChargeBalls(int ballType, Entity target){
-        switch (ballType){
+    public void onDestoryChargeBalls(int ballType, Entity target) {
+        switch (ballType) {
             case 1:
-                for(int i = 0; i < 3; i++) activateChargeBalls(1, target);
+                for (int i = 0; i < 3; i++) activateChargeBalls(1, target);
                 break;
             case 2:
-                for(int i = 0; i < 4; i++) activateChargeBalls(2, target);
+                for (int i = 0; i < 4; i++) activateChargeBalls(2, target);
                 target.swift -= 3;
                 break;
             case 3:
@@ -110,8 +116,8 @@ public class Buff {
         }
     }
 
-    public void activateChargeBalls(int ballType, Entity target){
-        switch (ballType){
+    public void activateChargeBalls(int ballType, Entity target) {
+        switch (ballType) {
             case 1://闪电充能球
                 ballDamage(6, self, target);
                 break;
@@ -124,40 +130,41 @@ public class Buff {
         }
     }
 
-    public String Tiphereth_words(){
-        switch(m.randint(1, 13)){
+    public String Tiphereth_words() {
+        switch (m.randint(1, 13)) {
             case 1:
-                return "哪怕只有我一个人，我也能管理好每个收容单元！";
+                return res.getString(R.string.tiphereth_1);
             case 2:
-                return "这首歌叫做\"Tiphereth的挽歌\", 为Tiphereth而写的...";
+                return res.getString(R.string.tiphereth_2);
             case 3:
-                return "愿这首歌...能安抚我们的灵魂......";
+                return res.getString(R.string.tiphereth_3);
             case 4:
-                return "我们是两个人，也是一个人，你知道那是什么意思吧？";
+                return res.getString(R.string.tiphereth_4);
             case 5:
-                return "中央本部太大了，每个人都忙得不可开支。";
+                return res.getString(R.string.tiphereth_5);
             case 6:
-                return "又...又要换一个了么？是时候去仓库了...";
+                return res.getString(R.string.tiphereth_6);
             case 7:
-                return "Tiphereth有得到他想要的东西吗？没有...他从一开始到底在期待着什么...";
+                return res.getString(R.string.tiphereth_7);
             case 8:
-                return "不要用那样的眼神看着我！你们已经...已经...被我抛弃了！！！";
+                return res.getString(R.string.tiphereth_8);
             case 9:
-                return "真想再一次和你手牵着手，一起在海边散步...海浪在我们身后发出欢快的声响...";
+                return res.getString(R.string.tiphereth_9);
             case 10:
-                return "如果你能够听到这首歌的话...";
+                return res.getString(R.string.tiphereth_10);
             case 11:
-                return "等真正的Tiphereth回来后，我要向他展现出我最成熟的一面...我想让他知道...知道...我...我...我真的做到了...";
+                return res.getString(R.string.tiphereth_11);
             case 12:
-                return "你告诉过我...\"一切都会好起来的\"...";
+                return res.getString(R.string.tiphereth_12);
             case 13:
-                return "这一切...都是值得的吗...";
+                return res.getString(R.string.tiphereth_13);
             default:
-                return "这一切...都是值得的吗...";
+                return res.getString(R.string.tiphereth_13);
         }
     }
-    public void turnStartActivate(Entity target){
-        if(bloodstainedTears > 0) {
+
+    public void turnStartActivate(Entity target) {
+        if (bloodstainedTears > 0) {
             if (bloodstainedTears < 3) {
                 bloodstainedTears++;
             } else if (bloodstainedTears >= 3) {
@@ -169,45 +176,45 @@ public class Buff {
         self.hp -= poison;
         poison /= 2;      //每回合结束对自身造成层数的伤害并减半
         armored--;
-        if(SeedofLight > 0){
+        if (SeedofLight > 0) {
             SeedofLight++;
-            if(Tiphereth >= 6){
+            if (Tiphereth >= 6) {
                 SeedofLight++;
             }
             self.max_energy = SeedofLight + (7 > SeedofLight ? SeedofLight : 7);
             self.gain_energy = SeedofLight - 1;
-            if(self.stagger_panic_term > 0){
+            if (self.stagger_panic_term > 0) {
                 self.stagger_panic_term--;
             }
         }
         self.energy += nextTurnLight;
         nextTurnLight = 0;
-        if(Precongization > 0){
+        if (Precongization > 0) {
             sidestep += 1;
             Precongization--;
-        }else {
+        } else {
             sidestep = 0;
         }
-        if(Tiphereth >= 6){
+        if (Tiphereth >= 6) {
             self.reload();
         }
-        if(noSelf > 0){
+        if (noSelf > 0) {
             noSelf *= 1.15;
-            for(int i = 0; i < noSelf; i++) self.max_hp *= 0.9993;
+            for (int i = 0; i < noSelf; i++) self.max_hp *= 0.9993;
         }
-        if(Tiphereth > 0 && Tiphereth < 6){
+        if (Tiphereth > 0 && Tiphereth < 6) {
             Toast.makeText(s, Tiphereth_words(), Toast.LENGTH_LONG).show();
             Tiphereth++;
-            if(m.randint(1, 3) == 1) {
+            if (m.randint(1, 3) == 1) {
                 self.stagger_panic_term++;
                 Tiphereth++;
             }
         }
-        for(int i = 0; i < chargeBallCount; i++){
+        for (int i = 0; i < chargeBallCount; i++) {
             activateChargeBalls((Integer) chargeBalls.get(i), target);
         }
-        if(self.EntityId != 8) cibei = 0;
-        if(Apocalypse_Bird >= 1){
+        if (self.EntityId != 8) cibei = 0;
+        if (Apocalypse_Bird >= 1) {
             self.energy = self.max_energy;
             self.max_hp *= 1.2;
             self.strength *= 1.05;
@@ -215,12 +222,12 @@ public class Buff {
         }
     }
 
-    public void reset(){
+    public void reset() {
         reset_Buff();
         reset_Debuff();
     }
 
-    public void reset_Buff(){
+    public void reset_Buff() {
         SeedofLight = 0;
         sidestep = 0;
         cibei = 0;
@@ -238,48 +245,48 @@ public class Buff {
         Apocalypse_Bird = 0;
     }
 
-    public void reset_Debuff(){
+    public void reset_Debuff() {
         expireSwift = 0;
         poison = 0;
         noSelf = 0;
     }
 
-    public String translation_chargeball(int chargeBallType){
-        switch (chargeBallType){
+    public String translation_chargeball(int chargeBallType) {
+        switch (chargeBallType) {
             case 1:
-                return "⚡闪电充能球";
+                return res.getString(R.string.chargeball_lightning);
             case 2:
-                return "🧊冰霜充能球";
+                return res.getString(R.string.chargeball_frost);
             case 3:
-                return "💡离子充能球";
+                return res.getString(R.string.chargeball_ion);
         }
         return "";
     }
 
-    public ArrayList<String> getString(){
+    public ArrayList<String> getString() {
         ArrayList<String> output = new ArrayList<>();
-        if(SeedofLight > 0) output.add("🕯️光之种"+SeedofLight+"  ");
-        if(cibei > 0) output.add("🐛?!艾兰?! "+cibei+"  ");
-        if(noSelf > 0) output.add("◼️无我"+noSelf+"  ");
-        if(bloodstainedTears > 0) output.add("🪡葬花针"+bloodstainedTears+"  ");
-        if(sidestep > 0) output.add("✨闪避"+sidestep+"  ");
-        if(Unlock > 0) output.add("🌸解放"+Unlock+"  ");
-        if(armored > 0) output.add("🛡️覆甲"+armored+"  ");
-        if(poison > 0) output.add("🍄剧毒"+poison+"  ");
-        if(nextTurnLight > 0) output.add("☀️下回合光芒"+nextTurnLight+"  ");
-        if(Precongization > 0) output.add("👁️‍🗨️预知"+ Precongization +"  ");
-        if(expireSwift > 0) output.add("🐢即将到期的敏捷"+expireSwift+"  ");
-        if(Tiphereth > 0){
+        if (SeedofLight > 0) output.add(String.format(res.getString(R.string.buff_seed_of_light), SeedofLight));
+        if (cibei > 0) output.add(String.format(res.getString(R.string.buff_cibei), cibei));
+        if (noSelf > 0) output.add(String.format(res.getString(R.string.buff_no_self), noSelf));
+        if (bloodstainedTears > 0) output.add(String.format(res.getString(R.string.buff_bloodstained_tears), bloodstainedTears));
+        if (sidestep > 0) output.add(String.format(res.getString(R.string.buff_sidestep), sidestep));
+        if (Unlock > 0) output.add(String.format(res.getString(R.string.buff_unlock), Unlock));
+        if (armored > 0) output.add(String.format(res.getString(R.string.buff_armored), armored));
+        if (poison > 0) output.add(String.format(res.getString(R.string.buff_poison), poison));
+        if (nextTurnLight > 0) output.add(String.format(res.getString(R.string.buff_next_turn_light), nextTurnLight));
+        if (Precongization > 0) output.add(String.format(res.getString(R.string.buff_precognition), Precongization));
+        if (expireSwift > 0) output.add(String.format(res.getString(R.string.buff_expire_swift), expireSwift));
+        if (Tiphereth > 0) {
             int remain = 6 - Tiphereth;
-            if(Tiphereth < 6) output.add("Tiphereth核心抑制中"+remain+"  ");
-            else output.add("Tiphereth核心抑制完毕  ");
+            if (Tiphereth < 6) output.add(String.format(res.getString(R.string.buff_tiphereth_in_progress), remain));
+            else output.add(res.getString(R.string.buff_tiphereth_done));
         }
-        if(concentration > 0) output.add("💠集中"+concentration+"  ");
+        if (concentration > 0) output.add(String.format(res.getString(R.string.buff_concentration), concentration));
         String chargeBall = "";
-        for(int i = 0; i < chargeBallCount; i++){
+        for (int i = 0; i < chargeBallCount; i++) {
             chargeBall += translation_chargeball((Integer) chargeBalls.get(i));
         }
-        output.add("充能球["+chargeBall+"]  ");
+        output.add(String.format(res.getString(R.string.buff_charge_balls), chargeBall));
         return output;
     }
 
@@ -309,8 +316,8 @@ public class Buff {
             o.put("tiphereth", Tiphereth);
             o.put("chargeballsize", chargeBallSize);
             o.put("chargeballcount", chargeBallCount);
-            for(int i = 1; i <= chargeBallCount; i++){
-                o.put("chargeball"+i, chargeBalls.get(i-1));
+            for (int i = 1; i <= chargeBallCount; i++) {
+                o.put("chargeball" + i, chargeBalls.get(i - 1));
             }
             o.put("concentration", concentration);
             o.put("currentgeneration", currentgeneration);
@@ -326,7 +333,7 @@ public class Buff {
      * 从 JSONObject 恢复 Buff 的数据状态（需要传入 Mechanics 和宿主 Entity）
      */
     public static Buff fromJson(JSONObject o, Mechanics m, StatsActivity s, Entity self) {
-        Buff b = new Buff(m, s, self);
+        Buff b = new Buff(m, s, self, s.getResources());
         //负面效果
         b.poison = o.optInt("poison", 0);
         b.expireSwift = o.optInt("expireswift", 0);
@@ -347,8 +354,8 @@ public class Buff {
         b.Tiphereth = o.optInt("tiphereth", 0);
         b.chargeBallSize = o.optInt("chargeballsize", 3);
         b.chargeBallCount = o.optInt("chargeballcount", 0);
-        for(int i = 1; i <= b.chargeBallCount; i++){
-            b.chargeBalls.add(o.optInt("chargeball"+i, 0));
+        for (int i = 1; i <= b.chargeBallCount; i++) {
+            b.chargeBalls.add(o.optInt("chargeball" + i, 0));
         }
         b.concentration = o.optInt("concentration", 0);
         b.currentgeneration = o.optInt("currentgeneration", 0);

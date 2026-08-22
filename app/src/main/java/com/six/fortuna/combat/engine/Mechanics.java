@@ -1,5 +1,9 @@
 package com.six.fortuna.combat.engine;
 
+import android.content.res.Resources;
+
+import com.six.fortuna.R;
+
 import java.util.Random;
 
 /**
@@ -14,10 +18,12 @@ public class Mechanics {
     }
 
     public final Logger logger;
+    private final Resources res;
     private final Random random = new Random();
 
-    public Mechanics(Logger logger) {
+    public Mechanics(Logger logger, Resources res) {
         this.logger = logger;
+        this.res = res;
     }
 
     private void log(String msg) {
@@ -31,20 +37,21 @@ public class Mechanics {
 
     // --- AmplitudeConversion(target, getitself, conversetype) ---
     // Java端不做交互式输入，直接指定 conversetype（0无 1灼热 2俱亡 3回声）
-    private String amplitudeName(int conversetype){
-        switch (conversetype){
+    private String amplitudeName(int conversetype) {
+        switch (conversetype) {
             case 1:
-                return "震颤·灼热";
+                return res.getString(R.string.mechanic_amplitude_hot);
             case 2:
-                return "震颤·沉沦";
+                return res.getString(R.string.mechanic_amplitude_sinking);
             case 3:
-                return "震颤·虚弱";
+                return res.getString(R.string.mechanic_amplitude_weak);
             default:
-                return "震颤·不知道是啥";
+                return res.getString(R.string.mechanic_amplitude_unknown);
         }
     }
+
     public void amplitudeConversion(Entity target, int conversetype) {
-        log("使 " + target.name + " 振幅转换为" + amplitudeName(conversetype));
+        log(String.format(res.getString(R.string.mechanic_log_amplitude), target.name, amplitudeName(conversetype)));
         target.tremor_conversion = conversetype;
     }
 
@@ -52,23 +59,23 @@ public class Mechanics {
     public boolean dealDamage(int amount, Entity target, Entity self) {
         // 1. 基础物理伤害与力量乘区
         int damage = amount + self.strength + self.this_turn_strength;
-        if(target.buff.sidestep >= damage){
-            if(target.bleed_term > 0){
+        if (target.buff.sidestep >= damage) {
+            if (target.bleed_term > 0) {
                 bleedActivate(target);
             }
-            if(self.bleed_term > 0){
+            if (self.bleed_term > 0) {
                 bleedActivate(self);
             }
             target.buff.sidestep--;
-            log(target.name+"闪避了"+damage+"点伤害，怎么，打不中么？剩余闪避值："+target.buff.sidestep);
+            log(String.format(res.getString(R.string.mechanic_log_dodge), target.name, damage, target.buff.sidestep));
             return false;
-        }else if(target.buff.sidestep > 0){
-            if(target.buff.Precongization > 0){
+        } else if (target.buff.sidestep > 0) {
+            if (target.buff.Precongization > 0) {
                 if (target.buff.Precongization >= 6) {
                     target.buff.Precongization -= 6;
                     return false;
                 }
-            }else{
+            } else {
                 target.buff.sidestep = 0;
             }
             self.sanity += 2;
@@ -102,8 +109,8 @@ public class Mechanics {
             bleedActivate(self);
         }
 
-        if(self.ammoType == 3){
-            switch (self.ammo){
+        if (self.ammoType == 3) {
+            switch (self.ammo) {
                 case 7:
                     damage *= 1.2;
                     target.health -= damage;
@@ -130,14 +137,14 @@ public class Mechanics {
                     break;
                 case 2:
                     damage *= 0.7;
-                    if(target.burn_strength > 7){
-                        if(target.burn_strength > 14){
-                            if(target.burn_strength > 21){
-                                for(int i = 0; i < 3; i++) target.block -= damage;
-                            }else {
+                    if (target.burn_strength > 7) {
+                        if (target.burn_strength > 14) {
+                            if (target.burn_strength > 21) {
+                                for (int i = 0; i < 3; i++) target.block -= damage;
+                            } else {
                                 for (int i = 0; i < 2; i++) target.block -= damage;
                             }
-                        }else {
+                        } else {
                             target.block -= damage;
                         }
                     }
@@ -154,11 +161,11 @@ public class Mechanics {
                     target.health -= damage;
 
             }
-            if(self.ammo > 0) self.consumeAmmo(1);
+            if (self.ammo > 0) self.consumeAmmo(1);
         }
 
-        if(target.buff.rainoftears >= 1){
-            if(target.sinking_term > 0){
+        if (target.buff.rainoftears >= 1) {
+            if (target.sinking_term > 0) {
                 damage *= 1 - 0.1 * ((target.sinking_term > 9) ? 9 : target.sinking_term);
                 target.sinking_term++;
                 target.sinking_strength++;
@@ -166,7 +173,7 @@ public class Mechanics {
             target.strength += 2;
         }
 
-        if(target.buff.littlebird == 1){
+        if (target.buff.littlebird == 1) {
             target.strength += 3;
             target.max_hp *= 1.2;
         }
@@ -174,21 +181,21 @@ public class Mechanics {
         // 5. 护盾抵扣伤害结算
         if (target.block >= damage) {
             target.block -= damage;
-            log(target.name + "的护盾抵挡了全部伤害，剩余护盾：" + target.block);
+            log(String.format(res.getString(R.string.mechanic_log_shield_block), target.name, target.block));
         } else {
             damage -= target.block;
             target.block = 0;
             target.hp -= damage;
             target.health -= damage;
-            log(target.name + "受到 " + damage + " 点伤害！HP: " + target.hp + "/" + target.max_hp);
+            log(String.format(res.getString(R.string.mechanic_log_damage), target.name, damage, target.hp, target.max_hp));
         }
 
         //6. 解放带来的增益
-        if(self.buff.Unlock > 0){
+        if (self.buff.Unlock > 0) {
             self.sanity += 5;
-            if(self.buff.Unlock > 1){
+            if (self.buff.Unlock > 1) {
                 self.strength += 2;
-                if(self.buff.Unlock > 2){
+                if (self.buff.Unlock > 2) {
                     self.grace += 1;
                 }
             }
@@ -196,15 +203,15 @@ public class Mechanics {
         return true;
     }
 
-    public void defend(int amount, Entity target){
+    public void defend(int amount, Entity target) {
         amount += target.swift;
-        if(amount <= 0) return;
+        if (amount <= 0) return;
         target.block += amount;
     }
 
-    public void sidestep(int amount, Entity target){
+    public void sidestep(int amount, Entity target) {
         amount += target.swift * 0.75;
-        if(amount <= 0) return;
+        if (amount <= 0) return;
         target.buff.sidestep += amount;
     }
 
@@ -219,7 +226,7 @@ public class Mechanics {
         if (target.burn_term > 0) {
             target.hp -= target.burn_strength;
             target.health -= target.burn_strength;
-            log(target.name + "受到 " + target.burn_strength + " 点灼烧伤害！");
+            log(String.format(res.getString(R.string.mechanic_log_burn), target.name, target.burn_strength));
             target.burn_term--;
             if (target.burn_term == 0) target.burn_strength = 0;
         }
@@ -230,7 +237,7 @@ public class Mechanics {
         if (target.bleed_term > 0) {
             target.hp -= target.bleed_strength;
             target.health -= target.bleed_strength;
-            log(target.name + "正在流血！造成 " + target.bleed_strength + " 点伤害。");
+            log(String.format(res.getString(R.string.mechanic_log_bleed), target.name, target.bleed_strength));
             target.bleed_term--;
             if (target.bleed_term == 0) target.bleed_strength = 0;
         }
@@ -241,7 +248,8 @@ public class Mechanics {
         if (target.sinking_term > 0) {
             target.sanity -= target.sinking_strength;
             target.sinking_term--;
-            log(target.name + " 受到沉沦效果，损失 " + target.sinking_strength + " 点理智，剩余理智 " + target.sanity);
+            log(String.format(res.getString(R.string.mechanic_log_sinking),
+                    target.name, target.sinking_strength, target.sanity));
             if (target.sinking_term <= 0) {
                 target.sinking_strength = 0;
                 target.sinking_term = 0;
@@ -252,7 +260,7 @@ public class Mechanics {
     // --- tremorBurst(target) ---
     public void tremorBurst(Entity target) {
         if (target.tremor_term > 0) {
-            log("对 " + target.name + " 触发震颤爆发！");
+            log(String.format(res.getString(R.string.mechanic_log_tremor), target.name));
             target.health -= target.tremor_strength;
             target.tremor_term--;
             if (target.tremor_term == 0) target.tremor_strength = 0;
@@ -307,7 +315,7 @@ public class Mechanics {
         if (target.health < checkPoint && target.stagger_count < 3 && target.buff.UnlockedHealth > 0) {
             target.stagger_panic_term += 1;
             target.stagger_count++;
-            log("!!! 破防 !!! " + target.name + " 被破防了！本回合跳过，护盾清零。");
+            log(String.format(res.getString(R.string.mechanic_log_stagger), target.name));
             target.block = 0;
             return 1;
         }

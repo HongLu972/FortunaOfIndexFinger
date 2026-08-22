@@ -107,7 +107,7 @@
     <string name="card_name_disposal">处置</string>
     <string name="card_name_proliferatingg">增殖的G</string>
     <string name="card_name_budaijiezou">不带节奏(目不能追，耳未可及)</string>
-    <string name="card_name_heishou">/@全体黑兽 ，收到扣三技能</string>
+    <string name="card_name_heishou">\@全体黑兽 ，收到扣三技能</string>
     <string name="card_name_shankai">闪开，老子自己来</string>
     <string name="card_name_kaidao">开·道(开辟君主之道吧！)</string>
     <string name="card_name_wudile">无敌了无敌了！</string>
@@ -303,4 +303,132 @@
     <!-- ========== Toast 消息 ========== -->
     <string name="toast_no_newer">没有更新的公告啦！</string>
     <string name="toast_no_older">没有更旧的公告啦！</string>
+
+    <!-- ========== Toast ========== -->
+    <string name="toast_energy_insufficient">光芒不足！需要 %d 点</string>
+    <string name="toast_staggered">混乱中。。。</string>
+    <string name="toast_chase_laugh">见·追·笑，艾兰市区</string>
+    <string name="toast_victory">🎉 击败了 %s</string>
+    <string name="toast_defeat">💀 你被击倒了</string>
+    <string name="toast_ailan_not_district">艾兰不市区</string>
+    <string name="toast_grace_compassion">纵使此身被区之名覆盖...</string>
+    <string name="toast_compassion">既见区区，为何不笑？</string>
+    <string name="toast_new_card">获得新卡：%s</string>
+
+    <!-- ========== 日志 ========== -->
+    <string name="log_deck_size">牌库：%d</string>
+    <string name="log_discard_size">弃牌堆：%d</string>
+    <string name="log_turn_start">——— 回合开始 ———</string>
+    <string name="log_turn_end">——— 回合结束 ———</string>
+    <string name="log_victory">🎉 战斗胜利！</string>
+    <string name="log_defeat">💀 战斗失败，危险度重置为0</string>
+    <string name="log_grace_gain">🏵 获得指令加护 +%d</string>
+    <string name="log_eye_gain">👁 获得「眼」+%d万，当前共 %d万</string>
+    <string name="log_new_card">🃏 获得新卡：%s%s（已放入牌库，去养成界面装备）</string>
+    <string name="log_battle_start">========== %s%d ==========</string>
+    <string name="log_restored_battle">========== 已恢复上次未完成的战斗 ==========</string>
+    <string name="log_enemy_action">%s: %s</string>
+    <string name="log_compassion_trigger">？！慈悲？！</string>
+    <string name="log_compassion_mass">我开源了追击，你们怎么可以笑我！</string>
+    <string name="log_compassion_eternal">所有笑我的人和小金，一同和我化为永恒的区吧！</string>
+    <string name="log_compassion_open_source">就由我来开源追击！</string>
+    <string name="log_compassion_seeing">既见区区，为何不笑？</string>
+    <string name="log_restrictions_note">当前危险度: %d[注:高于10可能引发精英战斗]</string>
+    <string name="log_restrictions_elite">当前危险度: %d[注:高于50可能引发BOSS战]</string>
+    <string name="log_restrictions_boss">当前危险度: %d[注:可能触发BOSS战，制约开始出现]</string>
+
+    <!-- ========== 敌人名称 ========== -->
+    <string name="enemy_hajimi">哈基米</string>
+    <string name="enemy_heart">？！心脏？！</string>
+    <string name="enemy_thunder_spirit">雷元素精灵</string>
+    <string name="enemy_albina">阿尔比娜</string>
+    <string name="enemy_forgotten_killer">被遗弃的杀人魔</string>
+    <string name="enemy_ailan_worm">艾兰虫</string>
+    <string name="enemy_rein">里恩</string>
+    <string name="enemy_valencina">瓦伦希娜</string>
+    <string name="enemy_yoshide">无我良秀</string>
+    <string name="enemy_god">伞神</string>
+    <string name="enemy_kromer">克罗默</string>
+
+    <!-- ========== 按钮 ========== -->
+    <string name="button_use_card">确认使用书页</string>
+
+    <!-- ========== 食指晋升消息 ========== -->
+    <string name="index_promote_penitent">你晋升了，现在是苦行者</string>
+    <string name="index_promote_procurator">你晋升了，现在是代行者</string>
+    <string name="index_promote_herald">你晋升了，现在是传令员</string>
+    <string name="index_promote_oracle">你晋升了，现在是神谕代行者</string>
+    <string name="index_promote_weaver">你晋升了，现在是纺织者</string>
+    <string name="index_promote_note_1">现在你的指令之路几乎到达了尽头</string>
+    <string name="index_promote_note_2">你无法提高更多等阶，但可以依旧提升等级</string>
+
+    <!-- ========== 食指称号 ========== -->
+    <string name="index_rank_0">食指编外成员  </string>
+    <string name="index_rank_1">食指 苦行者 Lv.%d  </string>
+    <string name="index_rank_2">食指 代行者 Lv.%d  </string>
+    <string name="index_rank_3">食指 传令员 Lv.%d  </string>
+    <string name="index_rank_4">食指 神谕代行者 Lv.%d  </string>
+    <string name="index_rank_5">食指 纺织者 Lv.%d  </string>
+    <string name="index_rank_6">食指之神 Lv.%d  </string>
+    <string name="index_rank_bug">Bug: OutOfIndexInLevel</string>
+
+    <!-- ========== 战斗引擎 - 振幅转换 ========== -->
+    <string name="mechanic_amplitude_hot">震颤·灼热</string>
+    <string name="mechanic_amplitude_sinking">震颤·沉沦</string>
+    <string name="mechanic_amplitude_weak">震颤·虚弱</string>
+    <string name="mechanic_amplitude_unknown">震颤·不知道是啥</string>
+
+    <!-- ========== 战斗引擎 - 日志 ========== -->
+    <string name="mechanic_log_amplitude">使 %s 振幅转换为%s</string>
+    <string name="mechanic_log_dodge">%s闪避了%d点伤害，怎么，打不中么？剩余闪避值：%d</string>
+    <string name="mechanic_log_shield_block">%s的护盾抵挡了全部伤害，剩余护盾：%d</string>
+    <string name="mechanic_log_damage">%s受到 %d 点伤害！HP: %d/%d</string>
+    <string name="mechanic_log_burn">%s受到 %d 点灼烧伤害！</string>
+    <string name="mechanic_log_bleed">%s正在流血！造成 %d 点伤害。</string>
+    <string name="mechanic_log_sinking">%s 受到沉沦效果，损失 %d 点理智，剩余理智 %d</string>
+    <string name="mechanic_log_tremor">对 %s 触发震颤爆发！</string>
+    <string name="mechanic_log_stagger">!!! 破防 !!! %s 被破防了！本回合跳过，护盾清零。</string>
+
+    <!-- ========== Tiphereth 台词 ========== -->
+    <string name="tiphereth_1">哪怕只有我一个人，我也能管理好每个收容单元！</string>
+    <string name="tiphereth_2">这首歌叫做"Tiphereth的挽歌", 为Tiphereth而写的...</string>
+    <string name="tiphereth_3">愿这首歌...能安抚我们的灵魂......</string>
+    <string name="tiphereth_4">我们是两个人，也是一个人，你知道那是什么意思吧？</string>
+    <string name="tiphereth_5">中央本部太大了，每个人都忙得不可开支。</string>
+    <string name="tiphereth_6">又...又要换一个了么？是时候去仓库了...</string>
+    <string name="tiphereth_7">Tiphereth有得到他想要的东西吗？没有...他从一开始到底在期待着什么...</string>
+    <string name="tiphereth_8">不要用那样的眼神看着我！你们已经...已经...被我抛弃了！！！</string>
+    <string name="tiphereth_9">真想再一次和你手牵着手，一起在海边散步...海浪在我们身后发出欢快的声响...</string>
+    <string name="tiphereth_10">如果你能够听到这首歌的话...</string>
+    <string name="tiphereth_11">等真正的Tiphereth回来后，我要向他展现出我最成熟的一面...我想让他知道...知道...我...我...我真的做到了...</string>
+    <string name="tiphereth_12">你告诉过我..."一切都会好起来的"...</string>
+    <string name="tiphereth_13">这一切...都是值得的吗...</string>
+
+    <!-- ========== 充能球名称 ========== -->
+    <string name="chargeball_lightning">⚡闪电充能球</string>
+    <string name="chargeball_frost">🧊冰霜充能球</string>
+    <string name="chargeball_ion">💡离子充能球</string>
+
+    <!-- ========== Buff 状态标签 ========== -->
+    <string name="buff_seed_of_light">🕯️光之种%d  </string>
+    <string name="buff_cibei">🐛?!艾兰?! %d  </string>
+    <string name="buff_no_self">◼️无我%d  </string>
+    <string name="buff_bloodstained_tears">🪡葬花针%d  </string>
+    <string name="buff_sidestep">✨闪避%d  </string>
+    <string name="buff_unlock">🌸解放%d  </string>
+    <string name="buff_armored">🛡️覆甲%d  </string>
+    <string name="buff_poison">🍄剧毒%d  </string>
+    <string name="buff_next_turn_light">☀️下回合光芒%d  </string>
+    <string name="buff_precognition">👁️‍🗨️预知%d  </string>
+    <string name="buff_expire_swift">🐢即将到期的敏捷%d  </string>
+    <string name="buff_tiphereth_in_progress">Tiphereth核心抑制中%d  </string>
+    <string name="buff_tiphereth_done">Tiphereth核心抑制完毕  </string>
+    <string name="buff_concentration">💠集中%d  </string>
+    <string name="buff_charge_balls">充能球[%s]  </string>
+
+    <!-- ========== Buff 日志 ========== -->
+    <string name="buff_log_shield">充能球对%2$s施加了%1$d的护盾。</string>
+    <string name="buff_log_dodge_all">充能球对%2$s造成了%1$d点伤害但全被闪掉了，怎么，打不中么?</string>
+    <string name="buff_log_shield_block">充能球对%2$s造成了%1$d点伤害但全被护盾格挡了，其剩余护盾为%3$d</string>
+    <string name="buff_log_damage">充能球对%2$s造成了%1$d点伤害，其剩余生命为%3$d</string>
 </resources>
