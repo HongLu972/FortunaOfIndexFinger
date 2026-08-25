@@ -80,7 +80,7 @@ public class Buff {
         if (target.buff.sidestep > 0) {
             if (target.buff.sidestep >= amount) {
                 target.buff.sidestep--;
-                s.appendLog(String.format(res.getString(R.string.buff_log_dodge_all), target.name, amount));
+                s.appendLog(String.format(res.getString(R.string.buff_log_dodge_all), amount, target.name));
                 return false;
             } else {
                 target.buff.sidestep = 0;
@@ -91,13 +91,13 @@ public class Buff {
         if (target.block > 0) {
             if (target.block > amount) {
                 target.block -= amount;
-                s.appendLog(String.format(res.getString(R.string.buff_log_shield_block), target.name, amount, target.block));
+                s.appendLog(String.format(res.getString(R.string.buff_log_shield_block), amount, target.name, target.block));
             } else {
                 amount -= target.block;
             }
         }
         target.hp -= amount;
-        s.appendLog(String.format(res.getString(R.string.buff_log_damage), target.name, amount, target.hp));
+        s.appendLog(String.format(res.getString(R.string.buff_log_damage), amount, target.name, target.hp));
         return true;
     }
 
@@ -165,11 +165,10 @@ public class Buff {
 
     public void turnStartActivate(Entity target) {
         if (bloodstainedTears > 0) {
-            if (bloodstainedTears < 3) {
+            if (bloodstainedTears < 5) {
                 bloodstainedTears++;
-            } else if (bloodstainedTears >= 3) {
-                self.hp -= (int) (self.max_hp * 0.05);
             }
+            self.hp -= self.max_hp * 0.05 * Math.min(bloodstainedTears, 4);
         }
         self.swift -= expireSwift;
         expireSwift = 0;
@@ -200,7 +199,7 @@ public class Buff {
         }
         if (noSelf > 0) {
             noSelf *= 1.15;
-            for (int i = 0; i < noSelf; i++) self.max_hp *= 0.9993;
+            self.max_hp *= Math.pow(0.9993, noSelf);
         }
         if (Tiphereth > 0 && Tiphereth < 6) {
             Toast.makeText(s, Tiphereth_words(), Toast.LENGTH_LONG).show();
@@ -242,6 +241,7 @@ public class Buff {
         bigbird = 0;
         tallbird = 0;
         littlebird = 0;
+        bloodstainedTears = 0;
         Apocalypse_Bird = 0;
     }
 

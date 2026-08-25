@@ -110,25 +110,25 @@ public class SettingActivity extends AppCompatActivity {
                 return;
             }if (code.matches("set.*Fortuna")){
                 store.saveCodename("福尔图娜");
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 6, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 6, 0, getResources()));
                 sucess();
             }else if(code.matches("set.*rank.*1")){
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 1, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 1, 0, getResources()));
                 sucess();
             }else if(code.matches("set.*rank.*2")){
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 2, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 2, 0, getResources()));
                 sucess();
             }else if(code.matches("set.*Rien")){
                 store.saveCodename("Rien");
-                store.saveStats(new IndexFingerLevel_CN(0, 4, 4, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 4, 4, 0, getResources()));
                 sucess();
             }else if(code.matches("set.*rank.*5")){
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 5, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 5, 0, getResources()));
                 sucess();
             }else if (code.matches("set.*rnfmabj")){
                 store.clearAll();
                 store.saveCodename("rnfmabj");
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 3, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 3, 0, getResources()));
                 store.saveCooldownDeadline(System.currentTimeMillis() + 2147483647000L);
 
                 Prescripts_finished special = new Prescripts_finished(2147483647, "在读完自然常数E前不要回家");
@@ -143,10 +143,10 @@ public class SettingActivity extends AppCompatActivity {
             }else if(code.matches("口口口")){
                 Toast.makeText(this, "I MUST BE THE REASON WHY->", Toast.LENGTH_LONG).show();
             }else if(code.matches("set.*rank.*4")){
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 4, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 4, 0, getResources()));
                 sucess();
             }else if(code.matches("set.*rank.*3")){
-                store.saveStats(new IndexFingerLevel_CN(0, 0, 3, 0));
+                store.saveStats(new IndexFingerLevel_CN(0, 0, 3, 0, getResources()));
                 sucess();
             }else if(code.matches("/kill.*")){
                 store.clearAll();
@@ -179,7 +179,7 @@ public class SettingActivity extends AppCompatActivity {
                 return;
             }else if(code.matches("getCard.*")){
                 final EditText input = new EditText(this);
-                input.setHint("输入官方代码");
+                input.setHint("输入代码");
                 new android.app.AlertDialog.Builder(this)
                         .setTitle("风灵月影·获得卡牌")
                         .setMessage("你要获得什么卡牌？")
@@ -201,6 +201,8 @@ public class SettingActivity extends AppCompatActivity {
                 return;
             }else if(code.matches("...........................")){
                 Toast.makeText(this, "何意味", Toast.LENGTH_LONG).show();
+            }else if(code.matches("activity.*dragonbone")){
+                startActivity(new Intent(this, DragonBonesTestActivity.class));
             }
             else{
                 return;

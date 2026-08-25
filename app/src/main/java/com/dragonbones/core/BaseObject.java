@@ -21,7 +21,7 @@ public abstract class BaseObject {
 
     private static void _returnObject(BaseObject object) {
         Class<? extends BaseObject> classType = object.getClass();
-        int maxCount = BaseObject._maxCountMap.containsKey(classType) ? BaseObject._defaultMaxCount : BaseObject._maxCountMap.get(classType);
+        int maxCount = BaseObject._maxCountMap.containsKey(classType) ? BaseObject._maxCountMap.get(classType) : BaseObject._defaultMaxCount;
         if (!BaseObject._poolsMap.containsKey(classType)) {
             BaseObject._poolsMap.put(classType, new Array<>());
         }

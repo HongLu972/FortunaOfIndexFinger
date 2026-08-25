@@ -428,4 +428,5 @@
     <string name="buff_log_dodge_all">Charge ball dealt %2$d damage to %1$s but it was fully dodged. Can\'t hit?</string>
     <string name="buff_log_shield_block">Charge ball dealt %2$d damage to %1$s but it was fully blocked. Remaining shield: %3$d</string>
     <string name="buff_log_damage">Charge ball dealt %2$d damage to %1$s, remaining HP: %3$d</string>
+    <string name="next_step">Next Step</string>
 </resources>

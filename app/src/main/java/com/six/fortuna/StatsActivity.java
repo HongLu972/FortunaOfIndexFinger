@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +55,14 @@ public class StatsActivity extends AppCompatActivity {
     private TextView tvEnemyName, tvEnemyIntent, tvEnemyStatus, tvPlayerStatus;
     private ProgressBar enemyHpBar;
     private Spinner spinnerCards;
+    private static final String PREFS_NAME = "fortuna_settings";
+    private static final String KEY_ANIMATED_BATTLE = "animated_battle_mode";
+    private boolean animatedMode;
+
+    private com.six.fortuna.dragonbones.DragonBonesView playerDragonBonesView; // 需要在 stats.xml 加对应控件
+    private com.dragonbones.armature.Armature playerArmature;
+    private final java.util.ArrayDeque<String> logQueue = new java.util.ArrayDeque<>();
+    private boolean isPlayingLog = false;
     private Button btnConfirm;
     private ProgressBar hpBar, sanBar, expBar;
     private ArrayAdapter<String> spinnerAdapter;
@@ -90,6 +99,18 @@ public class StatsActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         bindViews();
+        android.content.SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        animatedMode = prefs.getBoolean(KEY_ANIMATED_BATTLE, false);
+
+        Switch switchAnimatedBattle = findViewById(R.id.switch_animated_battle);
+        switchAnimatedBattle.setChecked(animatedMode);
+        applyBattleModeUI();
+
+        switchAnimatedBattle.setOnCheckedChangeListener((btn, checked) -> {
+            animatedMode = checked;
+            prefs.edit().putBoolean(KEY_ANIMATED_BATTLE, checked).apply();
+            applyBattleModeUI();
+        });
         tvCombatLog.setMovementMethod(new ScrollingMovementMethod());
 
         mechanics = new Mechanics(this::appendLog, getResources());
@@ -102,6 +123,10 @@ public class StatsActivity extends AppCompatActivity {
         spinnerCards.setAdapter(spinnerAdapter);
 
         btnConfirm.setOnClickListener(v -> {
+            if (isPlayingLog) {
+                revealNextLine();
+                return;
+            }
             if (battleOver) {
                 startNewBattle();
                 return;
@@ -156,6 +181,8 @@ public class StatsActivity extends AppCompatActivity {
         tvBlessing = findViewById(R.id.tv_blessing);
         tvHP = findViewById(R.id.HP);
 //        tvSanity = findViewById(R.id.Sanity);
+        playerDragonBonesView = findViewById(R.id.player_dragon_bones_view);
+        Switch switchAnimatedBattle = findViewById(R.id.switch_animated_battle);
         tvEXP = findViewById(R.id.EXPNumber);
         tvLevel = findViewById(R.id.level);
         tvLight = findViewById(R.id.LTAmount);
@@ -187,7 +214,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void initPlayer() {
-        player = new Entity(mechanics, this);
+        player = new Entity(mechanics, this, getResources());
         player.name = store.loadCodename();
         int bonusHp = store.loadBonusMaxHp();
         player.outside_max_hp = 200 + bonusHp;
@@ -313,7 +340,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void spawnHajimi() {
-        enemy = new Entity(mechanics, this);
+        enemy = new Entity(mechanics, this, getResources());
         enemy.name = getString(R.string.enemy_hajimi);
         enemy.max_hp = 1000;
         enemy.EntityId = 1;
@@ -367,7 +394,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void spawnEnemy(String name, int outside_max_hp, double[] staggerLine, int id){
-        enemy = new Entity(mechanics, this);
+        enemy = new Entity(mechanics, this, getResources());
         enemy.name = name;
         enemy.EntityId = id;
         enemy.outside_max_hp = outside_max_hp;
@@ -430,6 +457,8 @@ public class StatsActivity extends AppCompatActivity {
 
         if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0 )&& enemy.current_intent != null && enemy.current_intent.execute != null) {
             appendLog(String.format(getString(R.string.log_enemy_action), enemy.name, enemy.current_intent.description));
+            playEnemyAttackAnimation();
+            enemy.current_intent.execute.execute(enemy, player);
             enemy.current_intent.execute.execute(enemy, player);
             if(enemy.buff.cibei > 0){
                 if(enemy.countB == 1){
@@ -444,8 +473,10 @@ public class StatsActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.toast_grace_compassion), Toast.LENGTH_SHORT).show();
                     appendLog(getString(R.string.log_compassion_eternal));
                     for(int i = 0; i < enemy.buff.cibei; i++){
+                        enemy.this_turn_strength--;
                         if(enemy.buff.cibei > 15){
                             enemy.this_turn_strength += enemy.buff.cibei - 15;
+                            player.this_turn_strength -= enemy.buff.cibei - 15;
                             enemy.buff.cibei = 15;
                         }
                         appendLog(getString(R.string.log_compassion_open_source));
@@ -518,6 +549,8 @@ public class StatsActivity extends AppCompatActivity {
             return;
         }
         player.energy -= card.cost;
+        playPlayerAttackAnimation();
+        card.play.play(player, enemy);
         card.play.play(player, enemy);
         if(player.buff.cibei > 0){
             Toast.makeText(this, getString(R.string.toast_chase_laugh), Toast.LENGTH_SHORT).show();
@@ -735,14 +768,46 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     public void appendLog(String msg) {
-        if (tvCombatLog == null) return;
-        String current = tvCombatLog.getText().toString();
-        if (current.equals("rnfmabj")) current = "";
-        tvCombatLog.setText(current + "\n" + msg);
-        final int scrollAmount = tvCombatLog.getLayout() != null
-                ? tvCombatLog.getLayout().getLineTop(tvCombatLog.getLineCount()) - tvCombatLog.getHeight()
-                : 0;
-        tvCombatLog.scrollTo(0, Math.max(scrollAmount, 0));
+        logQueue.add(msg);
+        if (!isPlayingLog) {
+            startLogPlayback();
+        }
+    }
+
+    /** 开始播放本次结算产生的所有日志：锁住手牌选择，一条一条揭示 */
+    private void startLogPlayback() {
+        isPlayingLog = true;
+        spinnerCards.setEnabled(false);
+        while(isPlayingLog) {
+            revealNextLine();
+        }
+    }
+
+    /** 揭示队列里的下一条日志；队列空了就解锁交互，恢复正常选卡界面 */
+    private void revealNextLine() {
+        if (logQueue.isEmpty()) {
+            isPlayingLog = false;
+            spinnerCards.setEnabled(true);
+            if (!battleOver) {
+                btnConfirm.setText(getString(R.string.button_use_card));
+            }
+            return;
+        }
+
+        String msg = logQueue.poll();
+        if (tvCombatLog != null) {
+            String current = tvCombatLog.getText().toString();
+            if (current.equals("rnfmabj")) current = "";
+            tvCombatLog.setText(current + "\n" + msg);
+            final int scrollAmount = tvCombatLog.getLayout() != null
+                    ? tvCombatLog.getLayout().getLineTop(tvCombatLog.getLineCount()) - tvCombatLog.getHeight()
+                    : 0;
+            tvCombatLog.scrollTo(0, Math.max(scrollAmount, 0));
+        }
+
+        if (!logQueue.isEmpty()) {
+            btnConfirm.setText("▶ " + getString(R.string.next_step)); // 需要在 strings.xml 加一个 next_step，比如"下一步"
+        }
     }
 
     private String buildStatusChips(Entity e) {
@@ -821,6 +886,54 @@ public class StatsActivity extends AppCompatActivity {
                 enemyHpBar.setProgress(Math.max(0, enemy.hp));
             }
         }
+    }
+
+    /** 根据开关状态，切换是显示龙骨动画区，还是显示纯文字区 */
+    private void applyBattleModeUI() {
+        if (animatedMode) {
+            playerDragonBonesView.setVisibility(android.view.View.VISIBLE);
+            ensurePlayerArmatureLoaded();
+        } else {
+            playerDragonBonesView.setVisibility(android.view.View.GONE);
+        }
+    }
+
+    /** 懒加载：第一次切到动画模式才真正读资源，避免每次进战斗都读一遍 */
+    private void ensurePlayerArmatureLoaded() {
+        if (playerArmature != null) {
+            playerDragonBonesView.setArmature(playerArmature);
+            playerDragonBonesView.play();
+            return;
+        }
+        try {
+            com.six.fortuna.dragonbones.AndroidFactory factory = com.six.fortuna.dragonbones.AndroidFactory.getInstance();
+            factory.loadFromAssets(getAssets(),
+                    "dragonbones/PlayerAttackBlunt/Player_ske.json",
+                    "dragonbones/PlayerAttackBlunt/Player_tex.json",
+                    "dragonbones/PlayerAttackBlunt/Player_tex.png");
+            playerArmature = factory.buildArmature("Player"); // 骨架名字要跟你导出的一致
+            if (playerArmature != null) {
+                playerArmature.getAnimation().play("idle"); // 没有叫 idle 的动画就先随便 play() 播默认
+                playerDragonBonesView.setArmature(playerArmature);
+                playerDragonBonesView.play();
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            animatedMode = false; // 加载失败就自动退回文字模式，别崩
+            playerDragonBonesView.setVisibility(android.view.View.GONE);
+        }
+    }
+
+    /** 动画模式下，玩家行动时播一下攻击动画；没有动画数据/不在动画模式就什么都不做 */
+    private void playPlayerAttackAnimation() {
+        if (animatedMode && playerArmature != null) {
+            playerArmature.getAnimation().play("attack"); // 换成你实际导出的动画名
+        }
+    }
+
+    /** 敌人这边先占位：目前没有敌人的龙骨资源，动画模式下敌人先不播（不影响数值和文字结算） */
+    private void playEnemyAttackAnimation() {
+        // TODO: 等敌人也导出了龙骨资源，仿照 ensurePlayerArmatureLoaded 加一份敌人的
     }
 
     public String getLight(){

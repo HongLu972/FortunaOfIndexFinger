@@ -861,7 +861,7 @@ public class FortunaEnemies {
                 self.countB = 1;
             }
         }
-        if (self.buff.Precongization < 10) self.buff.Precongization = 10;
+        self.buff.Precongization += 10;
     }
 
     public void jielu(Entity self, Entity player) {
@@ -897,14 +897,18 @@ public class FortunaEnemies {
             self.buff.Precongization = 20;
             self.countA = 1;
         }
+        if(self.poise_strength >= 120){
+            self.poise_term += 2 * ((self.poise_strength - 100) / 20);
+            self.buff.Precongization += (self.poise_strength - 100) / 20;
+        }
         self.buff.sidestep = 0;
         self.buff.sidestep += self.swift + self.buff.Precongization;
         int a = (self.poise_strength + self.poise_term) / 10;
         self.this_turn_strength += a;
         self.strength += a / 10;
-        self.countC += self.buff.Precongization;
-        if (m.randint(1, 100) < self.countC) {
-            self.countC = 0;
+        self.countC += Math.min(self.buff.Precongization, 49);
+        if (m.randint(50, 150) < self.countC) {
+            self.countC -= 100;
             self.countB = 1;
         }
         if (self.buff.Precongization <= 1 || self.countB == 1) {
@@ -935,9 +939,7 @@ public class FortunaEnemies {
 
     public void duanYuan(Entity self, Entity player) {
         player.blade += self.buff.noSelf;
-        for (int i = 0; i < player.blade; i++) {
-            player.max_hp *= 0.999;
-        }
+        player.max_hp *= Math.pow(0.999, player.blade);
         painted(self, player);
     }
 
@@ -949,7 +951,7 @@ public class FortunaEnemies {
         player.max_hp = player.hp;
         if (player.hp < 0) {
             player.max_hp = 0;
-            player.hp = 0;
+            player.hp = -1;
         }
     }
 
@@ -1184,6 +1186,12 @@ public class FortunaEnemies {
         EnemyAction kai = new EnemyAction(res.getString(R.string.enemy_action_god_kai), this::kai);
         EnemyAction Corride_BandageKing = new EnemyAction(res.getString(R.string.enemy_action_god_corride), this::EGO_CorrideBandageKing);
 
+        self.swift -= 3;
+        self.strength += 2;
+
+        while (self.sinking_term > 10) {
+            m.sinking(self);
+        }
         if (self.sanity <= -45) {
             m.sanityReturn(self);
             self.name = res.getString(R.string.enemy_name_bound_king);
@@ -1191,13 +1199,6 @@ public class FortunaEnemies {
             self.strength += 6;
             return Corride_BandageKing;
         }
-        self.swift -= 3;
-        self.strength += 2;
-
-        while (self.sinking_term > 10) {
-            m.sinking(self);
-        }
-
         if (self.buff.rainoftears != 1) {
             //被动：泪雨
             self.buff.rainoftears = 1;
