@@ -196,7 +196,7 @@ public class FortunaCards {
     }
 
     public void effect_WordOfPower_Death(Entity player, Entity enemy) {
-        m.dealDamage((int) (enemy.max_hp * 1.5), enemy, player);
+        m.dealDamage((int) ((enemy.block + enemy.max_hp) * 1.5), enemy, player);
         enemy.hp = -1;
     }
 
@@ -820,12 +820,12 @@ public class FortunaCards {
         player.this_turn_strength += 20;
         enemy.buff.sidestep = 0;
         enemy.block = 0;
-        for (int i = 0; i < 3 + d; i++) {
+        for (int i = 0; i < d; i++) {
             a += a + 1;
             player.buff.bloodstainedTears++;
             if (m.dealDamage(80, enemy, player)) {
-                enemy.rapture_strength += (player.this_turn_strength + player.strength) * player.buff.bloodstainedTears;
-                enemy.rapture_term += 3 * player.buff.bloodstainedTears;
+                enemy.rapture_strength += Math.min((player.this_turn_strength + player.strength) * (player.buff.bloodstainedTears - 2), 150);
+                enemy.rapture_term += 2 * player.buff.bloodstainedTears;
             }
         }
         if (m.dealDamage(200, enemy, player)) {

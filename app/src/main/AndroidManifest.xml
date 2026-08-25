@@ -35,6 +35,9 @@
         <activity
             android:name=".AnnounceActivity"
             android:exported="false" />
+        <activity
+            android:name=".DragonBonesTestActivity"
+            android:exported="false" />
     </application>
 
 

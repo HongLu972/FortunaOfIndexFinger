@@ -71,8 +71,8 @@ public class Mechanics {
             return false;
         } else if (target.buff.sidestep > 0) {
             if (target.buff.Precongization > 0) {
-                if (target.buff.Precongization >= 6) {
-                    target.buff.Precongization -= 6;
+                if (target.buff.Precongization >= 20) {
+                    target.buff.Precongization -= Math.min(target.buff.Precongization / 2, damage / 5);
                     return false;
                 }
             } else {
@@ -87,7 +87,7 @@ public class Mechanics {
             damage = 0;
         } else {
             if (randint(1, 100) <= self.poise_strength * 5) {
-                damage = (int) (damage * (1.5 + 0.01 * self.poise_strength));
+                damage = (int) (damage * (1.5 + Math.min(1.0, 0.01 * self.poise_strength)));
                 self.poise_term--;
             }
         }

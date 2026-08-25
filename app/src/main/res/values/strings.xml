@@ -431,4 +431,5 @@
     <string name="buff_log_dodge_all">充能球对%2$s造成了%1$d点伤害但全被闪掉了，怎么，打不中么?</string>
     <string name="buff_log_shield_block">充能球对%2$s造成了%1$d点伤害但全被护盾格挡了，其剩余护盾为%3$d</string>
     <string name="buff_log_damage">充能球对%2$s造成了%1$d点伤害，其剩余生命为%3$d</string>
+    <string name="next_step">下一步</string>
 </resources>

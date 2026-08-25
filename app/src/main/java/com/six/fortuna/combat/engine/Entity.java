@@ -1,5 +1,7 @@
 package com.six.fortuna.combat.engine;
 
+import android.content.res.Resources;
+
 import com.six.fortuna.StatsActivity;
 
 /**
@@ -70,7 +72,7 @@ public class Entity {
     public int tianjiustarblade;
     public StatsActivity s;
 
-    public Buff buff = new Buff(m, s, this);
+    public Buff buff;
 
     // 当前意图（敌方专用，回合开始时brain函数算出来）
     public EnemyAction current_intent;
@@ -84,10 +86,10 @@ public class Entity {
         initialization();
     }
 
-    public Entity(Mechanics m, StatsActivity s){
+    public Entity(Mechanics m, StatsActivity s, Resources res){
         this.s = s;
         this.m = m;
-        this.buff = new Buff(m, s, this);
+        this.buff = new Buff(m, s, this, res);
         initialization();
     }
 

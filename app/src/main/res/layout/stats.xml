@@ -219,6 +219,12 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <com.six.fortuna.dragonbones.DragonBonesView
+        android:id="@+id/player_dragon_bones_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -229,7 +235,6 @@
         android:layout_above="@id/bottom_toolbar"
         android:layout_margin="10dp">
         <!--这里用于进行战斗操作，别问我为什么要加战斗-->
-
         <!-- 敌人状态栏：名字/血量/意图预告 -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -296,6 +301,13 @@
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:overScrollMode="always"/>
+        <!-- 顺便加个开关按钮，放导航栏或者设置区都行 -->
+        <Switch
+            android:id="@+id/switch_animated_battle"
+            android:textColor="@color/玉色"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="动画战斗" />
         <Spinner
             android:id="@+id/BookPagesChoice"
             android:layout_width="match_parent"
@@ -310,6 +322,7 @@
             android:backgroundTint="#FFF"
             android:textColor="#000"
             android:textStyle="bold"/>
+
     </LinearLayout>
 
     <LinearLayout
