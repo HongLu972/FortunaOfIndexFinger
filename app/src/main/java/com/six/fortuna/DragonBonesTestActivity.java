@@ -79,8 +79,8 @@ public class DragonBonesTestActivity extends AppCompatActivity {
 
     /** 从已解析的龙骨数据里取出第一个骨架的名字，避免还要手动去 json 里确认拼写。 */
     private static String findFirstArmatureName(AndroidFactory factory) {
-        Map<String, DragonBonesData> all = factory.getAllDragonBonesData();
-        for (DragonBonesData data : all.values()) {
+        java.util.Map<String, com.dragonbones.model.DragonBonesData> all = factory.getAllDragonBonesData();
+        for (com.dragonbones.model.DragonBonesData data : all.values()) {
             if (data.armatureNames.size() > 0) {
                 return data.armatureNames.get(0);
             }
