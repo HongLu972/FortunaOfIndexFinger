@@ -14,6 +14,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.dragonbones.animation.Animation;
+import com.dragonbones.animation.WorldClock;
+import com.dragonbones.armature.Armature;
+import com.dragonbones.model.AnimationData;
+import com.dragonbones.model.ArmatureData;
+import com.dragonbones.model.DragonBonesData;
 import com.six.fortuna.IndexLevel.IndexFingerLevel_CN;
 import com.six.fortuna.combat.engine.CardDeck;
 import com.six.fortuna.combat.engine.CardTypes.Card;
@@ -41,6 +48,7 @@ public class StatsActivity extends AppCompatActivity {
 
     private int currentSongResId;
     private boolean wasPlayingBeforeStop = false;
+    private boolean playerArmatureLoadFailed = false;
     private MediaPlayer mediaPlayer;
 
     // 局外初始牌组（第一次进游戏时发的牌，之后掉落卡会往里加）
@@ -110,6 +118,9 @@ public class StatsActivity extends AppCompatActivity {
             animatedMode = checked;
             prefs.edit().putBoolean(KEY_ANIMATED_BATTLE, checked).apply();
             applyBattleModeUI();
+            if (checked && !animatedMode) {
+                switchAnimatedBattle.setChecked(false);
+            }
         });
         tvCombatLog.setMovementMethod(new ScrollingMovementMethod());
 
@@ -150,6 +161,13 @@ public class StatsActivity extends AppCompatActivity {
                 return;
             }
             useCard(deck.hand.get(pos));
+            if(player.buff.animaionTimes == 0) return;
+            float totalTime = 3.0f;
+            float originalDuration = getActualDuration(playerArmature);
+            float targetSingleDuration = totalTime / player.buff.animaionTimes;
+            float newTimeScale = originalDuration / targetSingleDuration;
+            playerArmature.getAnimation().play("newAnimation",player.buff.animaionTimes);
+            player.buff.animaionTimes = 0;
         });
 
         findViewById(R.id.nav_home).setOnClickListener(v ->{
@@ -331,10 +349,10 @@ public class StatsActivity extends AppCompatActivity {
                 spawnHajimi();
                 break;
             case 2:
-                spawnEnemy(getString(R.string.enemy_heart), 1000, new double[] {0.3, 0.2, 0.1}, 6);
+                spawnEnemy(getString(R.string.enemy_heart), 10000, new double[] {0.3, 0.2, 0.1}, 6);
                 break;
             case 3:
-                spawnEnemy(getString(R.string.enemy_thunder_spirit), 1000, new double[] {0.6, 0.4, 0.2}, 9);
+                spawnEnemy(getString(R.string.enemy_thunder_spirit), 10000, new double[] {0.6, 0.4, 0.2}, 9);
                 break;
         }
     }
@@ -342,9 +360,9 @@ public class StatsActivity extends AppCompatActivity {
     private void spawnHajimi() {
         enemy = new Entity(mechanics, this, getResources());
         enemy.name = getString(R.string.enemy_hajimi);
-        enemy.max_hp = 1000;
+        enemy.max_hp = 10000;
         enemy.EntityId = 1;
-        enemy.outside_max_hp = 1000;
+        enemy.outside_max_hp = 10000;
         enemy.hp = enemy.outside_max_hp;
         enemy.health = enemy.hp;
         enemy.strength = 2;
@@ -358,16 +376,16 @@ public class StatsActivity extends AppCompatActivity {
                 spawnAlbina();
                 break;
             case 2:
-                spawnEnemy(getString(R.string.enemy_forgotten_killer), 3000, new double[] {0.2, 0.4, 0.6}, 4);
+                spawnEnemy(getString(R.string.enemy_forgotten_killer), 300000, new double[] {0.2, 0.4, 0.6}, 4);
                 break;
             case 3:
-                spawnEnemy(getString(R.string.enemy_ailan_worm), 10000, new double[] {0, 0, 0}, 8);
+                spawnEnemy(getString(R.string.enemy_ailan_worm), 100000, new double[] {0, 0, 0}, 8);
                 break;
         }
     }
 
     private void spawnAlbina(){
-        spawnEnemy(getString(R.string.enemy_albina), 2000, new double[]{0.8, 0.6, 0.4}, 2);
+        spawnEnemy(getString(R.string.enemy_albina), 20000, new double[]{0.8, 0.6, 0.4}, 2);
     }
 
     private void BossBattle(){
@@ -376,21 +394,21 @@ public class StatsActivity extends AppCompatActivity {
                 spawnRein();
                 break;
             case 2:
-                spawnEnemy(getString(R.string.enemy_valencina), 8000, new double[]{0.9, 0.5, 0.2}, 5);
+                spawnEnemy(getString(R.string.enemy_valencina), 800000, new double[]{0.9, 0.5, 0.2}, 5);
                 break;
             case 3:
-                spawnEnemy(getString(R.string.enemy_yoshide), 10000, new double[]{-0.2, -0.5, -1.0}, 7);
+                spawnEnemy(getString(R.string.enemy_yoshide), 1000000, new double[]{-0.2, -0.5, -1.0}, 7);
                 break;
             case 4:
-                spawnEnemy(getString(R.string.enemy_god), 10000, new double[]{0.8, 0.6, 0.3}, 10);
+                spawnEnemy(getString(R.string.enemy_god), 1000000, new double[]{0.8, 0.6, 0.3}, 10);
                 break;
             case 5:
-                spawnEnemy(getString(R.string.enemy_kromer), 10000, new double[]{0.7, 0.3, 0.0}, 11);
+                spawnEnemy(getString(R.string.enemy_kromer), 1000000, new double[]{0.7, 0.3, 0.0}, 11);
                 break;
         }
     }
     private void spawnRein(){
-        spawnEnemy(getString(R.string.enemy_rein), 10000, new double[]{0.7, 0.5, 0.2}, 3);
+        spawnEnemy(getString(R.string.enemy_rein), 1000000, new double[]{0.7, 0.5, 0.2}, 3);
     }
 
     private void spawnEnemy(String name, int outside_max_hp, double[] staggerLine, int id){
@@ -433,6 +451,11 @@ public class StatsActivity extends AppCompatActivity {
         if(player.restrictions >= 50){
             player.energy--;
         }
+        if(player.restrictions >= 100){
+            for(int i = 0; i < Math.min(Math.max(1, player.restrictions / 300), 3); i++){
+                deck.addCard(new Card("null", "制约", 1, null, -1, 1), mechanics.logger);
+            }
+        }
         if(player.sanity <= -45){
             player.stagger_panic_term++;
             player.sanity = 0;
@@ -444,9 +467,6 @@ public class StatsActivity extends AppCompatActivity {
 
     private void endTurn() {
         appendLog(getString(R.string.log_turn_end));
-        if(enemy.EntityId == 11 && enemy.buff.UnlockedHealth > 0){
-            playSong(this, R.raw.betweentwoworlds_2, mediaPlayer);
-        }
         deck.discardHand();
         player.buff.turnEndActivate();
         enemy.buff.turnEndActivate();
@@ -455,7 +475,7 @@ public class StatsActivity extends AppCompatActivity {
             player.energy = player.max_energy;
         }
 
-        if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0 )&& enemy.current_intent != null && enemy.current_intent.execute != null) {
+        if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0 )&&(enemy.buff.UnlockedHealth == 0)&& enemy.current_intent != null && enemy.current_intent.execute != null) {
             appendLog(String.format(getString(R.string.log_enemy_action), enemy.name, enemy.current_intent.description));
             playEnemyAttackAnimation();
             enemy.current_intent.execute.execute(enemy, player);
@@ -464,10 +484,15 @@ public class StatsActivity extends AppCompatActivity {
                 if(enemy.countB == 1){
                     Toast.makeText(this, getString(R.string.toast_ailan_not_district), Toast.LENGTH_SHORT).show();
                     appendLog(getString(R.string.log_compassion_mass));
-                    for(int i = 0; i < player.buff.cibei; i++){
+                    for(int i = 0; i < enemy.buff.cibei; i++){
                         appendLog(getString(R.string.log_compassion_trigger));
                         enemy.this_turn_strength += 3;
-                        useCard(cardDefs.zhuizhui());
+                        if(mechanics.dealDamage(30, player, enemy)){
+                            player.tremor_term += 3;
+                            player.tremor_strength += 5 + enemy.strength;
+                            mechanics.amplitudeConversion(player, 4);
+                            mechanics.tremorBurst(player);
+                        }
                     }
                 }else{
                     Toast.makeText(this, getString(R.string.toast_grace_compassion), Toast.LENGTH_SHORT).show();
@@ -480,7 +505,12 @@ public class StatsActivity extends AppCompatActivity {
                             enemy.buff.cibei = 15;
                         }
                         appendLog(getString(R.string.log_compassion_open_source));
-                        useCard(cardDefs.Elanzhuizhui());
+                        if(mechanics.dealDamage(30, player, enemy)){
+                            player.tremor_term += 3;
+                            player.tremor_strength += 5 + enemy.strength;
+                            mechanics.amplitudeConversion(player, 4);
+                            mechanics.tremorBurst(player);
+                        }
                         if(i > 15){
                             break;
                         }
@@ -550,7 +580,6 @@ public class StatsActivity extends AppCompatActivity {
         }
         player.energy -= card.cost;
         playPlayerAttackAnimation();
-        card.play.play(player, enemy);
         card.play.play(player, enemy);
         if(player.buff.cibei > 0){
             Toast.makeText(this, getString(R.string.toast_chase_laugh), Toast.LENGTH_SHORT).show();
@@ -646,9 +675,9 @@ public class StatsActivity extends AppCompatActivity {
     /** 按危险度加权抽一张奖励卡的key：危险度越高，抽到稀有/金卡的权重越大 */
     private String rollRewardCardKey(int difficulty) {
         if(difficulty > 50) difficulty = 50;
-        int goldWeight = Math.min(50, difficulty);          // 危险度50时金卡权重封顶50
-        int silverWeight = Math.min(70, 20 + difficulty);    // 稀有权重起步20，随危险度涨
-        int commonWeight = Math.max(10, 100 - goldWeight - silverWeight);
+        int goldWeight = Math.min(3, difficulty/75);          // 危险度50时金卡权重封顶50
+        int silverWeight = Math.min(40, difficulty);    // 稀有权重起步20，随危险度涨
+        int commonWeight = Math.max(1, 100 - goldWeight - silverWeight);
         int totalWeight = goldWeight + silverWeight + commonWeight;
 
         int roll = mechanics.randint(1, totalWeight);
@@ -768,6 +797,11 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     public void appendLog(String msg) {
+        if (animatedMode) {
+            // 动画模式：纯看演出，不显示文字，也不需要"下一步"逐条播放
+            android.util.Log.d("BattleLog", msg); // 留着方便你调试对不对，不影响UI
+            return;
+        }
         logQueue.add(msg);
         if (!isPlayingLog) {
             startLogPlayback();
@@ -898,11 +932,24 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-    /** 懒加载：第一次切到动画模式才真正读资源，避免每次进战斗都读一遍 */
+    private String findFirstArmatureName(com.six.fortuna.dragonbones.AndroidFactory factory) {
+        java.util.Map<String, com.dragonbones.model.DragonBonesData> all = factory.getAllDragonBonesData();
+        for (com.dragonbones.model.DragonBonesData data : all.values()) {
+            if (data.armatureNames.size() > 0) {
+                return data.armatureNames.get(0);
+            }
+        }
+        return null;
+    }
+
     private void ensurePlayerArmatureLoaded() {
         if (playerArmature != null) {
             playerDragonBonesView.setArmature(playerArmature);
             playerDragonBonesView.play();
+            return;
+        }
+        if (playerArmatureLoadFailed) {
+            // 之前已经失败过了，不要再重复调用 loadFromAssets，避免重复注册
             return;
         }
         try {
@@ -911,15 +958,20 @@ public class StatsActivity extends AppCompatActivity {
                     "dragonbones/PlayerAttackBlunt/Player_ske.json",
                     "dragonbones/PlayerAttackBlunt/Player_tex.json",
                     "dragonbones/PlayerAttackBlunt/Player_tex.png");
-            playerArmature = factory.buildArmature("Player"); // 骨架名字要跟你导出的一致
+            String armatureName = findFirstArmatureName(factory);
+            playerArmature = armatureName != null ? factory.buildArmature(armatureName) : null;
             if (playerArmature != null) {
-                playerArmature.getAnimation().play("idle"); // 没有叫 idle 的动画就先随便 play() 播默认
+                playerArmature.getAnimation().play("idle");
                 playerDragonBonesView.setArmature(playerArmature);
                 playerDragonBonesView.play();
+            } else {
+                playerArmatureLoadFailed = true;
+                Toast.makeText(this, "buildArmature 失败，检查骨架名字是否叫 Player", Toast.LENGTH_LONG).show();
             }
         } catch (java.io.IOException e) {
             e.printStackTrace();
-            animatedMode = false; // 加载失败就自动退回文字模式，别崩
+            playerArmatureLoadFailed = true;
+            animatedMode = false;
             playerDragonBonesView.setVisibility(android.view.View.GONE);
         }
     }
@@ -1010,5 +1062,39 @@ public class StatsActivity extends AppCompatActivity {
         if (wasPlayingBeforeStop && mediaPlayer != null) {
             mediaPlayer.start();        // 恢复播放
         }
+    }
+
+    public float getActualDuration(Armature armature) {
+        // 1. 获取当前播放的动画名称
+        Animation animation = armature.getAnimation();
+        String animName = animation.getLastAnimationName();
+        if (animName == null) {
+            return -1f;
+        }
+
+        // 2. 通过名称获取对应的动画数据
+        ArmatureData armatureData = armature.armatureData; // 直接访问字段
+        AnimationData animData = armatureData.getAnimation(animName);
+        if (animData == null) {
+            return -1f;
+        }
+
+        // 3. 获取动画的原始时长（秒）
+        //    注意：duration 已经是秒，可以直接使用
+        float originalDurationInSeconds = animData.duration; // 直接访问字段
+
+        // 4. 如果需要通过帧数计算，可以这样：
+        // int totalFrames = animData.frameCount; // 直接访问字段
+        // int frameRate = armatureData.parent.frameRate; // 直接访问字段
+        // float originalDurationInSeconds = (float) totalFrames / frameRate;
+
+        // 5. 计算当前总倍速
+        float speed = animation.timeScale * WorldClock.clock.timeScale;
+        if (speed == 0) {
+            return Float.POSITIVE_INFINITY; // 暂停状态
+        }
+
+        // 6. 返回实际消耗时间
+        return originalDurationInSeconds / speed;
     }
 }

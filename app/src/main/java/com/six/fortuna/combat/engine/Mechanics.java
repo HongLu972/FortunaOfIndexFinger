@@ -58,6 +58,7 @@ public class Mechanics {
     // --- deal_damage(amount, target, self) ---
     public boolean dealDamage(int amount, Entity target, Entity self) {
         // 1. 基础物理伤害与力量乘区
+        self.buff.animaionTimes++;
         int damage = amount + self.strength + self.this_turn_strength;
         if (target.buff.sidestep >= damage) {
             if (target.bleed_term > 0) {
@@ -285,6 +286,13 @@ public class Mechanics {
                 case 3: // 震颤 - 回声
                     target.this_turn_strength -= (int) (target.tremor_strength * 0.03 + 1);
                     break;
+                case 4: // 震颤 - 破裂
+                    target.hp -= target.tremor_strength;
+                    break;
+                case 5: // 震颤 - 永恒
+                    if(randint(1, 100) < 50) {
+                        tremorBurst(target);
+                    }
             }
         }
     }

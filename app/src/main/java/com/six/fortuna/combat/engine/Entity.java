@@ -116,6 +116,7 @@ public class Entity {
                         totalAmmo = 7;
                         reload();
                     }
+                    break;
             }
             ammo--;
         }
@@ -158,6 +159,10 @@ public class Entity {
                         break;
                 }
                 return "🪄魔弹: "+i+"  ";
+            case 4:
+                return "🐯虎标弹";
+            case 5:
+                return "🐯💢猛虎标弹";
             default:
                 return "🧨弹药";
         }

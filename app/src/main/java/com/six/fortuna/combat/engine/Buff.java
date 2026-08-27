@@ -32,6 +32,7 @@ public class Buff {
     public int cibei;
     public int armored;
     public int SeedofLight;
+    public int animaionTimes;
     public int currentgeneration;
     public int concentration;
     public int Unlock;
@@ -71,7 +72,7 @@ public class Buff {
         amount += self.buff.concentration;
         if (amount >= 0) {
             self.block += amount;
-            s.appendLog(String.format(res.getString(R.string.buff_log_shield), self.name, amount));
+            s.appendLog(String.format(res.getString(R.string.buff_log_shield), amount, self.name));
         }
     }
 
@@ -164,6 +165,7 @@ public class Buff {
     }
 
     public void turnStartActivate(Entity target) {
+        animaionTimes = 0;
         if (bloodstainedTears > 0) {
             if (bloodstainedTears < 5) {
                 bloodstainedTears++;

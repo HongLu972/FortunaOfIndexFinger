@@ -163,16 +163,21 @@ public class FortunaEnemies {
 
     public void normalhit(Entity self, Entity player) {
         if (!(m.dealDamage(4, player, self))) {
-            self.hp -= self.max_hp * 0.34;
+            self.hp -= self.hp * 0.5;
         } else {
-            self.hp += self.max_hp * 0.1;
+            self.hp += self.max_hp * 0.5;
+            player.hp /= 1 + Math.max(0.5, Math.min(self.strength / 100.0, 4.0));
         }
         self.charge_term++;
     }
 
     public void strongmove(Entity self, Entity player) {
         self.strength += 12;
-        player.strength += 4;
+        if(self.hp > self.max_hp){
+            self.block += self.hp - self.max_hp;
+            self.strength += (self.hp / (self.max_hp / 100)) / 10;
+            self.hp = self.max_hp;
+        }
     }
 
     public EnemyAction hearts(Entity self, Entity player) {
@@ -223,8 +228,14 @@ public class FortunaEnemies {
 
     public void sound(Entity self, Entity player) {
         int k = 0;
-        for (int i = 0; i < self.buff.chargeBallSize; i++) if (self.buff.chargeBalls.get(i).equals(1)) k++;
-        player.swift -= self.charge_strength;
+        if (self.buff.chargeBalls != null) {
+            for (int i = 0; i < self.buff.chargeBalls.size(); i++) {
+                Integer value = (Integer) self.buff.chargeBalls.get(i);
+                if (value != null && value == 1) {
+                    k++;
+                }
+            }
+        }        player.swift -= self.charge_strength;
         player.swift -= k;
     }
 
@@ -746,6 +757,16 @@ public class FortunaEnemies {
 
         if (player.sanity <= -45 || player.stagger_panic_term > 0) {
             return eStaggerAction;
+        }
+
+        if(self.krama > 10){
+            self.this_turn_strength -= self.krama/10;
+            if(self.krama > 30){
+                self.sanity -= (self.krama - 30) / 10;
+                if(self.krama > 100){
+                    self.strength -= self.krama / 60;
+                }
+            }
         }
 
         if (self.countC == 0) {

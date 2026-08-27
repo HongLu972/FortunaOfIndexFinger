@@ -103,7 +103,7 @@
             <!--                android:textStyle="bold"-->
             <!--                android:text="精神值: XX/XX"/>-->
             <!--约等于能量，暂时没想好形式-->
-
+            <!--永远缅怀曾经的精神条-->
 
             <!--这里整个进度条-->
             <!--整了-->
@@ -219,12 +219,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <com.six.fortuna.dragonbones.DragonBonesView
-        android:id="@+id/player_dragon_bones_view"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:visibility="gone" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -324,6 +318,22 @@
             android:textStyle="bold"/>
 
     </LinearLayout>
+
+    <com.six.fortuna.dragonbones.DragonBonesView
+        android:id="@+id/player_dragon_bones_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/bottom_toolbar"
+        android:layout_below="@id/LTArea"
+
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="80dp"
+        android:background="#1A1A2E" />
+<!--        android:visibility="gone" />-->
 
     <LinearLayout
         android:id="@+id/bottom_toolbar"
