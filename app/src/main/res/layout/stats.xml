@@ -333,6 +333,21 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="80dp"
         android:background="#1A1A2E" />
+
+    <com.six.fortuna.dragonbones.DragonBonesView
+        android:id="@+id/enemy_dragon_bones_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/bottom_toolbar"
+        android:layout_below="@id/LTArea"
+
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="80dp"
+        android:background="#1A1A2E" />
 <!--        android:visibility="gone" />-->
 
     <LinearLayout
