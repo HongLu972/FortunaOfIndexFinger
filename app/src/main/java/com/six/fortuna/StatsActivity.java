@@ -51,12 +51,10 @@ public class StatsActivity extends AppCompatActivity {
     private boolean playerArmatureLoadFailed = false;
     private MediaPlayer mediaPlayer;
 
-    // 局外初始牌组（第一次进游戏时发的牌，之后掉落卡会往里加）
     private static final String[] STARTER_DECK = {
             "cogito", "cogito", "ququ"
     };
 
-    // UI
     private TextView tvTitle, tvKarma, tvBlessing;
     private TextView tvHP, tvSanity, tvEXP, tvLevel, tvLight;
     private TextView tvCombatLog;
@@ -67,8 +65,12 @@ public class StatsActivity extends AppCompatActivity {
     private static final String KEY_ANIMATED_BATTLE = "animated_battle_mode";
     private boolean animatedMode;
 
-    private com.six.fortuna.dragonbones.DragonBonesView playerDragonBonesView; // 需要在 stats.xml 加对应控件
+    private com.six.fortuna.dragonbones.DragonBonesView playerDragonBonesView;
     private com.dragonbones.armature.Armature playerArmature;
+    private com.six.fortuna.dragonbones.DragonBonesView enemyDragonBonesView;
+    private com.dragonbones.armature.Armature enemyArmature;
+    private boolean enemyArmatureLoadFailed = false;
+    private final android.os.Handler clashHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private final java.util.ArrayDeque<String> logQueue = new java.util.ArrayDeque<>();
     private boolean isPlayingLog = false;
     private Button btnConfirm;
@@ -78,7 +80,6 @@ public class StatsActivity extends AppCompatActivity {
     private PrescriptStore store;
     private IndexFingerLevel_CN indexFingerLevel;
 
-    // ---- 引擎层 ----
     public Mechanics mechanics;
     private CardDeck deck;
     private FortunaCards cardDefs;
@@ -86,8 +87,8 @@ public class StatsActivity extends AppCompatActivity {
     private Entity player;
     private Entity enemy;
 
-    // 战斗是否已经结束（胜利/失败），结束后Spinner只显示"开始下一场"
     private boolean battleOver = false;
+    private boolean isAttackAnimating = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +143,10 @@ public class StatsActivity extends AppCompatActivity {
                 startNewBattle();
                 return;
             }
+            if (isAttackAnimating) {
+                Toast.makeText(this, "动画播放中，请稍候", Toast.LENGTH_SHORT).show();
+                return;
+            }
             int pos = spinnerCards.getSelectedItemPosition();
             List<String> names = currentSpinnerNames();
             if (pos < 0 || pos >= names.size()) {
@@ -156,21 +161,14 @@ public class StatsActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.noCard), Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(player.stagger_panic_term > 0){
+            if (player.stagger_panic_term > 0) {
                 Toast.makeText(this, getString(R.string.onStagger), Toast.LENGTH_SHORT).show();
                 return;
             }
             useCard(deck.hand.get(pos));
-            if(player.buff.animaionTimes == 0) return;
-            float totalTime = 3.0f;
-            float originalDuration = getActualDuration(playerArmature);
-            float targetSingleDuration = totalTime / player.buff.animaionTimes;
-            float newTimeScale = originalDuration / targetSingleDuration;
-            playerArmature.getAnimation().play("newAnimation",player.buff.animaionTimes);
-            player.buff.animaionTimes = 0;
         });
 
-        findViewById(R.id.nav_home).setOnClickListener(v ->{
+        findViewById(R.id.nav_home).setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
         });
         findViewById(R.id.nav_stats).setOnClickListener(v -> {});
@@ -184,7 +182,6 @@ public class StatsActivity extends AppCompatActivity {
             });
         }
 
-        // 优先尝试恢复上次没打完的战斗快照，没有的话才走全新开局
         if (!restoreBattleSnapshot()) {
             startNewBattle();
         } else {
@@ -198,9 +195,8 @@ public class StatsActivity extends AppCompatActivity {
         tvKarma = findViewById(R.id.tv_karma);
         tvBlessing = findViewById(R.id.tv_blessing);
         tvHP = findViewById(R.id.HP);
-//        tvSanity = findViewById(R.id.Sanity);
         playerDragonBonesView = findViewById(R.id.player_dragon_bones_view);
-        Switch switchAnimatedBattle = findViewById(R.id.switch_animated_battle);
+        enemyDragonBonesView = findViewById(R.id.enemy_dragon_bones_view);
         tvEXP = findViewById(R.id.EXPNumber);
         tvLevel = findViewById(R.id.level);
         tvLight = findViewById(R.id.LTAmount);
@@ -213,13 +209,11 @@ public class StatsActivity extends AppCompatActivity {
         spinnerCards = findViewById(R.id.BookPagesChoice);
         btnConfirm = findViewById(R.id.ComfirmUsing);
         hpBar = findViewById(R.id.HPBar);
-//        sanBar = findViewById(R.id.SanBar);
         expBar = findViewById(R.id.EXPBar);
     }
 
     // ===================== 开局 / 重开 =====================
 
-    /** 全新开一场战斗：血量按局外养成回满，危险度接着存档里的走，掉落的卡也已经在牌组里了 */
     private void startNewBattle() {
         battleOver = false;
         initPlayer();
@@ -255,7 +249,6 @@ public class StatsActivity extends AppCompatActivity {
         player.difficulty = store.loadBattleDifficulty();
     }
 
-    /** 从局外持久卡组（store里存的）构建这场战斗要用的抽牌堆，第一次进游戏发STARTER_DECK */
     private void initDeckFromOwnedCards() {
         List<String> owned = store.loadOwnedCardKeys();
         if (owned == null) {
@@ -278,7 +271,7 @@ public class StatsActivity extends AppCompatActivity {
             player.difficulty += mechanics.randint(1, 2);
             appendLog(String.format(getString(R.string.log_restrictions_note), player.difficulty));
         } else if (player.difficulty <= 50) {
-            if(mechanics.randint(100, 799) <= 325) {
+            if (mechanics.randint(100, 799) <= 325) {
                 NormalBattle();
             }
             EliteBattle();
@@ -287,14 +280,14 @@ public class StatsActivity extends AppCompatActivity {
         } else {
             player.difficulty += mechanics.randint(4, 12);
             appendLog(String.format(getString(R.string.log_restrictions_boss), player.difficulty));
-            if(mechanics.randint(1, 100) < player.difficulty - 50 && !(mechanics.randint(1, 100) == 1)) {
+            if (mechanics.randint(1, 100) < player.difficulty - 50 && !(mechanics.randint(1, 100) == 1)) {
                 player.restrictions = (int) ((1 + 0.01 * mechanics.randint(1, 50)) * (player.difficulty / 10));
                 BossBattle();
-            }else{
+            } else {
                 player.restrictions = (int) ((1 + 0.01 * mechanics.randint(1, 50)) * (player.difficulty / 10));
-                if(mechanics.randint(225, 325) == 325){
+                if (mechanics.randint(225, 325) == 325) {
                     NormalBattle();
-                }else {
+                } else {
                     EliteBattle();
                 }
             }
@@ -303,7 +296,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private EnemyAction computeEnemyIntent() {
-        switch (enemy.EntityId){
+        switch (enemy.EntityId) {
             case 1:
                 return enemyDefs.brainHajimi(enemy, player);
             case 2:
@@ -332,9 +325,9 @@ public class StatsActivity extends AppCompatActivity {
                 return enemyDefs.brainGOD(enemy, player);
             case 11:
                 EnemyAction temp = enemyDefs.brainKromo(enemy, player);
-                if(enemy.countC == 2){
+                if (enemy.countC == 2) {
                     playSong(this, R.raw.betweentwoworlds_2, mediaPlayer);
-                }else{
+                } else {
                     playSong(this, R.raw.betweentwoworlds_1, mediaPlayer);
                 }
                 return temp;
@@ -343,16 +336,16 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-    private void NormalBattle(){
-        switch (mechanics.randint(1, 3)){
+    private void NormalBattle() {
+        switch (mechanics.randint(1, 3)) {
             case 1:
                 spawnHajimi();
                 break;
             case 2:
-                spawnEnemy(getString(R.string.enemy_heart), 10000, new double[] {0.3, 0.2, 0.1}, 6);
+                spawnEnemy(getString(R.string.enemy_heart), 10000, new double[]{0.3, 0.2, 0.1}, 6);
                 break;
             case 3:
-                spawnEnemy(getString(R.string.enemy_thunder_spirit), 10000, new double[] {0.6, 0.4, 0.2}, 9);
+                spawnEnemy(getString(R.string.enemy_thunder_spirit), 10000, new double[]{0.6, 0.4, 0.2}, 9);
                 break;
         }
     }
@@ -370,26 +363,26 @@ public class StatsActivity extends AppCompatActivity {
         enemy.staggerLine = new double[]{0.75, 0.5, 0.25};
     }
 
-    private void EliteBattle(){
-        switch (mechanics.randint(1, 3)){
+    private void EliteBattle() {
+        switch (mechanics.randint(1, 3)) {
             case 1:
                 spawnAlbina();
                 break;
             case 2:
-                spawnEnemy(getString(R.string.enemy_forgotten_killer), 300000, new double[] {0.2, 0.4, 0.6}, 4);
+                spawnEnemy(getString(R.string.enemy_forgotten_killer), 300000, new double[]{0.2, 0.4, 0.6}, 4);
                 break;
             case 3:
-                spawnEnemy(getString(R.string.enemy_ailan_worm), 100000, new double[] {0, 0, 0}, 8);
+                spawnEnemy(getString(R.string.enemy_ailan_worm), 100000, new double[]{0, 0, 0}, 8);
                 break;
         }
     }
 
-    private void spawnAlbina(){
+    private void spawnAlbina() {
         spawnEnemy(getString(R.string.enemy_albina), 20000, new double[]{0.8, 0.6, 0.4}, 2);
     }
 
-    private void BossBattle(){
-        switch (mechanics.randint(1, 5)){
+    private void BossBattle() {
+        switch (mechanics.randint(1, 5)) {
             case 1:
                 spawnRein();
                 break;
@@ -407,11 +400,12 @@ public class StatsActivity extends AppCompatActivity {
                 break;
         }
     }
-    private void spawnRein(){
+
+    private void spawnRein() {
         spawnEnemy(getString(R.string.enemy_rein), 1000000, new double[]{0.7, 0.5, 0.2}, 3);
     }
 
-    private void spawnEnemy(String name, int outside_max_hp, double[] staggerLine, int id){
+    private void spawnEnemy(String name, int outside_max_hp, double[] staggerLine, int id) {
         enemy = new Entity(mechanics, this, getResources());
         enemy.name = name;
         enemy.EntityId = id;
@@ -430,11 +424,11 @@ public class StatsActivity extends AppCompatActivity {
         appendLog(getString(R.string.log_turn_start));
         appendLog(String.format(getString(R.string.log_deck_size), deck.drawPile.size()));
         appendLog(String.format(getString(R.string.log_discard_size), deck.discardPile.size()));
-        if(player.buff.UnlockedHealth > 0 || player.hp < 0){
+        if (player.buff.UnlockedHealth > 0 || player.hp < 0) {
             player.buff.UnlockedHealth = 0;
             player.buff.lockedHealth--;
             player.hp = (int) (player.max_hp * 0.5);
-            if(player.buff.bloodstainedTears > 0){
+            if (player.buff.bloodstainedTears > 0) {
                 deck.addCard(cardDefs.BloodstainedTears_finale(), mechanics.logger);
             }
         }
@@ -445,18 +439,18 @@ public class StatsActivity extends AppCompatActivity {
         player.energy += player.gain_energy;
         player.this_turn_strength = 0;
         deck.drawCards(HAND_SIZE - deck.hand.size(), player, this::appendLog);
-        if(player.energy >= player.max_energy){
+        if (player.energy >= player.max_energy) {
             player.energy = player.max_energy;
         }
-        if(player.restrictions >= 50){
+        if (player.restrictions >= 50) {
             player.energy--;
         }
-        if(player.restrictions >= 100){
-            for(int i = 0; i < Math.min(Math.max(1, player.restrictions / 300), 3); i++){
+        if (player.restrictions >= 100) {
+            for (int i = 0; i < Math.min(Math.max(1, player.restrictions / 300), 3); i++) {
                 deck.addCard(new Card("null", "制约", 1, null, -1, 1), mechanics.logger);
             }
         }
-        if(player.sanity <= -45){
+        if (player.sanity <= -45) {
             player.stagger_panic_term++;
             player.sanity = 0;
         }
@@ -471,47 +465,47 @@ public class StatsActivity extends AppCompatActivity {
         player.buff.turnEndActivate();
         enemy.buff.turnEndActivate();
 
-        if(player.energy >= player.max_energy){
+        if (player.energy >= player.max_energy) {
             player.energy = player.max_energy;
         }
 
-        if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0 )&&(enemy.buff.UnlockedHealth == 0)&& enemy.current_intent != null && enemy.current_intent.execute != null) {
+        if ((enemy.buff.lockedHealth > 0 || enemy.hp > 0) && (enemy.buff.UnlockedHealth == 0) && enemy.current_intent != null && enemy.current_intent.execute != null) {
             appendLog(String.format(getString(R.string.log_enemy_action), enemy.name, enemy.current_intent.description));
             playEnemyAttackAnimation();
             enemy.current_intent.execute.execute(enemy, player);
             enemy.current_intent.execute.execute(enemy, player);
-            if(enemy.buff.cibei > 0){
-                if(enemy.countB == 1){
+            if (enemy.buff.cibei > 0) {
+                if (enemy.countB == 1) {
                     Toast.makeText(this, getString(R.string.toast_ailan_not_district), Toast.LENGTH_SHORT).show();
                     appendLog(getString(R.string.log_compassion_mass));
-                    for(int i = 0; i < enemy.buff.cibei; i++){
+                    for (int i = 0; i < enemy.buff.cibei; i++) {
                         appendLog(getString(R.string.log_compassion_trigger));
                         enemy.this_turn_strength += 3;
-                        if(mechanics.dealDamage(30, player, enemy)){
+                        if (mechanics.dealDamage(30, player, enemy)) {
                             player.tremor_term += 3;
                             player.tremor_strength += 5 + enemy.strength;
                             mechanics.amplitudeConversion(player, 4);
                             mechanics.tremorBurst(player);
                         }
                     }
-                }else{
+                } else {
                     Toast.makeText(this, getString(R.string.toast_grace_compassion), Toast.LENGTH_SHORT).show();
                     appendLog(getString(R.string.log_compassion_eternal));
-                    for(int i = 0; i < enemy.buff.cibei; i++){
+                    for (int i = 0; i < enemy.buff.cibei; i++) {
                         enemy.this_turn_strength--;
-                        if(enemy.buff.cibei > 15){
+                        if (enemy.buff.cibei > 15) {
                             enemy.this_turn_strength += enemy.buff.cibei - 15;
                             player.this_turn_strength -= enemy.buff.cibei - 15;
                             enemy.buff.cibei = 15;
                         }
                         appendLog(getString(R.string.log_compassion_open_source));
-                        if(mechanics.dealDamage(30, player, enemy)){
+                        if (mechanics.dealDamage(30, player, enemy)) {
                             player.tremor_term += 3;
                             player.tremor_strength += 5 + enemy.strength;
                             mechanics.amplitudeConversion(player, 4);
                             mechanics.tremorBurst(player);
                         }
-                        if(i > 15){
+                        if (i > 15) {
                             break;
                         }
                     }
@@ -519,19 +513,19 @@ public class StatsActivity extends AppCompatActivity {
             }
         }
 
-        if(player.stagger_panic_term > 0){
+        if (player.stagger_panic_term > 0) {
             player.stagger_panic_term--;
         }
-        if(enemy.stagger_panic_term > 0){
+        if (enemy.stagger_panic_term > 0) {
             enemy.stagger_panic_term--;
         }
 
         mechanics.burn(player);
         mechanics.burn(enemy);
-        if(player.tremor_term > 0) {
+        if (player.tremor_term > 0) {
             player.tremor_term--;
         }
-        if(enemy.tremor_term > 0){
+        if (enemy.tremor_term > 0) {
             enemy.tremor_term--;
         }
 
@@ -546,14 +540,14 @@ public class StatsActivity extends AppCompatActivity {
             return;
         }
         if (enemy.hp <= 0) {
-            if(enemy.EntityId == 7 && enemy.block > 0){
+            if (enemy.EntityId == 7 && enemy.block > 0) {
                 enemy.max_hp = enemy.block;
                 enemy.hp = enemy.max_hp;
                 enemy.block = 0;
-            }else {
-                if(enemy.buff.lockedHealth > 0){
+            } else {
+                if (enemy.buff.lockedHealth > 0) {
                     enemy.buff.UnlockedHealth++;
-                }else {
+                } else {
                     enemy.hp = 0;
                     onVictory();
                     return;
@@ -561,7 +555,7 @@ public class StatsActivity extends AppCompatActivity {
             }
         }
 
-        if(enemy.stagger_panic_term <= 0) enemy.current_intent = computeEnemyIntent();
+        if (enemy.stagger_panic_term <= 0) enemy.current_intent = computeEnemyIntent();
         startTurn();
     }
 
@@ -570,21 +564,21 @@ public class StatsActivity extends AppCompatActivity {
             Toast.makeText(this, String.format(getString(R.string.toast_energy_insufficient), card.cost), Toast.LENGTH_SHORT).show();
             return;
         }
-        if(player.sanity <= -45){
+        if (player.sanity <= -45) {
             player.stagger_panic_term++;
             player.sanity = 0;
         }
-        if(player.stagger_panic_term > 0){
+        if (player.stagger_panic_term > 0) {
             appendLog(getString(R.string.toast_staggered));
             return;
         }
         player.energy -= card.cost;
         playPlayerAttackAnimation();
         card.play.play(player, enemy);
-        if(player.buff.cibei > 0){
+        if (player.buff.cibei > 0) {
             Toast.makeText(this, getString(R.string.toast_chase_laugh), Toast.LENGTH_SHORT).show();
             appendLog(getString(R.string.log_compassion_seeing));
-            for(int i = 0; i < player.buff.cibei; i++){
+            for (int i = 0; i < player.buff.cibei; i++) {
                 appendLog(getString(R.string.log_compassion_trigger));
                 useCard(cardDefs.zhuizhui(), 1);
             }
@@ -599,24 +593,26 @@ public class StatsActivity extends AppCompatActivity {
         appendLog(String.format(getString(R.string.log_discard_size), deck.discardPile.size()));
 
         if (enemy.hp <= 0) {
-            if(enemy.EntityId == 7 && enemy.block > 0){
+            if (enemy.EntityId == 7 && enemy.block > 0) {
                 enemy.max_hp = enemy.block;
                 enemy.hp = enemy.max_hp;
                 enemy.block = 0;
-            }else {
-                if(enemy.buff.lockedHealth > 0) return;
+            } else {
+                if (enemy.buff.lockedHealth > 0) return;
                 enemy.hp = 0;
                 onVictory();
             }
         }
     }
 
+    // 重载：只执行效果，不播放动画（用于连击）
     private void useCard(Card card, int i) {
         if (player.energy < card.cost) {
             Toast.makeText(this, String.format(getString(R.string.toast_energy_insufficient), card.cost), Toast.LENGTH_SHORT).show();
             return;
         }
         player.energy -= card.cost;
+        // 不播放动画
         card.play.play(player, enemy);
         deck.playFromHand(card);
         store.saveBattleDifficulty(player.difficulty);
@@ -639,19 +635,16 @@ public class StatsActivity extends AppCompatActivity {
         Toast.makeText(this, String.format(getString(R.string.toast_victory), enemy.name), Toast.LENGTH_LONG).show();
         appendLog(getString(R.string.log_victory));
 
-        // 1. 指令加护：按危险度 1:1 发放
         int graceGain = Math.max(1, player.difficulty) / 10;
         indexFingerLevel.grace += graceGain;
         store.saveStats(indexFingerLevel);
         appendLog(String.format(getString(R.string.log_grace_gain), graceGain));
 
-        // 2. "眼"：按危险度换算，1点危险度=1万眼
         long eyeGain = (long) Math.max(1, player.difficulty) * 10000L;
         long totalEyes = store.loadEyes() + eyeGain;
         store.saveEyes(totalEyes);
         appendLog(String.format(getString(R.string.log_eye_gain), eyeGain / 10000, totalEyes / 10000));
 
-        // 3. 掉卡：掉落概率、掉落质量都跟危险度走，掉的卡进"大牌库"（不直接进出战牌组，得去养成界面手动装备）
         int dropChance = Math.min(90, 20 + graceGain * 3);
         if (mechanics.randint(1, 100) <= dropChance) {
             String dropKey = rollRewardCardKey(player.difficulty);
@@ -665,18 +658,16 @@ public class StatsActivity extends AppCompatActivity {
             Toast.makeText(this, String.format(getString(R.string.toast_new_card), displayName), Toast.LENGTH_LONG).show();
         }
 
-        // 战斗结束，快照没意义了，清掉；危险度已经在spawnByDifficulty时存过，留着给下一场用
         store.clearBattleSnapshot();
         battleOver = true;
         showBattleOverSpinner(NEXT_BATTLE_LABEL);
         refreshAllUI();
     }
 
-    /** 按危险度加权抽一张奖励卡的key：危险度越高，抽到稀有/金卡的权重越大 */
     private String rollRewardCardKey(int difficulty) {
-        if(difficulty > 50) difficulty = 50;
-        int goldWeight = Math.min(3, difficulty/75);          // 危险度50时金卡权重封顶50
-        int silverWeight = Math.min(40, difficulty);    // 稀有权重起步20，随危险度涨
+        if (difficulty > 50) difficulty = 50;
+        int goldWeight = Math.min(3, difficulty / 75);
+        int silverWeight = Math.min(40, difficulty);
         int commonWeight = Math.max(1, 100 - goldWeight - silverWeight);
         int totalWeight = goldWeight + silverWeight + commonWeight;
 
@@ -691,7 +682,6 @@ public class StatsActivity extends AppCompatActivity {
             if (FortunaCards.rarenessOf(key) == targetRareness) candidates.add(key);
         }
         if (candidates.isEmpty()) {
-            // 兜底：万一某个稀有度暂时没卡，退化成从整个奖励池里随便抽
             candidates.addAll(java.util.Arrays.asList(FortunaCards.REWARD_POOL_KEYS));
         }
         return candidates.get(mechanics.randint(0, candidates.size() - 1));
@@ -716,7 +706,6 @@ public class StatsActivity extends AppCompatActivity {
 
     // ===================== 存档：战斗快照 =====================
 
-    /** 把当前战斗现场（玩家/敌人属性 + 手牌/抽牌堆/弃牌堆的key列表）整体写入store */
     private void persistBattleSnapshot() {
         try {
             JSONObject root = new JSONObject();
@@ -737,7 +726,6 @@ public class StatsActivity extends AppCompatActivity {
         return arr;
     }
 
-    /** 有快照就整体恢复现场，返回true；没有快照返回false交给调用方走全新开局 */
     private boolean restoreBattleSnapshot() {
         String raw = store.loadBattleSnapshot();
         if (raw == null) return false;
@@ -753,7 +741,6 @@ public class StatsActivity extends AppCompatActivity {
             loadKeysInto(root.optJSONArray("drawPile"), deck.drawPile);
             loadKeysInto(root.optJSONArray("discardPile"), deck.discardPile);
 
-            // current_intent里的方法引用没法存，恢复时重新算一次（会有一次轻微的副作用重复，可接受）
             enemy.current_intent = computeEnemyIntent();
             player.buff.m = mechanics;
             enemy.buff.m = mechanics;
@@ -798,8 +785,7 @@ public class StatsActivity extends AppCompatActivity {
 
     public void appendLog(String msg) {
         if (animatedMode) {
-            // 动画模式：纯看演出，不显示文字，也不需要"下一步"逐条播放
-            android.util.Log.d("BattleLog", msg); // 留着方便你调试对不对，不影响UI
+            android.util.Log.d("BattleLog", msg);
             return;
         }
         logQueue.add(msg);
@@ -808,16 +794,14 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-    /** 开始播放本次结算产生的所有日志：锁住手牌选择，一条一条揭示 */
     private void startLogPlayback() {
         isPlayingLog = true;
         spinnerCards.setEnabled(false);
-        while(isPlayingLog) {
+        while (isPlayingLog) {
             revealNextLine();
         }
     }
 
-    /** 揭示队列里的下一条日志；队列空了就解锁交互，恢复正常选卡界面 */
     private void revealNextLine() {
         if (logQueue.isEmpty()) {
             isPlayingLog = false;
@@ -840,37 +824,37 @@ public class StatsActivity extends AppCompatActivity {
         }
 
         if (!logQueue.isEmpty()) {
-            btnConfirm.setText("▶ " + getString(R.string.next_step)); // 需要在 strings.xml 加一个 next_step，比如"下一步"
+            btnConfirm.setText("▶ " + getString(R.string.next_step));
         }
     }
 
     private String buildStatusChips(Entity e) {
         StringBuilder sb = new StringBuilder();
-        sb.append("🧠"+getString(R.string.sanity)+" ").append(e.sanity).append("  ");
+        sb.append("🧠" + getString(R.string.sanity) + " ").append(e.sanity).append("  ");
         sb.append(e.getAmmo()).append("  ");
-        if (e.stagger_count < 3){
-            sb.append("😖"+getString(R.string.next_stagger)).append(e.health - e.staggerLine[e.stagger_count]*e.outside_max_hp).append("伤害  ");
+        if (e.stagger_count < 3) {
+            sb.append("😖" + getString(R.string.next_stagger)).append(e.health - e.staggerLine[e.stagger_count] * e.outside_max_hp).append("伤害  ");
         }
-        if (e.block > 0) sb.append("🛡"+getString(R.string.shield)).append(e.block).append("  ");
-        if (e.strength != 0) sb.append("💪"+getString(R.string.strength)).append(e.strength).append("  ");
-        if (e.this_turn_strength != 0) sb.append("⚡"+getString(R.string.this_turn_strength)).append(e.this_turn_strength).append("  ");
-        if (e.swift != 0) sb.append("⬆"+getString(R.string.haste)).append(e.swift).append("  ");
-        if (e.burn_term > 0) sb.append("🔥"+getString(R.string.burn)).append(e.burn_strength).append("x").append(e.burn_term).append("  ");
-        if (e.bleed_term > 0) sb.append("🩸"+getString(R.string.bleed)).append(e.bleed_strength).append("x").append(e.bleed_term).append("  ");
-        if (e.tremor_term > 0) sb.append("🌀"+getString(R.string.tremor)).append(e.tremor_strength).append("x").append(e.tremor_term).append("  ");
-        if (e.sinking_term > 0) sb.append("💧"+getString(R.string.sinking)).append(e.sinking_strength).append("x").append(e.sinking_term).append("  ");
-        if (e.rapture_term > 0) sb.append("💔"+getString(R.string.rapture)).append(e.rapture_strength).append("x").append(e.rapture_term).append("  ");
-        if (e.poise_term > 0) sb.append("🌫️"+getString(R.string.poise)).append(e.poise_strength).append("x").append(e.poise_term).append("  ");
-        if (e.blade > 0) sb.append("🗡"+getString(R.string.blade)).append(e.blade).append("  ");
-        if (e.shin > 0) sb.append("💛"+getString(R.string.shin)).append(e.shin).append("  ");
-        if (e.charge_term > 0 || e.charge_strength > 1) sb.append("🔋"+getString(R.string.charge)).append(e.charge_strength).append("-").append(e.charge_term).append("  ");
-        if (e.stagger_panic_term > 0) sb.append("😵"+getString(R.string.stagger)).append(e.stagger_panic_term).append("  ");
-        if (e.restrictions > 0) sb.append("⛓"+getString(R.string.restrictions)).append(e.restrictions).append("  ");
-        if (e.krama > 0) sb.append("‼️"+getString(R.string.krama)).append(e.krama).append("  ");
-        if (e.EntityId == 3) sb.append("⚜️"+getString(R.string.Hermes)).append(e.grace).append("  ");
-        if (e.tianjiustarblade > 0) sb.append("🔪"+getString(R.string.TianjiuStarBlade)).append(e.tianjiustarblade).append("  ");
+        if (e.block > 0) sb.append("🛡" + getString(R.string.shield)).append(e.block).append("  ");
+        if (e.strength != 0) sb.append("💪" + getString(R.string.strength)).append(e.strength).append("  ");
+        if (e.this_turn_strength != 0) sb.append("⚡" + getString(R.string.this_turn_strength)).append(e.this_turn_strength).append("  ");
+        if (e.swift != 0) sb.append("⬆" + getString(R.string.haste)).append(e.swift).append("  ");
+        if (e.burn_term > 0) sb.append("🔥" + getString(R.string.burn)).append(e.burn_strength).append("x").append(e.burn_term).append("  ");
+        if (e.bleed_term > 0) sb.append("🩸" + getString(R.string.bleed)).append(e.bleed_strength).append("x").append(e.bleed_term).append("  ");
+        if (e.tremor_term > 0) sb.append("🌀" + getString(R.string.tremor)).append(e.tremor_strength).append("x").append(e.tremor_term).append("  ");
+        if (e.sinking_term > 0) sb.append("💧" + getString(R.string.sinking)).append(e.sinking_strength).append("x").append(e.sinking_term).append("  ");
+        if (e.rapture_term > 0) sb.append("💔" + getString(R.string.rapture)).append(e.rapture_strength).append("x").append(e.rapture_term).append("  ");
+        if (e.poise_term > 0) sb.append("🌫️" + getString(R.string.poise)).append(e.poise_strength).append("x").append(e.poise_term).append("  ");
+        if (e.blade > 0) sb.append("🗡" + getString(R.string.blade)).append(e.blade).append("  ");
+        if (e.shin > 0) sb.append("💛" + getString(R.string.shin)).append(e.shin).append("  ");
+        if (e.charge_term > 0 || e.charge_strength > 1) sb.append("🔋" + getString(R.string.charge)).append(e.charge_strength).append("-").append(e.charge_term).append("  ");
+        if (e.stagger_panic_term > 0) sb.append("😵" + getString(R.string.stagger)).append(e.stagger_panic_term).append("  ");
+        if (e.restrictions > 0) sb.append("⛓" + getString(R.string.restrictions)).append(e.restrictions).append("  ");
+        if (e.krama > 0) sb.append("‼️" + getString(R.string.krama)).append(e.krama).append("  ");
+        if (e.EntityId == 3) sb.append("⚜️" + getString(R.string.Hermes)).append(e.grace).append("  ");
+        if (e.tianjiustarblade > 0) sb.append("🔪" + getString(R.string.TianjiuStarBlade)).append(e.tianjiustarblade).append("  ");
         ArrayList<String> a = e.buff.getString();
-        for(int i = 0; i < a.size(); i++){
+        for (int i = 0; i < a.size(); i++) {
             sb.append(a.get(i));
         }
         if (sb.length() == 0) sb.append(getString(R.string.NoEffect));
@@ -886,16 +870,11 @@ public class StatsActivity extends AppCompatActivity {
         tvTitle.setText(name);
 
         tvHP.setText(getString(R.string.hp) + ": " + player.hp + "/" + player.max_hp);
-        //tvSanity.setText("理智值: " + player.sanity);
 
         if (hpBar != null) {
             hpBar.setMax(Math.max(1, player.max_hp));
             hpBar.setProgress(Math.max(0, Math.min(player.hp, player.max_hp)));
         }
-//        if (sanBar != null) {
-//            sanBar.setMax(90);
-//            sanBar.setProgress(Math.max(0, Math.min(player.sanity + 45, 90)));
-//        }
 
         int exp = indexFingerLevel.grace;
         int maxExp = 100;
@@ -922,19 +901,25 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-    /** 根据开关状态，切换是显示龙骨动画区，还是显示纯文字区 */
     private void applyBattleModeUI() {
         if (animatedMode) {
             playerDragonBonesView.setVisibility(android.view.View.VISIBLE);
             ensurePlayerArmatureLoaded();
+            if (enemyDragonBonesView != null) {
+                enemyDragonBonesView.setVisibility(android.view.View.VISIBLE);
+                ensureEnemyArmatureLoaded();
+            }
         } else {
             playerDragonBonesView.setVisibility(android.view.View.GONE);
+            if (enemyDragonBonesView != null) {
+                enemyDragonBonesView.setVisibility(android.view.View.GONE);
+            }
         }
     }
 
     private String findFirstArmatureName(com.six.fortuna.dragonbones.AndroidFactory factory) {
-        java.util.Map<String, com.dragonbones.model.DragonBonesData> all = factory.getAllDragonBonesData();
-        for (com.dragonbones.model.DragonBonesData data : all.values()) {
+        java.util.Map<String, DragonBonesData> all = factory.getAllDragonBonesData();
+        for (DragonBonesData data : all.values()) {
             if (data.armatureNames.size() > 0) {
                 return data.armatureNames.get(0);
             }
@@ -948,10 +933,7 @@ public class StatsActivity extends AppCompatActivity {
             playerDragonBonesView.play();
             return;
         }
-        if (playerArmatureLoadFailed) {
-            // 之前已经失败过了，不要再重复调用 loadFromAssets，避免重复注册
-            return;
-        }
+        if (playerArmatureLoadFailed) return;
         try {
             com.six.fortuna.dragonbones.AndroidFactory factory = com.six.fortuna.dragonbones.AndroidFactory.getInstance();
             factory.loadFromAssets(getAssets(),
@@ -961,14 +943,14 @@ public class StatsActivity extends AppCompatActivity {
             String armatureName = findFirstArmatureName(factory);
             playerArmature = armatureName != null ? factory.buildArmature(armatureName) : null;
             if (playerArmature != null) {
-                playerArmature.getAnimation().play("idle");
+                playerArmature.getAnimation().play("Idle");
                 playerDragonBonesView.setArmature(playerArmature);
                 playerDragonBonesView.play();
             } else {
                 playerArmatureLoadFailed = true;
-                Toast.makeText(this, "buildArmature 失败，检查骨架名字是否叫 Player", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "buildArmature 失败", Toast.LENGTH_LONG).show();
             }
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             playerArmatureLoadFailed = true;
             animatedMode = false;
@@ -976,35 +958,162 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-    /** 动画模式下，玩家行动时播一下攻击动画；没有动画数据/不在动画模式就什么都不做 */
-    private void playPlayerAttackAnimation() {
-        if (animatedMode && playerArmature != null) {
-            playerArmature.getAnimation().play("attack"); // 换成你实际导出的动画名
+    private void ensureEnemyArmatureLoaded() {
+        if (enemyDragonBonesView == null) return;
+        if (enemyArmature != null) {
+            enemyDragonBonesView.setArmature(enemyArmature);
+            enemyDragonBonesView.play();
+            return;
+        }
+        if (enemyArmatureLoadFailed) return;
+        try {
+            com.six.fortuna.dragonbones.AndroidFactory factory = com.six.fortuna.dragonbones.AndroidFactory.getInstance();
+            String armatureName = findFirstArmatureName(factory);
+            if (armatureName == null) {
+                factory.loadFromAssets(getAssets(),
+                        "dragonbones/PlayerAttackBlunt/Player_ske.json",
+                        "dragonbones/PlayerAttackBlunt/Player_tex.json",
+                        "dragonbones/PlayerAttackBlunt/Player_tex.png");
+                armatureName = findFirstArmatureName(factory);
+            }
+            enemyArmature = armatureName != null ? factory.buildArmature(armatureName) : null;
+            if (enemyArmature != null) {
+                enemyArmature.getAnimation().play("Idle");
+                enemyDragonBonesView.setArmature(enemyArmature);
+                enemyDragonBonesView.setScaleX(-1f);
+                enemyDragonBonesView.play();
+            } else {
+                enemyArmatureLoadFailed = true;
+                Toast.makeText(this, "敌人 buildArmature 失败", Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            enemyArmatureLoadFailed = true;
         }
     }
 
-    /** 敌人这边先占位：目前没有敌人的龙骨资源，动画模式下敌人先不播（不影响数值和文字结算） */
-    private void playEnemyAttackAnimation() {
-        // TODO: 等敌人也导出了龙骨资源，仿照 ensurePlayerArmatureLoaded 加一份敌人的
+    private void doHitstop() {
+        WorldClock.clock.timeScale = 0f;
+        clashHandler.postDelayed(() -> WorldClock.clock.timeScale = 1f, 80);
     }
 
-    public String getLight(){
+    // ========== 攻击动画（修正版） ==========
+
+    private void playPlayerAttackAnimation() {
+        playPlayerAttackAnimation(false);
+    }
+
+    private void playPlayerAttackAnimation(boolean enhanced) {
+        if (!animatedMode || playerArmature == null || isAttackAnimating) return;
+        isAttackAnimating = true;
+
+        final float speedScale;
+        if (player.buff.animaionTimes > 1) {
+            float originalDuration = getActualDuration(playerArmature);
+            if (originalDuration > 0) {
+                float totalTime = 1.2f;
+                float eachTime = totalTime / player.buff.animaionTimes;
+                speedScale = Math.min(originalDuration / eachTime, 5.0f);
+            } else {
+                speedScale = 1.0f;
+            }
+            player.buff.animaionTimes = 0;
+        } else {
+            speedScale = 1.0f;
+        }
+
+        final float originalScaleX = playerDragonBonesView.getScaleX();
+        playerDragonBonesView.setScaleX(-1f);
+
+        playerArmature.getAnimation().play("Move", 1);
+        clashHandler.postDelayed(() -> {
+            if (playerArmature == null) {
+                isAttackAnimating = false;
+                return;
+            }
+            playerArmature.getAnimation().timeScale = speedScale;
+            playerArmature.getAnimation().play(enhanced ? "Attack_Enhanced" : "Attack", 1);
+
+            final int hitDelay = (int) ((enhanced ? 400 : 300) / speedScale);
+            clashHandler.postDelayed(() -> {
+                if (enemyArmature != null) {
+                    enemyArmature.getAnimation().play("Onhit", 1);
+                    clashHandler.postDelayed(() -> {
+                        if (enemyArmature != null) {
+                            enemyArmature.getAnimation().play("Idle", 1);
+                        }
+                    }, 200);
+                }
+                doHitstop();
+            }, hitDelay);
+
+            final int totalDuration = (int) ((enhanced ? 700 : 600) / speedScale);
+            clashHandler.postDelayed(() -> {
+                if (playerArmature != null) {
+                    playerArmature.getAnimation().timeScale = 1.0f;
+                    playerArmature.getAnimation().play("Idle", 1);
+                }
+                playerDragonBonesView.setScaleX(originalScaleX);
+                isAttackAnimating = false;
+            }, totalDuration);
+        }, 200);
+    }
+
+    private void playEnemyAttackAnimation() {
+        playEnemyAttackAnimation(false);
+    }
+
+    private void playEnemyAttackAnimation(boolean enhanced) {
+        if (!animatedMode || enemyArmature == null || isAttackAnimating) return;
+        isAttackAnimating = true;
+
+        final float speedScale = 1.0f;
+        final float originalScaleX = enemyDragonBonesView.getScaleX();
+        enemyDragonBonesView.setScaleX(1f);
+
+        enemyArmature.getAnimation().timeScale = speedScale;
+        enemyArmature.getAnimation().play(enhanced ? "Attack_Enhanced" : "Attack", 1);
+
+        final int hitDelay = (int) ((enhanced ? 400 : 300) / speedScale);
+        clashHandler.postDelayed(() -> {
+            if (playerArmature != null) {
+                playerArmature.getAnimation().play("Onhit", 1);
+                clashHandler.postDelayed(() -> {
+                    if (playerArmature != null) {
+                        playerArmature.getAnimation().play("Idle", 1);
+                    }
+                }, 200);
+            }
+            doHitstop();
+        }, hitDelay);
+
+        final int totalDuration = (int) ((enhanced ? 700 : 600) / speedScale);
+        clashHandler.postDelayed(() -> {
+            if (enemyArmature != null) {
+                enemyArmature.getAnimation().timeScale = 1.0f;
+                enemyArmature.getAnimation().play("Idle", 1);
+            }
+            enemyDragonBonesView.setScaleX(originalScaleX);
+            isAttackAnimating = false;
+        }, totalDuration);
+    }
+
+    public String getLight() {
         String output = "";
-        for(int i = 0; i < player.energy && i < player.max_energy; i++){
+        for (int i = 0; i < player.energy && i < player.max_energy; i++) {
             output += "🟡";
         }
-        if (player.max_energy <= player.energy){
-            for(int i = 0; i < player.energy - player.max_energy; i++){
+        if (player.max_energy <= player.energy) {
+            for (int i = 0; i < player.energy - player.max_energy; i++) {
                 output += "🟣";
             }
-        }else{
-            for(int i = 0; i < player.max_energy - player.energy; i++){
+        } else {
+            for (int i = 0; i < player.max_energy - player.energy; i++) {
                 output += "⚪";
             }
         }
         return output;
     }
-
 
     public void playSong(Context context, int newSongResId, MediaPlayer mediaPlayer) {
         if (newSongResId == currentSongResId) {
@@ -1026,7 +1135,6 @@ public class StatsActivity extends AppCompatActivity {
                     mediaPlayer.prepareAsync();
                     mediaPlayer.setOnPreparedListener(mp -> mp.start());
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1036,7 +1144,8 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mediaPlayer != null){
+        clashHandler.removeCallbacksAndMessages(null);
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
@@ -1046,10 +1155,9 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        // 当 Activity 进入后台（不可见）时执行
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            wasPlayingBeforeStop = true; // 记录状态：本来正在播放
-            mediaPlayer.pause();        // 暂停音乐
+            wasPlayingBeforeStop = true;
+            mediaPlayer.pause();
         } else {
             wasPlayingBeforeStop = false;
         }
@@ -1058,43 +1166,27 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // 当 Activity 重新回到前台（可见）时执行
         if (wasPlayingBeforeStop && mediaPlayer != null) {
-            mediaPlayer.start();        // 恢复播放
+            mediaPlayer.start();
         }
     }
 
     public float getActualDuration(Armature armature) {
-        // 1. 获取当前播放的动画名称
         Animation animation = armature.getAnimation();
         String animName = animation.getLastAnimationName();
         if (animName == null) {
             return -1f;
         }
-
-        // 2. 通过名称获取对应的动画数据
-        ArmatureData armatureData = armature.armatureData; // 直接访问字段
+        ArmatureData armatureData = armature.armatureData;
         AnimationData animData = armatureData.getAnimation(animName);
         if (animData == null) {
             return -1f;
         }
-
-        // 3. 获取动画的原始时长（秒）
-        //    注意：duration 已经是秒，可以直接使用
-        float originalDurationInSeconds = animData.duration; // 直接访问字段
-
-        // 4. 如果需要通过帧数计算，可以这样：
-        // int totalFrames = animData.frameCount; // 直接访问字段
-        // int frameRate = armatureData.parent.frameRate; // 直接访问字段
-        // float originalDurationInSeconds = (float) totalFrames / frameRate;
-
-        // 5. 计算当前总倍速
+        float originalDurationInSeconds = animData.duration;
         float speed = animation.timeScale * WorldClock.clock.timeScale;
         if (speed == 0) {
-            return Float.POSITIVE_INFINITY; // 暂停状态
+            return Float.POSITIVE_INFINITY;
         }
-
-        // 6. 返回实际消耗时间
         return originalDurationInSeconds / speed;
     }
 }
