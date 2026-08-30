@@ -267,28 +267,30 @@ public class Buff {
 
     public ArrayList<String> getString() {
         ArrayList<String> output = new ArrayList<>();
-        if (SeedofLight > 0) output.add(String.format(res.getString(R.string.buff_seed_of_light), SeedofLight));
-        if (cibei > 0) output.add(String.format(res.getString(R.string.buff_cibei), cibei));
-        if (noSelf > 0) output.add(String.format(res.getString(R.string.buff_no_self), noSelf));
-        if (bloodstainedTears > 0) output.add(String.format(res.getString(R.string.buff_bloodstained_tears), bloodstainedTears));
-        if (sidestep > 0) output.add(String.format(res.getString(R.string.buff_sidestep), sidestep));
-        if (Unlock > 0) output.add(String.format(res.getString(R.string.buff_unlock), Unlock));
-        if (armored > 0) output.add(String.format(res.getString(R.string.buff_armored), armored));
-        if (poison > 0) output.add(String.format(res.getString(R.string.buff_poison), poison));
-        if (nextTurnLight > 0) output.add(String.format(res.getString(R.string.buff_next_turn_light), nextTurnLight));
-        if (Precongization > 0) output.add(String.format(res.getString(R.string.buff_precognition), Precongization));
-        if (expireSwift > 0) output.add(String.format(res.getString(R.string.buff_expire_swift), expireSwift));
+        if (SeedofLight > 0) output.add("seed_of_light:" + SeedofLight);
+        if (cibei > 0) output.add("cibei:" + cibei);
+        if (noSelf > 0) output.add("no_self:" + noSelf);
+        if (bloodstainedTears > 0) output.add("bloodstained_tears:" + bloodstainedTears);
+        if (sidestep > 0) output.add("sidestep:" + sidestep);
+        if (Unlock > 0) output.add("unlock:" + Unlock);
+        if (armored > 0) output.add("armored:" + armored);
+        if (poison > 0) output.add("poison:" + poison);
+        if (nextTurnLight > 0) output.add("next_turn_light:" + nextTurnLight);
+        if (Precongization > 0) output.add("precognition:" + Precongization);
+        if (expireSwift > 0) output.add("expire_swift:" + expireSwift);
         if (Tiphereth > 0) {
             int remain = 6 - Tiphereth;
-            if (Tiphereth < 6) output.add(String.format(res.getString(R.string.buff_tiphereth_in_progress), remain));
-            else output.add(res.getString(R.string.buff_tiphereth_done));
+            if (Tiphereth < 6) output.add("tiphereth:进行中(" + remain + "回合)");
+            else output.add("tiphereth:已完成");
         }
-        if (concentration > 0) output.add(String.format(res.getString(R.string.buff_concentration), concentration));
-        String chargeBall = "";
-        for (int i = 0; i < chargeBallCount; i++) {
-            chargeBall += translation_chargeball((Integer) chargeBalls.get(i));
+        if (concentration > 0) output.add("concentration:" + concentration);
+        if (chargeBallCount > 0) {
+            StringBuilder balls = new StringBuilder();
+            for (int i = 0; i < chargeBallCount; i++) {
+                balls.append(translation_chargeball((Integer) chargeBalls.get(i)));
+            }
+            output.add("charge_balls:" + balls.toString());
         }
-        output.add(String.format(res.getString(R.string.buff_charge_balls), chargeBall));
         return output;
     }
 

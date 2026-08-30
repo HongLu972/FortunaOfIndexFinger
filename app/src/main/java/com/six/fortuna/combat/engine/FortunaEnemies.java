@@ -214,7 +214,7 @@ public class FortunaEnemies {
         self.buff.currentgeneration *= 1.5;
         int k = 0;
         for (int i = 0; i < self.buff.chargeBallSize; i++) if (self.buff.chargeBalls.get(i).equals(1)) k++;
-        if (m.dealDamage((self.buff.currentgeneration + self.buff.concentration) * k, player, self)) {
+        if (m.dealDamage((self.buff.currentgeneration + self.buff.concentration) * k, player, self) && player.max_energy > player.gain_energy) {
             player.max_energy -= 2;
         }
     }
