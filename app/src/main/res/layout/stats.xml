@@ -283,6 +283,30 @@
             </HorizontalScrollView>
         </LinearLayout>
 
+        <HorizontalScrollView
+            android:id="@+id/hsv_player_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/ll_player_status_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:id="@+id/hsv_enemy_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/ll_enemy_status_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
+
         <TextView
             android:id="@+id/CombatText"
             android:layout_width="match_parent"

@@ -4,8 +4,8 @@
     <string name="next_stagger">距离混乱的距离</string>
     <string name="shield">护盾</string>
     <string name="sanity">理智</string>
-    <string name="strength">力量</string>
-    <string name="this_turn_strength">本回合内力量</string>
+    <string name="strength">强壮</string>
+    <string name="this_turn_strength">临时强壮</string>
     <string name="haste">迅捷</string>
     <string name="burn">烧伤</string>
     <string name="bleed">流血</string>
